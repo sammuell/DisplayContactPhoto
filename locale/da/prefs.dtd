@@ -1,0 +1,48 @@
+<!-- do not translate 'Display Contact Photo' -->
+<!ENTITY window.title "Display Contact Photo Indstillinger">
+<!ENTITY tabs.generalSettings "Generelle indstillinger">
+<!ENTITY tabs.facesLocalPhotos "Lokale fotos">
+<!ENTITY tabs.visualEffects "Visuelle effekter">
+<!ENTITY tabs.maintenance "Vedligeholdelse">
+<!ENTITY maxSize.label "Maximum størrelse af ét billede:">
+<!ENTITY defaultPhoto.caption "Standard billede">
+<!ENTITY defaultPhoto.generic "Mozilla standard">
+<!ENTITY defaultPhoto.labelGenericList "Vælg standard billede">
+<!ENTITY defaultPhoto.labelNoPhoto "Hvad skal der ske hvis der intet foto er?">
+<!ENTITY defaultPhoto.show "Vis standard billede">
+<!ENTITY defaultPhoto.hide "Vis tom plads">
+<!ENTITY defaultPhoto.collapse "Vis ingenting">
+<!ENTITY position.label "Position af billedet:">
+<!ENTITY position.left "Venstre side">
+<!ENTITY position.right "Højre side">
+<!ENTITY faces.enable "Aktiver visning af indlejrede ansigter">
+<!ENTITY faces.overrideDescription "Hvad skal der ske hvis både kontakt foto og et hoved er der:">
+<!ENTITY faces.displayPhoto "Vis kontakt foto">
+<!ENTITY faces.displayFace "Vis hoved">
+<!ENTITY faces.moreInfo "Vær venlig at besøge følgende website for mere information:">
+<!ENTITY directory.enable "Muliggør visning af lokale fotos">
+<!ENTITY directory.description1 "Filnavnene bør bestå af e-mail adresse og filtype.">
+<!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Understøttede billed typer: jpg, png, gif.">
+<!ENTITY directory.description3 "Hvis sådan fik eksistere, vil den blive vist uanset om der er andre billeder.">
+<!ENTITY directory.browseButton "Søg mappe...">
+<!ENTITY directory.openButton "Åben mappe">
+<!ENTITY directory.enableWildcards "Muliggør domæne wildcard billeder">
+<!ENTITY directory.wildcardDescription "Disse billeder er tildelt et helt domæne og vil blive vist, hvis der ikke er andre foto at vise frem. Filnavnet bør bestå af en snabelA(@) efterfulgt af domænenavnet og filtype, f.eks '@ Mozilla.org.png'">
+<!ENTITY effects.enableBackgroundColor "Fyld gennemsigtige områder med en farve:">
+<!ENTITY effects.backgroundLabel "Farve på gennemsigtige område i et foto (eks. .png, .gif):">
+<!ENTITY effects.label "Visuelle effekter">
+<!ENTITY effects.enableBorder "Vis">
+<!ENTITY effects.borderColor "Ramme farve:">
+<!ENTITY effects.colorDefaultBlack "Standard: sort">
+<!ENTITY effects.colorDefaultWhite "Standard: hvid">
+<!ENTITY effects.borderThin "Tynd ramme">
+<!ENTITY effects.borderBlurred "Sløret tykkere ramme">
+<!ENTITY effects.roundedCorners "Hvis runde hjørner">
+<!ENTITY effects.enableShadow "Vis skygge">
+<!ENTITY effects.enableGloss "Tilføj glossy effekt til billedet:">
+<!ENTITY effects.glossCurved "buet">
+<!ENTITY effects.glossHorizontal "Horisontal">
+<!ENTITY effects.glossCorner "Hjørne">
+<!ENTITY clearCache.label "Ryd thumbnail cache">
+<!ENTITY clearCache.description "Thumbnail cachen skal ryddes manuelt, hvis du har (eks.) ændret et billede i den lokale foto mappe (Du behøver ikke at gøre dette, hvis du tilføjer et foto).">
+<!ENTITY pixels "Pixels">

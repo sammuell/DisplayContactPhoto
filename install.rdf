@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+	<Description about="urn:mozilla:install-manifest">
+		<em:id>contactPhoto@leven.ch</em:id>
+		<em:name>Display Contact Photo</em:name>
+		<em:version>1.0.1</em:version>
+		
+		<em:creator>Samuel Müller</em:creator>
+		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>
+		<em:optionsURL>chrome://contactPhoto/content/prefs.xul</em:optionsURL>
+		<em:iconURL>chrome://contactPhoto/skin/icon.png</em:iconURL>
+		<em:homepageURL>https://addons.mozilla.org/de/thunderbird/addon/58034</em:homepageURL>
+		
+		<!-- de -->
+		<em:localized>
+			<Description>
+				<em:locale>de</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Zeigt das Foto des Absenders bzw. des Empfängers beim Lesen oder Schreiben einer Nachricht an.</em:description>
+				<em:translator>Samuel Müller</em:translator>
+			</Description>
+		</em:localized>
+		
+		<!-- fr -->
+		<em:localized>
+			<Description>
+				<em:locale>fr</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Affiche la photo de la fiche du contact (expéditeur / destinataire) lors de la lecture ou de l'écriture d'un courriel.</em:description>
+				<em:translator>myahoo</em:translator>
+			</Description>
+		</em:localized>
+		
+		<!-- it -->
+		<em:localized>
+			<Description>
+				<em:locale>it</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Mostra la foto del mittente, o del destinatario, mentre si legge, o si compone, un messaggio di posta.</em:description>
+				<em:translator>gialloporpora</em:translator>
+			</Description>
+		</em:localized>
+		
+		<!-- pt-BR -->
+		<em:localized>
+			<Description>
+				<em:locale>pt-BR</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Mostra a foto do remetente ou destinatário durante a leitura ou redação da mensagem.</em:description>
+				<em:translator>Edgard Dias Magalhães (edgard.magalhaes@gmail.com)</em:translator>
+			</Description>
+		</em:localized>
+		
+		<!-- sr-RS -->
+		<em:localized>
+			<Description>
+				<em:locale>fr</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Приказује контактну слику пошаљиоца или примаоца у току читања или писања поруке.</em:description>
+				<em:translator>Charmed94</em:translator>
+			</Description>
+		</em:localized>
+
+		<!-- Thunderbird -->
+		<em:targetApplication>
+			<Description>
+				<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+				<em:minVersion>3.0</em:minVersion>
+				<em:maxVersion>3.1b2pre</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+		
+		<!-- SeaMonkey 
+		<em:targetApplication>
+			<Description>
+				<em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
+				<em:minVersion>2.0</em:minVersion>
+				<em:maxVersion>2.0.*</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+		-->
+	</Description>      
+</RDF>

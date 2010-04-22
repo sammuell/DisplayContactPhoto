@@ -1,0 +1,48 @@
+<!-- do not translate 'Display Contact Photo' -->
+<!ENTITY window.title "Display Contact Photo Options">
+<!ENTITY tabs.generalSettings "General Settings">
+<!ENTITY tabs.facesLocalPhotos "Faces/Local photos">
+<!ENTITY tabs.visualEffects "Visual effects">
+<!ENTITY tabs.maintenance "Maintenance">
+<!ENTITY maxSize.label "Maximum size of a photo:">
+<!ENTITY defaultPhoto.caption "Default photo">
+<!ENTITY defaultPhoto.generic "Mozilla Default">
+<!ENTITY defaultPhoto.labelGenericList "Choose a default photo:">
+<!ENTITY defaultPhoto.labelNoPhoto "Behavior if there is no photo:">
+<!ENTITY defaultPhoto.show "Display the default photo">
+<!ENTITY defaultPhoto.hide "Display empty space">
+<!ENTITY defaultPhoto.collapse "Display nothing">
+<!ENTITY position.label "Position of the photo:">
+<!ENTITY position.left "Left side">
+<!ENTITY position.right "Right side">
+<!ENTITY faces.enable "Enable display of embedded faces">
+<!ENTITY faces.overrideDescription "Behavior if a contact photo and a face are present:">
+<!ENTITY faces.displayPhoto "Display contact photo">
+<!ENTITY faces.displayFace "Display face">
+<!ENTITY faces.moreInfo "Please visit the following website for more information:">
+<!ENTITY directory.enable "Enable display of local photos">
+<!ENTITY directory.description1 "The filenames should be composed of the e-mail address and the file type.">
+<!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Supported image types: jpg, png, gif.">
+<!ENTITY directory.description3 "If such a file exists, it will be displayed regardless of other photos.">
+<!ENTITY directory.browseButton "Browse directory…">
+<!ENTITY directory.openButton "Open directory">
+<!ENTITY directory.enableWildcards "Enable domain wildcard photos">
+<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. '@mozilla.org.png'">
+<!ENTITY effects.enableBackgroundColor "Fill transparent areas with a color:">
+<!ENTITY effects.backgroundLabel "Color for transparent areas of a photo (e.g. .png, .gif):">
+<!ENTITY effects.label "Visual effects">
+<!ENTITY effects.enableBorder "Show a border around the photo">
+<!ENTITY effects.borderColor "Border color:">
+<!ENTITY effects.colorDefaultBlack "Default: black">
+<!ENTITY effects.colorDefaultWhite "Default: white">
+<!ENTITY effects.borderThin "Thin border">
+<!ENTITY effects.borderBlurred "Blurred thicker border">
+<!ENTITY effects.roundedCorners "Show rounded corners">
+<!ENTITY effects.enableShadow "Show a drop shadow">
+<!ENTITY effects.enableGloss "Add a glossy effect to the photo:">
+<!ENTITY effects.glossCurved "curved">
+<!ENTITY effects.glossHorizontal "horizontal">
+<!ENTITY effects.glossCorner "corner">
+<!ENTITY clearCache.label "Clear thumbnail cache">
+<!ENTITY clearCache.description "The thumbnail cache has to be cleared manually only if you have (ex)changed a photo in the local photo directory (You do not have to do this if you add a photo).">
+<!ENTITY pixels "pixels">

@@ -1,0 +1,48 @@
+<!-- do not translate 'Display Contact Photo' -->
+<!ENTITY window.title "Opções do Display Contact Photo">
+<!ENTITY tabs.generalSettings "Configurações Gerais">
+<!ENTITY tabs.facesLocalPhotos "Rostos/Fotos Locais">
+<!ENTITY tabs.visualEffects "Efeitos Visuais">
+<!ENTITY tabs.maintenance "Manutenção">
+<!ENTITY maxSize.label "Tamanho máximo por foto:">
+<!ENTITY defaultPhoto.caption "Foto padrão">
+<!ENTITY defaultPhoto.generic "Padrão Mozilla">
+<!ENTITY defaultPhoto.labelGenericList "Escolha uma foto padrão:">
+<!ENTITY defaultPhoto.labelNoPhoto "Comportamento no caso de não haver foto:">
+<!ENTITY defaultPhoto.show "Mostrar a foto padrão">
+<!ENTITY defaultPhoto.hide "Mostrar espaço em branco">
+<!ENTITY defaultPhoto.collapse "Não mostrar nada">
+<!ENTITY position.label "Posição da foto">
+<!ENTITY position.left "Lado esquerdo">
+<!ENTITY position.right "Lado direito">
+<!ENTITY faces.enable "Ativar a exibição de rostos incorporados">
+<!ENTITY faces.overrideDescription "Comportamento se ambas foto do contato e rosto existirem:">
+<!ENTITY faces.displayPhoto "Mostrar a foto do contato">
+<!ENTITY faces.displayFace "Mostrar o rosto">
+<!ENTITY faces.moreInfo "Por favor, visite a seguinte página para maiores informações:">
+<!ENTITY directory.enable "Ativar exibição de fotos locais">
+<!ENTITY directory.description1 "Os nomes de arquivos devem ser compostos pelo endereço eletrônico e o tipo do arquivo.">
+<!ENTITY directory.description2 "Por exemplo: 'info@mozilla.org.png'. Tipos de imagens suportados: jpg, png e gif.">
+<!ENTITY directory.description3 "Se esse arquivo existir, ele será exibido, independentemente de outras fotos.">
+<!ENTITY directory.browseButton "Buscar na pasta...">
+<!ENTITY directory.openButton "Abrir pasta">
+<!ENTITY directory.enableWildcards "Ativar domínio de fotos coringa">
+<!ENTITY directory.wildcardDescription "Essas fotos são atribuídos a um domínio inteiro e serão exibidas se não houver outra foto para mostrar. O nome do arquivo deverá ser composto por um símbolo @ seguido do nome de domínio e do tipo de arquivo,por exemplo '@mozilla.org.png'">
+<!ENTITY effects.enableBackgroundColor "Preencher espaços transparentes com a cor:">
+<!ENTITY effects.backgroundLabel "Cor para áreas transparentes de uma foto (e.g. png, gif):">
+<!ENTITY effects.label "Efeitos visuais">
+<!ENTITY effects.enableBorder "Mostrar uma borda em torno da foto">
+<!ENTITY effects.borderColor "Cor da borda:">
+<!ENTITY effects.colorDefaultBlack "Padrão: preto">
+<!ENTITY effects.colorDefaultWhite "Padrão: branco">
+<!ENTITY effects.borderThin "Borda fina">
+<!ENTITY effects.borderBlurred "Borda borrada e espessa">
+<!ENTITY effects.roundedCorners "Exibir cantos arredondados">
+<!ENTITY effects.enableShadow "Exibir uma sombra">
+<!ENTITY effects.enableGloss "Adicione um efeito brilhante para a foto:">
+<!ENTITY effects.glossCurved "curvo">
+<!ENTITY effects.glossHorizontal "horizontal">
+<!ENTITY effects.glossCorner "borda">
+<!ENTITY clearCache.label "Limpar cache de miniaturas">
+<!ENTITY clearCache.description "O cache de miniaturas deve ser limpo manualmente apenas se você tiver mudado uma foto na pasta local (você não precisa fazer isso se você apenas adicionou uma nova foto).">
+<!ENTITY pixels "pixels">

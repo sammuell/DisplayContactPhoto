@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://contactPhoto/skin/contactPhoto.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/prefs.dtd">
+ 
+<prefwindow id="DiCoP-Prefwindow"
+	title="&window.title;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	
+<prefpane id="DiCoP-PreferencesPane" flex="1" label="&window.title;">
+
+<preferences>
+	<preference id="extensions.contactPhoto.photoSize" name="extensions.contactPhoto.photoSize" type="int"/>
+	<preference id="extensions.contactPhoto.photoPosition" name="extensions.contactPhoto.photoPosition" type="string"/>
+	<preference id="extensions.contactPhoto.defaultGenericIcon" name="extensions.contactPhoto.defaultGenericIcon" type="string"/>
+	<preference id="extensions.contactPhoto.enableFaces" name="extensions.contactPhoto.enableFaces" type="bool"/>
+	<preference id="extensions.contactPhoto.overrideFaces" name="extensions.contactPhoto.overrideFaces" type="bool"/>
+	<preference id="extensions.contactPhoto.enableLocalPhotos" name="extensions.contactPhoto.enableLocalPhotos" type="bool"/>
+	<preference id="extensions.contactPhoto.enableDomainWildcardPhotos" name="extensions.contactPhoto.enableDomainWildcardPhotos" type="bool"/>
+	<preference id="extensions.contactPhoto.defaultPhoto" name="extensions.contactPhoto.defaultPhoto" type="string"/>
+	<preference id="extensions.contactPhoto.drawBackgroundColor" name="extensions.contactPhoto.drawBackgroundColor" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.backgroundColor" name="extensions.contactPhoto.backgroundColor" type="string" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectBorder" name="extensions.contactPhoto.effectBorder" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectBorderColor" name="extensions.contactPhoto.effectBorderColor" type="string" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectBorderType" name="extensions.contactPhoto.effectBorderType" type="int" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectRoundedCorners" name="extensions.contactPhoto.effectRoundedCorners" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectShadow" name="extensions.contactPhoto.effectShadow" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectGloss" name="extensions.contactPhoto.effectGloss" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.effectGlossType" name="extensions.contactPhoto.effectGlossType" type="int" instantApply="true"/>
+</preferences>
+	
+<tabbox id="PrefTabbox" selectedIndex="0" persist="selectedIndex" handleCtrlTab="true">
+	<tabs>
+		<tab label="&tabs.generalSettings;"/>
+		<tab label="&tabs.visualEffects;"/>
+		<tab label="&tabs.facesLocalPhotos;"/>
+		<tab label="&tabs.maintenance;"/>
+	</tabs>
+	
+	<tabpanels>
+		<tabpanel>
+			<vbox flex="1">
+				
+				<!-- MAX PHOTO SITE -->
+				<groupbox>
+					<caption label="&maxSize.label;"/>
+					<hbox align="center">
+						<textbox type="number" increment="5" maxlength="3" size="5" preference="extensions.contactPhoto.photoSize"/>
+						<label value="&pixels;"/>
+					</hbox>
+				</groupbox>
+				
+				
+				<!-- POSITION -->
+				<groupbox>
+					<caption label="&position.label;"/>
+					
+					<radiogroup preference="extensions.contactPhoto.photoPosition">
+						<hbox align="center">
+							<radio value="left" label="&position.left;"/>
+							<radio value="right" label="&position.right;"/>
+						</hbox>
+					</radiogroup>
+				</groupbox>
+				
+				
+				<!-- DEFAULT PHOTO -->
+				<groupbox>
+					<caption label="&defaultPhoto.caption;"/>
+											
+						<label value="&defaultPhoto.labelNoPhoto;"/>
+						<radiogroup preference="extensions.contactPhoto.defaultPhoto" class="indent">
+							
+							<radio value="show" label="&defaultPhoto.show;"/>
+							<radio value="hide" label="&defaultPhoto.hide;"/>
+							<radio value="collapse" label="&defaultPhoto.collapse;"/>
+							
+						</radiogroup>
+						
+						<separator orient="horizontal"/>
+						
+						<hbox align="center">
+							<label value="&defaultPhoto.labelGenericList;"/>
+								
+							<menulist id="listDefaultPhoto" flex="1" preference="extensions.contactPhoto.defaultGenericIcon">
+								<menupopup>
+									<menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" value="chrome://messenger/skin/addressbook/icons/contact-generic.png" image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
+								</menupopup>
+							</menulist>
+						</hbox>
+						
+						
+					
+
+						
+					
+				</groupbox>
+			</vbox>
+		</tabpanel>
+		
+		<tabpanel>		
+			<!-- VISUAL EFFECTS -->
+			<vbox flex="1">
+				
+				<groupbox>
+					<caption>
+						<checkbox label="&effects.enableBorder;" oncommand="enableBorderTypes();" id="enableBorderCheckbox" preference="extensions.contactPhoto.effectBorder"/>
+					</caption>
+					<radiogroup id="borderTypes" preference="extensions.contactPhoto.effectBorderType">
+						<grid>
+							<columns>
+								<column flex="1"/>
+								<column flex="1"/>
+							</columns>
+							<rows>
+								<row>
+									<radio value="1" label="&effects.borderThin;"/>
+									<button oncommand="setColor('borderColorPicker', 'effectBorderColor', '#000000');" id="colorDefaultBlack" label="&effects.colorDefaultBlack;"/>
+								</row>
+								<row>
+									<radio value="2" label="&effects.borderBlurred;"/>
+									<button oncommand="setColor('borderColorPicker', 'effectBorderColor', '#ffffff');" id="colorDefaultWhite" label="&effects.colorDefaultWhite;"/>
+								</row>
+							</rows>
+						</grid>
+						<hbox align="center">
+							<label value="&effects.borderColor;"/>
+							<textbox oninput="updateColorPicker('borderColorPicker', 'borderColorPreview');" size="7" maxlength="7" id="borderColorPreview" preference="extensions.contactPhoto.effectBorderColor"/>
+							<colorpicker onchange="updateColorInput('borderColorPicker', 'effectBorderColor');" type="button" id="borderColorPicker"/>
+						</hbox>
+					</radiogroup>
+				</groupbox>
+				<checkbox label="&effects.roundedCorners;" id="checkboxEnableRoundedCorners" preference="extensions.contactPhoto.effectRoundedCorners"/>
+				<checkbox label="&effects.enableShadow;" id="checkboxEnableShadow" preference="extensions.contactPhoto.effectShadow"/>
+				
+				<hbox>
+					<checkbox label="&effects.enableGloss;" id="checkboxEnableGloss" oncommand="enableGlossOptions();" preference="extensions.contactPhoto.effectGloss"/>
+					<menulist id="effectGlossTypes" preference="extensions.contactPhoto.effectGlossType">
+						<menupopup>
+							<menuitem value="0" label="&effects.glossCurved;"/>
+							<menuitem value="1" label="&effects.glossHorizontal;"/>
+							<menuitem value="2" label="&effects.glossCorner;"/>
+						</menupopup>
+					</menulist>
+				</hbox>
+				
+				<!-- BACKGROUND COLOR -->
+				<groupbox>
+					<caption>
+						<checkbox label="&effects.enableBackgroundColor;" oncommand="enableBackgroundColor();" id="enableBackgroundColorCheckbox" preference="extensions.contactPhoto.drawBackgroundColor"/>
+					</caption>
+					
+					<label value="&effects.backgroundLabel;"/>
+					
+					<hbox align="center">
+						<textbox oninput="updateColorPicker('backgroundColorPicker', 'backgroundColorPreview');" size="7" maxlength="7" id="backgroundColorPreview" preference="extensions.contactPhoto.backgroundColor"/>
+						<colorpicker onchange="updateColorInput('backgroundColorPicker', 'backgroundColor');" type="button" id="backgroundColorPicker"/>
+					</hbox>
+				</groupbox>
+			</vbox>
+		</tabpanel>
+		
+		<tabpanel>
+			<vbox>
+			<!-- PHOTO DIRECTORY -->
+			<groupbox>
+				<caption>
+					<checkbox label="&directory.enable;" oncommand="enableLocalOptions();" id="enableLocalPhotosCheckbox" preference="extensions.contactPhoto.enableLocalPhotos"/>
+				</caption>
+				
+				<description>&directory.description1;</description>
+				<description>&directory.description2;</description>
+				<description>&directory.description3;</description>
+				
+				<hbox>
+					<button icon="open" oncommand="selectPhotoDirectory();" id="enableLocalPhotosButton" label="&directory.browseButton;"/>
+					<textbox readonly="true" align="center" flex="1" id="enableLocalPhotosTextbox"/>
+					<button icon="open" oncommand="openPhotoDirectory();" id="openLocalFolderButton" label="&directory.openButton;"/>
+				</hbox>
+				<separator orient="horizontal"/>
+				<hbox align="center">
+					<checkbox label="&directory.enableWildcards;" id="checkboxEnableWildcards" preference="extensions.contactPhoto.enableDomainWildcardPhotos"/>
+					
+					<image class="moreinfo" popup="moreinfo-wildcards"/>
+					<panel id="moreinfo-wildcards" class="moreinfo" position="end_before">
+						<description>&directory.wildcardDescription;</description>
+					</panel>
+				</hbox>
+			</groupbox>
+			
+			
+			<!-- FACES -->
+			<groupbox>
+				<caption> 
+					<checkbox label="&faces.enable;" oncommand="enableFacesOptions();" id="enableFacesCheckbox" preference="extensions.contactPhoto.enableFaces"/>
+				</caption>
+				
+				<radiogroup id="enableFacesRadiogroup" preference="extensions.contactPhoto.overrideFaces">
+					<label>&faces.overrideDescription;</label>
+					<hbox align="center">
+						<radio value="true" label="&faces.displayPhoto;"/>
+						<radio value="false" label="&faces.displayFace;"/>
+					</hbox>
+				</radiogroup>
+				
+				<label>&faces.moreInfo;</label>
+				<label value="http://quimby.gnus.org/circus/face/" onclick="loadWebsite(event);" class="text-link"/>
+			</groupbox>
+			</vbox>
+		</tabpanel>
+		
+		<tabpanel>
+			<!-- MAINTENANCE -->
+			<groupbox>
+				<caption label="&clearCache.label;"/>
+				
+				<description width="300">&clearCache.description;</description>
+				<button icon="clear" id="clearCache" label="&clearCache.label;" oncommand="clearCache();"/>
+			</groupbox>
+		</tabpanel>
+		
+	</tabpanels>
+</tabbox>
+	
+</prefpane>
+
+<script type="application/x-javascript" src="chrome://contactPhoto/content/contactPhoto.js"/>
+<script type="application/x-javascript" src="chrome://contactPhoto/content/prefs.js"/>
+
+<stringbundleset id="stringbundleset">
+	<stringbundle id="DiCoP-LocalizedJS" src="chrome://contactPhoto/locale/contactPhoto.properties"/>
+</stringbundleset>
+ 
+</prefwindow>

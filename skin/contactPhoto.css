@@ -1,0 +1,30 @@
+﻿@import url("chrome://messenger/skin/");
+
+#DiCoP-Box {
+	margin: 2px;
+	padding: 0px;
+}
+
+#photo  { /* photo from edit card dialog */
+	border: 1px solid black;
+	-moz-box-shadow: #444 2px 2px 5px;
+}
+
+box.DiCoP-ComposeImageBox {
+	/*border: 1px dashed red;*/
+	margin: 0px;
+	margin: 0 2px;
+}
+box.DiCoP-ComposeImageBox  > image {
+	display: block;
+}
+
+image.moreinfo {
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	list-style-image: url("chrome://global/skin/icons/question-16.png");
+}
+panel.moreinfo {
+	width: 300px;
+}
