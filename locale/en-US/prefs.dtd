@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "General Settings">
 <!ENTITY tabs.facesLocalPhotos "Faces/Local photos">
 <!ENTITY tabs.visualEffects "Visual effects">
-<!ENTITY tabs.maintenance "Maintenance">
+<!ENTITY tabs.miscellaneous "Miscellaneous">
 <!ENTITY maxSize.label "Maximum size of a photo:">
 <!ENTITY defaultPhoto.caption "Default photo">
 <!ENTITY defaultPhoto.generic "Mozilla Default">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Display the default photo">
 <!ENTITY defaultPhoto.hide "Display empty space">
 <!ENTITY defaultPhoto.collapse "Display nothing">
+<!ENTITY gravatar.caption "Gravatars">
+<!ENTITY gravatar.enable "Enable Gravatars">
+<!ENTITY gravatar.label "Load images from">
+<!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The email address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY position.label "Position of the photo:">
 <!ENTITY position.left "Left side">
 <!ENTITY position.right "Right side">
@@ -21,9 +25,10 @@
 <!ENTITY faces.displayFace "Display face">
 <!ENTITY faces.moreInfo "Please visit the following website for more information:">
 <!ENTITY directory.enable "Enable display of local photos">
-<!ENTITY directory.description1 "The filenames should be composed of the e-mail address and the file type.">
+<!ENTITY directory.description1 "The file name has to be composed of the e-mail address and the file type.">
 <!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Supported image types: jpg, png, gif.">
-<!ENTITY directory.description3 "If such a file exists, it will be displayed regardless of other photos.">
+<!ENTITY directory.description3 "The entire file name has to be in lowercase.">
+<!ENTITY directory.description4 "If such a file exists, it will be displayed regardless of other photos.">
 <!ENTITY directory.browseButton "Browse directory…">
 <!ENTITY directory.openButton "Open directory">
 <!ENTITY directory.enableWildcards "Enable domain wildcard photos">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "curved">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "corner">
+<!ENTITY specialFolders.caption "Special folders">
+<!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
+<!ENTITY specialFolders.label "Enabe special folders">
 <!ENTITY clearCache.label "Clear thumbnail cache">
-<!ENTITY clearCache.description "The thumbnail cache has to be cleared manually only if you have (ex)changed a photo in the local photo directory (You do not have to do this if you add a photo).">
+<!ENTITY clearCache.description "The thumbnail cache has to be cleared manually only if you have (ex)changed a photo in the local photo directory or if you want to reload all Gravatars.">
 <!ENTITY pixels "pixels">

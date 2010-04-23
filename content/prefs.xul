@@ -14,12 +14,13 @@
 <preferences>
 	<preference id="extensions.contactPhoto.photoSize" name="extensions.contactPhoto.photoSize" type="int"/>
 	<preference id="extensions.contactPhoto.photoPosition" name="extensions.contactPhoto.photoPosition" type="string"/>
-	<preference id="extensions.contactPhoto.defaultGenericIcon" name="extensions.contactPhoto.defaultGenericIcon" type="string"/>
+	<preference id="extensions.contactPhoto.defaultGenericPhoto" name="extensions.contactPhoto.defaultGenericPhoto" type="string"/>
 	<preference id="extensions.contactPhoto.enableFaces" name="extensions.contactPhoto.enableFaces" type="bool"/>
 	<preference id="extensions.contactPhoto.overrideFaces" name="extensions.contactPhoto.overrideFaces" type="bool"/>
 	<preference id="extensions.contactPhoto.enableLocalPhotos" name="extensions.contactPhoto.enableLocalPhotos" type="bool"/>
 	<preference id="extensions.contactPhoto.enableDomainWildcardPhotos" name="extensions.contactPhoto.enableDomainWildcardPhotos" type="bool"/>
 	<preference id="extensions.contactPhoto.defaultPhoto" name="extensions.contactPhoto.defaultPhoto" type="string"/>
+	<preference id="extensions.contactPhoto.enableGravatar" name="extensions.contactPhoto.enableGravatar" type="bool" instantApply="true"/>
 	<preference id="extensions.contactPhoto.drawBackgroundColor" name="extensions.contactPhoto.drawBackgroundColor" type="bool" instantApply="true"/>
 	<preference id="extensions.contactPhoto.backgroundColor" name="extensions.contactPhoto.backgroundColor" type="string" instantApply="true"/>
 	<preference id="extensions.contactPhoto.effectBorder" name="extensions.contactPhoto.effectBorder" type="bool" instantApply="true"/>
@@ -29,6 +30,7 @@
 	<preference id="extensions.contactPhoto.effectShadow" name="extensions.contactPhoto.effectShadow" type="bool" instantApply="true"/>
 	<preference id="extensions.contactPhoto.effectGloss" name="extensions.contactPhoto.effectGloss" type="bool" instantApply="true"/>
 	<preference id="extensions.contactPhoto.effectGlossType" name="extensions.contactPhoto.effectGlossType" type="int" instantApply="true"/>
+	<preference id="extensions.contactPhoto.specialFoldersUseToHeaders" name="extensions.contactPhoto.specialFoldersUseToHeaders" type="bool"/>
 </preferences>
 	
 <tabbox id="PrefTabbox" selectedIndex="0" persist="selectedIndex" handleCtrlTab="true">
@@ -36,11 +38,11 @@
 		<tab label="&tabs.generalSettings;"/>
 		<tab label="&tabs.visualEffects;"/>
 		<tab label="&tabs.facesLocalPhotos;"/>
-		<tab label="&tabs.maintenance;"/>
+		<tab label="&tabs.miscellaneous;"/>
 	</tabs>
 	
 	<tabpanels>
-		<tabpanel>
+		<tabpanel id="generalTab">
 			<vbox flex="1">
 				
 				<!-- MAX PHOTO SITE -->
@@ -84,23 +86,37 @@
 						<hbox align="center">
 							<label value="&defaultPhoto.labelGenericList;"/>
 								
-							<menulist id="listDefaultPhoto" flex="1" preference="extensions.contactPhoto.defaultGenericIcon">
+							<menulist id="listDefaultPhoto" flex="1" preference="extensions.contactPhoto.defaultGenericPhoto">
 								<menupopup>
+									<!-- the mozilla default photo is already here because it is not present in the template list -->
 									<menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" value="chrome://messenger/skin/addressbook/icons/contact-generic.png" image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
 								</menupopup>
 							</menulist>
 						</hbox>
-						
-						
-					
 
-						
-					
 				</groupbox>
+				
+				<!-- GRAVATAR -->
+				<groupbox>
+					<caption label="&gravatar.caption;"/>
+					
+					<hbox align="center">
+						<label value="&gravatar.label;" style="margin-right:0px;"/>
+						<label value="http://www.gravatar.com" onclick="loadWebsite(event);" style="margin-left:2px;" class="text-link"/>
+						
+						<image class="moreinfo" popup="moreinfo-gravatar"/>
+						<panel id="moreinfo-gravatar" class="moreinfo" position="end_before">
+							<description>&gravatar.description;</description>
+						</panel>
+					</hbox>
+					
+					<checkbox label="&gravatar.enable;" oncommand="enableGravatar();" id="checkboxEnableGravatar" preference="extensions.contactPhoto.enableGravatar"/>
+				</groupbox>
+				
 			</vbox>
 		</tabpanel>
 		
-		<tabpanel>		
+		<tabpanel id="visualTab">		
 			<!-- VISUAL EFFECTS -->
 			<vbox flex="1">
 				
@@ -162,7 +178,7 @@
 			</vbox>
 		</tabpanel>
 		
-		<tabpanel>
+		<tabpanel id="localTab">
 			<vbox>
 			<!-- PHOTO DIRECTORY -->
 			<groupbox>
@@ -173,6 +189,7 @@
 				<description>&directory.description1;</description>
 				<description>&directory.description2;</description>
 				<description>&directory.description3;</description>
+				<description>&directory.description4;</description>
 				
 				<hbox>
 					<button icon="open" oncommand="selectPhotoDirectory();" id="enableLocalPhotosButton" label="&directory.browseButton;"/>
@@ -211,14 +228,22 @@
 			</vbox>
 		</tabpanel>
 		
-		<tabpanel>
-			<!-- MAINTENANCE -->
-			<groupbox>
-				<caption label="&clearCache.label;"/>
+		<tabpanel id="miscellaneousTab">
+			<!-- MISCELLANEOUS -->
+			<vbox width="350">
+				<groupbox>
+					<caption label="&specialFolders.caption;"/>
+					<description>&specialFolders.description;</description>
+					<checkbox label="&specialFolders.label;" preference="extensions.contactPhoto.specialFoldersUseToHeaders"/>
+				</groupbox>
 				
-				<description width="300">&clearCache.description;</description>
-				<button icon="clear" id="clearCache" label="&clearCache.label;" oncommand="clearCache();"/>
-			</groupbox>
+				<groupbox>
+					<caption label="&clearCache.label;"/>
+					
+					<description>&clearCache.description;</description>
+					<button icon="clear" id="clearCache" label="&clearCache.label;" oncommand="clearCache();"/>
+				</groupbox>
+			</vbox>
 		</tabpanel>
 		
 	</tabpanels>

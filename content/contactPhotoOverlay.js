@@ -258,12 +258,14 @@ contactPhoto.messageDisplay = {
 
 				case 'defaultPhoto':
 				case 'overrideFaces':
-				case 'defaultGenericIcon':
+				case 'defaultGenericPhoto':
+				case 'enableGravatar':
 				contactPhoto.display.logic(contactPhoto.messageDisplay.photoInfo, true);
 				break;
 
 				case 'enableFaces':
 				case 'enableLocalPhotos':
+				case 'specialFoldersUseToHeaders':
 				contactPhoto.messageDisplay.getPhoto();
 				break;
 

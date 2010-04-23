@@ -1,21 +1,22 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.0.1';
+contactPhoto.currentVersion = '1.1b1';
 contactPhoto.debug = false;
 
 contactPhoto.genericInit = function() {
-	// initialize preferences
-	contactPhoto.prefs.init();
+	contactPhoto.prefs.init(); // initialize preferences
 	
 	// do some version first-time run stuff
 	if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
 	
 		// remove some outdated preferences
-		var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails'];
+		var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon'];
 		for (var i in prefsToRemove) {
 			try {
 				contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
-			} catch (e) { }
+			} catch (e) {
+				if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
+			}
 		}
 		
 		contactPhoto.cache.clear();
@@ -66,7 +67,9 @@ contactPhoto.prefs = {
 			case 'file':
 				try {
 					return contactPhoto.prefs.branch.getComplexValue(prefName, Components.interfaces.nsILocalFile);
-				} catch(e) { }
+				} catch(e) {
+					if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
+				}
 		}
 	},
 
@@ -90,6 +93,7 @@ contactPhoto.prefs = {
 		}
 	},
 
+	// checkCustomHeaders: adds custom headers to message index (currently only 'face') without removing existing headers
 	checkCustomHeaders: function() {
 		var headerPrefs = Components.classes['@mozilla.org/preferences-service;1']
 					.getService(Components.interfaces.nsIPrefService)
@@ -135,6 +139,8 @@ contactPhoto.style = {
 }
 
 contactPhoto.display = {
+	// logic: determines which photo is displayed according to the preferences
+	// isMessagePhoto is set to false in the compose window
 	logic: function(photoInfo, isMessagePhoto) {
 		var cropContextmenuItem;
 		if (isMessagePhoto) {
@@ -190,9 +196,6 @@ contactPhoto.display = {
 			}
 		}
 
-		
-		
-		
 		if (isMessagePhoto) {
 			// if we are here, then there is no photo nor face to show
 			switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
@@ -215,7 +218,7 @@ contactPhoto.display = {
 	},
 
 	photo: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp photo')
+		if (contactPhoto.debug) alert('disp photo')
 		
 		var origFile = Components.classes["@mozilla.org/file/directory_service;1"]
 						.getService(Components.interfaces.nsIProperties)
@@ -227,25 +230,30 @@ contactPhoto.display = {
 	},
 	
 	genericPhoto: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp gen photo')
-
+		if (contactPhoto.debug) alert('disp gen photo')
+		
+		if (contactPhoto.prefs.get('enableGravatar', 'bool') && photoInfo.genericPhotoURI.indexOf('gravatar') > -1) {
+			contactPhoto.display.gravatar(photoInfo);
+			return;
+		}
+		
 		contactPhoto.display.checkPhoto(photoInfo.genericPhotoURI, photoInfo);
 	},
 
 	localPhoto: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp loc photo')
+		if (contactPhoto.debug) alert('disp loc photo')
 
 		contactPhoto.display.checkPhoto(photoInfo.localPhotoURI, photoInfo);
 	},
 	
 	domainWildcard: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp wild')
+		if (contactPhoto.debug) alert('disp wild')
 		
 		contactPhoto.display.checkPhoto(photoInfo.domainWildcardURI, photoInfo);
 	},
 
 	face: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp face')
+		if (contactPhoto.debug) alert('disp face')
 		
 		photoInfo.photoObject.style.width = '48px';
 		photoInfo.photoObject.style.height = '48px';
@@ -253,15 +261,39 @@ contactPhoto.display = {
 		photoInfo.photoObject.style.display = 'block';
 	},
 
-	defaultPhoto: function(photoInfo) {
-		//if (contactPhoto.debug) alert('disp def photo')
-
-		contactPhoto.display.checkPhoto(contactPhoto.prefs.get('defaultGenericIcon', 'char'), photoInfo);
+	gravatar: function(photoInfo) {
+		if (contactPhoto.debug) alert('disp gravatar')
+		
+		var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
+		var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?s='+photoInfo.size;
+		
+		contactPhoto.display.checkPhoto(gravatarURI, photoInfo, true);
 	},
-
-	checkPhoto: function(srcURI, photoInfo) {
-		var thumbnailName = contactPhoto.utils.getFilename(srcURI);
 	
+	defaultPhoto: function(photoInfo) {
+		if (contactPhoto.debug) alert('disp def photo')
+		
+		var defaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
+		
+		if (contactPhoto.prefs.get('enableGravatar', 'bool') && defaultPhoto.indexOf('gravatar') > -1) {
+			contactPhoto.display.gravatar(photoInfo);
+			return;
+		}
+
+		contactPhoto.display.checkPhoto(defaultPhoto, photoInfo);
+	},
+	
+	// checkPhoto: checks if the thumbnails exists starts the loader, else starts the resizer
+	checkPhoto: function(srcURI, photoInfo, isGravatar) {
+		var thumbnailName;
+		
+		// gravatar url contain illegal file name characters, so a separate name is generated
+		if (isGravatar) {
+			thumbnailName = 'gravatar-'+photoInfo.emailAddress;
+		} else {
+			thumbnailName = contactPhoto.utils.getFilename(srcURI);
+		}
+		
 		var thumbnailFile = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
@@ -286,6 +318,7 @@ contactPhoto.display = {
 	
 	dummyPhotos: [],
 
+	// photoLoader: pre-loads the photo to determine the dimensions, then displays the photo
 	photoLoader: function(URI, photoObject) {
 		var dummyPhoto = new Image();
 		
@@ -305,10 +338,11 @@ contactPhoto.display = {
 	}
 }
 
+// photoForEmailAddress: get all existing photos for a given email address
 contactPhoto.photoForEmailAddress = function(emailAddress) {
-	var photoInfo = contactPhoto.utils.newPhotoInfo();
-	
 	emailAddress = emailAddress.toLowerCase();
+	
+	var photoInfo = contactPhoto.utils.newPhotoInfo(emailAddress);
 	
 	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool')) {
 		try {
@@ -353,7 +387,9 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 					}
 				}
 			}
-		} catch (ex) { }
+		} catch (ex) {
+			if (contactPhoto.debug) alert('failed to load local photo, errmsg: '+ex);
+		}
 	}
 
 	photoInfo.cardDetails = contactPhoto.getCard(emailAddress); // make sure we have the latest card
@@ -382,6 +418,7 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 	return photoInfo;
 }
 
+// getCard: searches the first card match in all address books for a given email address
 contactPhoto.getCard = function(emailAddress) {
 	let abManager = Components.classes["@mozilla.org/abmanager;1"]
 						.getService(Components.interfaces.nsIAbManager);
@@ -414,8 +451,8 @@ contactPhoto.getCard = function(emailAddress) {
 // functions for cache managing
 contactPhoto.cache = {
 	directory: 'contactPhotoThumbnails',
-
-	clear: function() { // clear the cache
+	// clear: empties the cache
+	clear: function() {
 		var oldDir = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
@@ -433,6 +470,7 @@ contactPhoto.cache = {
 		return true;
 	},
 
+	// checkDirectory: checks if all cache directories exist, else create them
 	checkDirectory: function() {
 		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
@@ -462,8 +500,9 @@ contactPhoto.cache = {
 		}
 	},
 
+	// removeThumbnail: delete a specific thumbnail from the cache
 	removeThumbnail: function(fileName) {
-		subdirectories = [contactPhoto.prefs.get('smallIconSize', 'int'), ''+contactPhoto.prefs.get('photoSize', 'int')];
+		subdirectories = [''+contactPhoto.prefs.get('smallIconSize', 'int'), ''+contactPhoto.prefs.get('photoSize', 'int')];
 		
 		for (var i in subdirectories) {
 			var removeFile = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -471,7 +510,7 @@ contactPhoto.cache = {
 				.get("ProfD", Components.interfaces.nsIFile);
 			removeFile.append(contactPhoto.cache.directory);
 			removeFile.append(subdirectories[i]);
-			removeFile.append(contactPhoto.messageDisplay.photoInfo.photoName+'.png');
+			removeFile.append(fileName+'.png');
 		
 			if (removeFile.exists()) {
 				removeFile.remove(false);
@@ -490,6 +529,7 @@ contactPhoto.resizer = {
 	callbackProgress: [],
 	resizing: false,
 
+	// functions for managing the resizer queue
 	queue: {
 		buffer: [],
 		maxLength: 0,
@@ -518,9 +558,9 @@ contactPhoto.resizer = {
 
 	},
 
+	// startProcessing: starts the image resize process
 	startProcessing: function(callbackProgress, callbackDone) {
-		//contactPhoto.resizeImageDimension = imageSize;
-
+		
 		if (typeof callbackDone == 'function') contactPhoto.resizer.callbackDone.push(callbackDone);
 		if (typeof callbackProgress == 'function') contactPhoto.resizer.callbackProgress.push(callbackProgress);
 
@@ -530,6 +570,7 @@ contactPhoto.resizer = {
 		}
 	},
 
+	// processQueue: gets the next entry in the queue and starts resizing
 	processQueue: function() {
 		if (contactPhoto.resizer.queue.empty()) { // finished processing
 			contactPhoto.resizer.currentImage = null;
@@ -551,6 +592,7 @@ contactPhoto.resizer = {
 		contactPhoto.resizer.resizeStep1();
 	},
 
+	// resizeStep1: first pre-loads the image to get the dimensions
 	resizeStep1: function() {
 		contactPhoto.resizer.dummyImg = new Image();
 		contactPhoto.resizer.dummyImg.addEventListener('load', function() {
@@ -559,9 +601,10 @@ contactPhoto.resizer = {
 
 		contactPhoto.resizer.dummyImg.src = contactPhoto.resizer.currentImage.src;
 	},
-
+	
+	// resizeStep2: does the actual resizing and applies the visual effects
 	resizeStep2: function() {
-		var preScaleFactor = 2;
+		var preScaleFactor = 2; // the images are scaled down in two steps to enhance quality
 	
 		var w = contactPhoto.resizer.dummyImg.width;
 		var h = contactPhoto.resizer.dummyImg.height;
@@ -579,7 +622,7 @@ contactPhoto.resizer = {
 				&& !photoInfo.hasLocalPhoto && !photoInfo.hasDomainWildcard) {
 			var cropPhotoName = card.getProperty('CropPhotoName', '');
 
-			if (cropPhotoName == photoInfo.photoName) {
+			if (cropPhotoName == photoInfo.photoName) { // do not crop if the image is outdated
 				cropPhoto = true;
 
 				var cropW = card.getProperty('CropPhotoWidth', '');
@@ -609,7 +652,7 @@ contactPhoto.resizer = {
 			contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 		}
 		
-		var cropped_resized = false;
+		var cropped_resized = false; // is used to signal that the image has been cropped/resized
 		if (cropPhoto) {
 			var cropW = card.getProperty('CropPhotoWidth', '');
 			var cropH = card.getProperty('CropPhotoHeight', '');
@@ -627,7 +670,7 @@ contactPhoto.resizer = {
 					
 					preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
 					contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-				} else {
+				} else { // just draw it
 					contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, w, h);
 				}
 				cropped_resized = true;
@@ -645,7 +688,7 @@ contactPhoto.resizer = {
 				
 				preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
 				contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-			} else {
+			} else { // just draw it
 				contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, w, h);
 			}
 		}
@@ -672,7 +715,7 @@ contactPhoto.resizer = {
 					contactPhoto.imageFX.addBorder();
 				} else if (borderType == 2) { // blurred border
 					contactPhoto.imageFX.addBlurredBorder();
-				}
+				} // more borders to come?
 			}
 		}
 
@@ -946,7 +989,8 @@ contactPhoto.imageFX = {
 		
 		contactPhoto.resizer.ctx.restore();
 	},
-
+	
+	// _getGaussMatrix: calculates a two-dimensional gauss matrix
 	_getGaussMatrix: function(size, sigma) {
 		var matrix = [];
 		var sum = 0;
@@ -1000,16 +1044,19 @@ contactPhoto.imageFX = {
 }
 
 contactPhoto.utils = {
+	// getFilename: extracts the file name from a path
 	getFilename: function(path) {
 		return path.substring(path.lastIndexOf('/')+1);
 	},
-
-	makeURI: function(file) { // returns uri of a nsIFile
+	
+	// makeURI: returns uri of a nsIFile
+	makeURI: function(file) {
 		return Components.classes["@mozilla.org/network/io-service;1"]
 			.getService(Components.interfaces.nsIIOService)
 			.newFileURI(file).spec;
 	},
-
+	
+	// getColor: loads a hex color from the preferences and converts it to an int array
 	getColor: function(colorPref) {
 		var color = contactPhoto.prefs.get(colorPref, 'char');
 		var rgb = [255, 255, 255]; // defaults to white
@@ -1021,18 +1068,21 @@ contactPhoto.utils = {
 		}
 		return rgb;
 	},
-
+	
+	// isSentMessage: determines if the message is inside the outbox, the sent or the drafts folder
 	isSentMessage: function() {
-		const folderFlags = Components.interfaces.nsMsgFolderFlags;
-		var currentFolder = gMessageDisplay.displayedMessage.folder;
-		while (currentFolder) {
-			if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) return true;
-			currentFolder = currentFolder.parent;
+		if (contactPhoto.prefs.get('specialFoldersUseToHeaders', 'bool')) {
+			const folderFlags = Components.interfaces.nsMsgFolderFlags;
+			var currentFolder = gMessageDisplay.displayedMessage.folder;
+			while (currentFolder) {
+				if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) return true;
+				currentFolder = currentFolder.parent;
+			}
 		}
-
 		return false;
 	},
 	
+	// customAlert: displays a nicer alert window than window.alert()
 	customAlert: function(text) {
 		var alertTitle = contactPhoto.localizedJS.getString('addonName');
 		var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -1051,15 +1101,18 @@ contactPhoto.utils = {
 		}
 	},
 	
+	// trim: trim a string
 	trim: function(str) {
 		str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	},
 	
-	newPhotoInfo: function() {
+	// newPhotoInfo: 
+	newPhotoInfo: function(address) {
 		return {
+			emailAddress: address,
 			size: 60,
-			photoObject: null,
-			noVisualEffects: false,
+			photoObject: null, // dom object of the photo
+			noVisualEffects: false, // used for thumbnails in the compose window
 			cardDetails: null,
 			hasPhoto: false, // there is a photo in the address book
 			photoName: null,
@@ -1074,7 +1127,36 @@ contactPhoto.utils = {
 		}
 	},
 	
-	mydump: function(what) { // a function to quickly inspect objects
+	// md5_hex: calculate the md5 checksum of a string
+	md5_hex: function(str) {
+		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
+					createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+					
+		// we use UTF-8 here, you can choose other encodings.
+		converter.charset = 'UTF-8';
+		
+		// data is an array of bytes
+		var data = converter.convertToByteArray(str, {});
+		var cryptohash = Components.classes["@mozilla.org/security/hash;1"]
+							.createInstance(Components.interfaces.nsICryptoHash);
+		cryptohash.init(cryptohash.MD5);
+
+		cryptohash.update(data, data.length);
+		
+		// pass false here to get binary data back
+		var hash = cryptohash.finish(false);
+
+		// return the two-digit hexadecimal code for a byte
+		function toHexString(charCode) {
+			return ("0" + charCode.toString(16)).slice(-2);
+		}
+
+		// convert the binary hash data to a hex string.
+		return [toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
+	},
+	
+	// mydump: a debug function to quickly inspect objects
+	mydump: function(what) {
 		if (typeof what == 'undefined') {
 			alert('undefined');
 			return;
@@ -1099,71 +1181,4 @@ contactPhoto.utils = {
 		if (j == 0) alert(a);
 	}
 	
-};
-
-// functions used in contact add/edit dialogs for managing generic images
-contactPhoto.genericPhotos = {
-
-	display: function() { // replaces the default generic photo with custom photos
-		contactPhoto.genericPhotos.load();
-
-		var genericPhotoList = document.getElementById('GenericPhotoList');
-		var oldPhotoListValue = genericPhotoList.value;
-		
-		var menupop = genericPhotoList.getElementsByTagName('menupopup')[0];
-		
-		for (var i=0; i<menupop.childNodes.length; i++) {
-			menupop.childNodes[i].className += ' menuitem-iconic';
-		}
-
-		for (var i=0; i<contactPhoto.genericPhotos.count; i++) {
-			var currentPhoto = contactPhoto.genericPhotos.list[i];
-			var newItem = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'menuitem');
-			newItem.setAttribute('label', currentPhoto.label);
-			newItem.setAttribute('value', currentPhoto.large);
-			newItem.setAttribute('image', currentPhoto.tiny);
-			newItem.setAttribute('class', 'menuitem-iconic');
-			menupop.appendChild(newItem);
-		}
-		
-		genericPhotoList.value = oldPhotoListValue; // update the generated list
-	},
-
-
-	list: [],
-
-	add: function(label, large, tiny) {
-		contactPhoto.genericPhotos.list.push({
-			label: label,
-			large: large,
-			tiny: tiny
-		});
-	},
-
-	photosLoaded: false,
-
-	load: function() {
-		if (contactPhoto.genericPhotos.photosLoaded) return;
-
-		contactPhoto.genericPhotos.count = 0;
-
-		var i = 0;
-		while (true) {
-			try {
-				var label = contactPhoto.prefs.get('genericPhoto.'+i+'.label', 'char');
-				var large = contactPhoto.prefs.get('genericPhoto.'+i+'.large', 'char');
-				var tiny = contactPhoto.prefs.get('genericPhoto.'+i+'.tiny', 'char');
-
-				contactPhoto.genericPhotos.add(label, large, tiny);
-				i++;
-
-			} catch(e) {
-				contactPhoto.genericPhotos.count = i;
-				break;
-			}
-		}
-
-		contactPhoto.genericPhotos.photosLoaded = true;
-	}
-
 };

@@ -16,6 +16,7 @@ function initPreferences() {
 	enableBackgroundColor();
 	
 	populateDefaultGenericPhotoList();
+	enableGravatar();
 }
 window.addEventListener('load', initPreferences, false); // display the color
 
@@ -154,6 +155,7 @@ function openPhotoDirectory() {
 }
 
 function clearCache() {
+	// this code needs to be reworked
 	if (contactPhoto.cache.clear()) {
 		contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('cacheCleared'));
 	} else {
@@ -162,24 +164,40 @@ function clearCache() {
 }
 
 function populateDefaultGenericPhotoList() {
-	contactPhoto.genericPhotos.load();
-
 	var genericPhotoList = document.getElementById('listDefaultPhoto');
-	var oldPhotoListValue = genericPhotoList.value;
 
-	var menupop = genericPhotoList.getElementsByTagName('menupopup')[0];
+	var menupopup = genericPhotoList.firstChild;
 	
-	for (var i=0; i<contactPhoto.genericPhotos.count; i++) {
-		var currentPhoto = contactPhoto.genericPhotos.list[i];
-		var newItem = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'menuitem');
-		newItem.setAttribute('label', currentPhoto.label);
-		newItem.setAttribute('value', currentPhoto.large);
-		newItem.setAttribute('image', currentPhoto.tiny);
-		newItem.setAttribute('class', 'menuitem-iconic');
-		menupop.appendChild(newItem);
+	// copy all entries from the template list into the real list
+	var templateList = document.getElementById('DiCoP-GenericPhotoListTemplate');
+	var templateMenupopup = templateList.firstChild;
+	
+	for (var i=0; i<templateMenupopup.childNodes.length; i++) {
+		var clone = templateMenupopup.childNodes[i].cloneNode(true);
+		menupopup.appendChild(clone);
 	}
 	
-	document.getElementById('extensions.contactPhoto.defaultGenericIcon').updateElements();
+	// update the list
+	document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();
+}
+
+function enableGravatar() {
+	var menuitemGravatar = document.getElementById('DiCoP-GenericPhotoGravatar');
+	
+	if (document.getElementById('checkboxEnableGravatar').checked) {
+		menuitemGravatar.disabled = false;
+		
+	} else {
+		// if gravatar is the current default photo when it gets disabled, change the default photo
+		if (menuitemGravatar.selected) {
+			alert(3234)
+			var menuitemDiCoP = document.getElementById('DiCoP-GenericPhotoDiCoP');
+			contactPhoto.prefs.set('defaultGenericPhoto', menuitemDiCoP.value, 'char');
+			document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();
+		}
+		
+		menuitemGravatar.disabled = true;
+	}
 }
 
 function loadWebsite(e) {
