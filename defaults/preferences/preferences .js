@@ -30,26 +30,34 @@ pref('extensions.contactPhoto.genericPhoto.0.large', 'chrome://contactPhoto/skin
 pref('extensions.contactPhoto.genericPhoto.0.tiny', 'chrome://contactPhoto/skin/genericIcons/displaycontactphoto-tiny.png');
 pref('extensions.contactPhoto.genericPhoto.0.label', 'Display Contact Photo Icon');
 
-pref('extensions.contactPhoto.genericPhoto.1.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette1.png');
-pref('extensions.contactPhoto.genericPhoto.1.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette1-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.1.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette8.png');
+pref('extensions.contactPhoto.genericPhoto.1.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette8-tiny.png');
 pref('extensions.contactPhoto.genericPhoto.1.label', 'Male 1');
 
-pref('extensions.contactPhoto.genericPhoto.2.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette2.png');
-pref('extensions.contactPhoto.genericPhoto.2.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette2-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.2.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette1.png');
+pref('extensions.contactPhoto.genericPhoto.2.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette1-tiny.png');
 pref('extensions.contactPhoto.genericPhoto.2.label', 'Male 2');
 
-pref('extensions.contactPhoto.genericPhoto.3.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette4.png');
-pref('extensions.contactPhoto.genericPhoto.3.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette4-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.3.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette2.png');
+pref('extensions.contactPhoto.genericPhoto.3.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette2-tiny.png');
 pref('extensions.contactPhoto.genericPhoto.3.label', 'Male 3');
 
-pref('extensions.contactPhoto.genericPhoto.4.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette5.png');
-pref('extensions.contactPhoto.genericPhoto.4.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette5-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.4.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette4.png');
+pref('extensions.contactPhoto.genericPhoto.4.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette4-tiny.png');
 pref('extensions.contactPhoto.genericPhoto.4.label', 'Male 4');
 
-pref('extensions.contactPhoto.genericPhoto.5.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette3.png');
-pref('extensions.contactPhoto.genericPhoto.5.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette3-tiny.png');
-pref('extensions.contactPhoto.genericPhoto.5.label', 'Female 1');
+pref('extensions.contactPhoto.genericPhoto.5.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette5.png');
+pref('extensions.contactPhoto.genericPhoto.5.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette5-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.5.label', 'Male 5');
 
-pref('extensions.contactPhoto.genericPhoto.6.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette6.png');
-pref('extensions.contactPhoto.genericPhoto.6.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette6-tiny.png');
-pref('extensions.contactPhoto.genericPhoto.6.label', 'Female 2');
+pref('extensions.contactPhoto.genericPhoto.6.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette7.png');
+pref('extensions.contactPhoto.genericPhoto.6.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette7-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.6.label', 'Female 1');
+
+pref('extensions.contactPhoto.genericPhoto.7.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette3.png');
+pref('extensions.contactPhoto.genericPhoto.7.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette3-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.7.label', 'Female 2');
+
+pref('extensions.contactPhoto.genericPhoto.8.large', 'chrome://contactPhoto/skin/genericIcons/person-silhouette6.png');
+pref('extensions.contactPhoto.genericPhoto.8.tiny', 'chrome://contactPhoto/skin/genericIcons/person-silhouette6-tiny.png');
+pref('extensions.contactPhoto.genericPhoto.8.label', 'Female 3');

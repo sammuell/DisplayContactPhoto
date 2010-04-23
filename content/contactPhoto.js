@@ -308,6 +308,8 @@ contactPhoto.display = {
 contactPhoto.photoForEmailAddress = function(emailAddress) {
 	var photoInfo = contactPhoto.utils.newPhotoInfo();
 	
+	emailAddress = emailAddress.toLowerCase();
+	
 	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool')) {
 		try {
 			var fileTypes = ['jpg', 'png', 'gif', 'jpeg'];
@@ -607,7 +609,7 @@ contactPhoto.resizer = {
 			contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 		}
 		
-		var resized = false;
+		var cropped_resized = false;
 		if (cropPhoto) {
 			var cropW = card.getProperty('CropPhotoWidth', '');
 			var cropH = card.getProperty('CropPhotoHeight', '');
@@ -615,30 +617,37 @@ contactPhoto.resizer = {
 			var cropT = card.getProperty('CropPhotoTop', '');
 
 			if (cropW != '' && cropH != '' && cropL != '' && cropT != '') {
+				// only pre-scale if source image is big enough
+				if (contactPhoto.resizer.dummyImg.width > w*preScaleFactor && contactPhoto.resizer.dummyImg.height > h*preScaleFactor) {
+					var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+					preScaleCanvas.width = Math.round(w*preScaleFactor);
+					preScaleCanvas.height = Math.round(h*preScaleFactor);
+					
+					var preScaleCtx = preScaleCanvas.getContext('2d');
+					
+					preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
+					contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
+				} else {
+					contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, w, h);
+				}
+				cropped_resized = true;
+			}
+		}
+
+		if (!cropped_resized) {
+			// only pre-scale if source image is big enough
+			if (contactPhoto.resizer.dummyImg.width > w*preScaleFactor && contactPhoto.resizer.dummyImg.height > h*preScaleFactor) {
 				var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 				preScaleCanvas.width = Math.round(w*preScaleFactor);
 				preScaleCanvas.height = Math.round(h*preScaleFactor);
 				
 				var preScaleCtx = preScaleCanvas.getContext('2d');
 				
-				preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
+				preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
 				contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-				
-				//contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, w, h);
-				resized = true;
+			} else {
+				contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, w, h);
 			}
-		}
-
-		if (!resized) {
-			var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-			preScaleCanvas.width = Math.round(w*preScaleFactor);
-			preScaleCanvas.height = Math.round(h*preScaleFactor);
-			
-			var preScaleCtx = preScaleCanvas.getContext('2d');
-			
-			preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
-			contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-			//contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, w, h);
 		}
 
 		
