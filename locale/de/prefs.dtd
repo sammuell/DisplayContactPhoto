@@ -21,7 +21,7 @@
 <!ENTITY faces.displayFace "Face anzeigen">
 <!ENTITY faces.moreInfo "Mehr Informationen finden Sie auf folgender Webseite:">
 <!ENTITY directory.enable "Anzeige von lokalen Fotos aktivieren">
-<!ENTITY directory.description1 "Die Dateinamen sollten aus der E-Mail-Adresse sowie dem Dateityp zusammengesetzt sein">
+<!ENTITY directory.description1 "Die Dateinamen sollten aus der E-Mail-Adresse sowie dem Dateityp zusammengesetzt sein (alles in Kleinschrift).">
 <!ENTITY directory.description2 "Z.B. 'info@mozilla.org.png'. Unterstützte Bildformate: jpg, png, gif.">
 <!ENTITY directory.description3 "Falls eine solche Datei existiert, wird sie unabhängig von anderen Fotos angezeigt.">
 <!ENTITY directory.browseButton "Ordner auswählen…">

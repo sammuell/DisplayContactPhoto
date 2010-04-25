@@ -1,0 +1,48 @@
+<!-- do not translate 'Display Contact Photo' -->
+<!ENTITY window.title "Display Contact Photo Options">
+<!ENTITY tabs.generalSettings "Obecné nastavení">
+<!ENTITY tabs.facesLocalPhotos "Tváře/Místní fotografie">
+<!ENTITY tabs.visualEffects "Vizuální efekty">
+<!ENTITY tabs.maintenance "Podpora">
+<!ENTITY maxSize.label "Maximální velikost fotografie:">
+<!ENTITY defaultPhoto.caption "Výchozí fotografie">
+<!ENTITY defaultPhoto.generic "Mozilla Default">
+<!ENTITY defaultPhoto.labelGenericList "Vyberte výchozí fotografii:">
+<!ENTITY defaultPhoto.labelNoPhoto "Co zobrazit pokud není fotografie">
+<!ENTITY defaultPhoto.show "Zobrazit výchozí fotografii.">
+<!ENTITY defaultPhoto.hide "Zobrazit prázdné místo.">
+<!ENTITY defaultPhoto.collapse "Nezobrazovat nic.">
+<!ENTITY position.label "Poloha fotografie:">
+<!ENTITY position.left "levá strana">
+<!ENTITY position.right "pravá strana">
+<!ENTITY faces.enable "Povolit zobrazení vložené tváře">
+<!ENTITY faces.overrideDescription "Co zobrazit pokud je u kontaktu přiřazena fotografie a tvář:">
+<!ENTITY faces.displayPhoto "Zobrazit fotografii kontaktu">
+<!ENTITY faces.displayFace "Zobrazit tvář">
+<!ENTITY faces.moreInfo "Prosím, navštivte následující webové stránky pro více informací:">
+<!ENTITY directory.enable "Povolit zobrazení místních fotografií">
+<!ENTITY directory.description1 "Názvy souborů by měly být složeny z e-mailovou adresu a přípony souboru.">
+<!ENTITY directory.description2 "Např. 'info@mozilla.org.png'. Podporované typy souborů: jpg, png, gif.">
+<!ENTITY directory.description3 "Pokud takový soubor existuje, bude zobrazen bez ohledu na další fotografie.">
+<!ENTITY directory.browseButton "Procházet…">
+<!ENTITY directory.openButton "Otevřít adresář">
+<!ENTITY directory.enableWildcards "Povolit domény zástupných fotografie">
+<!ENTITY directory.wildcardDescription "Tyto fotografie jsou zařazeny do celé domény a bude se zobrazí, pokud neexistuje žádná jiná fotka k zobrazení. Název souboru by měl být složen ze znaku @ a následuje doménové jméno a přípona souboru, např. '@ Mozilla.org.png'">
+<!ENTITY effects.enableBackgroundColor "Vyplňit průhledné oblasti s barvou:">
+<!ENTITY effects.backgroundLabel "Barva pro průhledné oblasti fotografie (např.. Png,. Gif):">
+<!ENTITY effects.label "Vizuální efekty">
+<!ENTITY effects.enableBorder "Zobrazit ohraničení fotky">
+<!ENTITY effects.borderColor "Barva rámečku:">
+<!ENTITY effects.colorDefaultBlack "Výchozí: černá">
+<!ENTITY effects.colorDefaultWhite "Výchozí: bílá">
+<!ENTITY effects.borderThin "Úzký okraj">
+<!ENTITY effects.borderBlurred "Rozmazané hranice tlustší">
+<!ENTITY effects.roundedCorners "Zobrazit zakulacené rohy">
+<!ENTITY effects.enableShadow "Zobrazení stínu">
+<!ENTITY effects.enableGloss "Vložit poznámku k fotografii:">
+<!ENTITY effects.glossCurved "zakřivený">
+<!ENTITY effects.glossHorizontal "vodorovný">
+<!ENTITY effects.glossCorner "roh">
+<!ENTITY clearCache.label "Vyčištění paměti náhledů">
+<!ENTITY clearCache.description "Vyčištění paměti náhledů musí být provedeno manuálně, pokud došlo ke změně v místním adresáři fotografií (Nemusí být provedeno při přidávání fotografií).">
+<!ENTITY pixels "pixely">
