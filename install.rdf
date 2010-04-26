@@ -6,7 +6,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
-		<em:version>1.1b1</em:version>
+		<em:version>1.1b2</em:version>
 		
 		<em:creator>Samuel Müller</em:creator>
 		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>
@@ -73,7 +73,7 @@
 			</Description>
 		</em:targetApplication>
 		
-		<!-- SeaMonkey 
+		<!-- SeaMonkey -->
 		<em:targetApplication>
 			<Description>
 				<em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
@@ -81,6 +81,6 @@
 				<em:maxVersion>2.0.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
-		-->
+		
 	</Description>      
 </RDF>
