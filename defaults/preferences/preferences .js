@@ -1,6 +1,6 @@
 pref('extensions.contactPhoto.currentVersion', '');
 
-pref('extensions.contactPhoto.photoSize', 60);
+pref('extensions.contactPhoto.photoSize', 75);
 pref('extensions.contactPhoto.smallIconSize', 20);
 pref('extensions.contactPhoto.photoPosition', 'left');
 pref('extensions.contactPhoto.defaultPhoto', 'show');

@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Paramètres généraux">
 <!ENTITY tabs.facesLocalPhotos "Photos (visage, lieu…)">
 <!ENTITY tabs.visualEffects "Effets">
-<!ENTITY tabs.maintenance "Maintenance">
+<!ENTITY tabs.miscellaneous "Divers">
 <!ENTITY maxSize.label "Taille maximale d'une photo :">
 <!ENTITY defaultPhoto.caption "Photo par défaut">
 <!ENTITY defaultPhoto.generic "Par défaut Mozilla">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Afficher la photo par défaut">
 <!ENTITY defaultPhoto.hide "Afficher l'espace vide">
 <!ENTITY defaultPhoto.collapse "Ne rien afficher">
+<!ENTITY gravatar.caption "Univatars (avatars universels)">
+<!ENTITY gravatar.enable "Activer les Univatars">
+<!ENTITY gravatar.label "Charger des images depuis">
+<!ENTITY gravatar.description "Univatar (de l'anglais « Gravatar » signifiant « globally recognized avatar », ou « avatar universel ») est un service permettant d'utiliser un seul et même avatar. L'adresse électronique est cryptée et envoyée au site gravatar.com. Si le propriétaire de cette adresse est enregistré sur gravatar.com, son avatar sera affiché (sinon ce sera une image par défaut). Les images Gravatar son placées en mémoire cache pour des raisons de performance et afin de réduire le téléchargement.">
 <!ENTITY position.label "Emplacement de la photo :">
 <!ENTITY position.left "Côté gauche">
 <!ENTITY position.right "Côté droit">
@@ -23,7 +27,8 @@
 <!ENTITY directory.enable "Activer l'affichage des photos locales">
 <!ENTITY directory.description1 "Les noms de fichiers doivent plutôt être composés de l'adresse électronique et du type de fichier.">
 <!ENTITY directory.description2 "Par exemple « info@mozilla.org.png ». Les formats d'images acceptés sont .jpg, .png et .gif.">
-<!ENTITY directory.description3 "Si un fichier existe déjà, il sera affiché sans tenir compte des autres photos.">
+<!ENTITY directory.description3 "Le nom entier du fichier doit être en minuscules.">
+<!ENTITY directory.description4 "Si un fichier existe déjà, il sera affiché sans tenir compte des autres photos.">
 <!ENTITY directory.browseButton "Parcourir le dossier…">
 <!ENTITY directory.openButton "Ouvrir le dossier">
 <!ENTITY directory.enableWildcards "Activer les photos correspondantes de domaines">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "incurvé">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "coin">
+<!ENTITY specialFolders.caption "Dossiers spéciaux">
+<!ENTITY specialFolders.description "Les dossiers spéciaux sont « Messages en attente », « Envoyés » et « Brouillons ». Les messages de ces dossiers sont traités autrement : ils affichent l'image par défaut de leur destinataire (selon votre point de vue). Décocher cette case pour désactiver cette fonction.">
+<!ENTITY specialFolders.label "Activer les dossiers spéciaux">
 <!ENTITY clearCache.label "Vider la mémoire cache des vignettes">
 <!ENTITY clearCache.description "La mémoire cache des vignettes n'est à vider manuellement qu'en cas d'échange ou de modification de photos du dossier local (inutile si vous avez ajouté une nouvelle photo).">
 <!ENTITY pixels "pixels">

@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Опште поставке">
 <!ENTITY tabs.facesLocalPhotos "Лица и локалне слике">
 <!ENTITY tabs.visualEffects "Визуелни ефекти">
-<!ENTITY tabs.maintenance "Одржавање">
+<!ENTITY tabs.miscellaneous "Miscellaneous">
 <!ENTITY maxSize.label "Максимална величина слике:">
 <!ENTITY defaultPhoto.caption "Подразумевана слика">
 <!ENTITY defaultPhoto.generic "Подразумевано по Мозили">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Прикажи подразумевану слику">
 <!ENTITY defaultPhoto.hide "Прикажи празан простор">
 <!ENTITY defaultPhoto.collapse "Ништа не приказуј">
+<!ENTITY gravatar.caption "Gravatars">
+<!ENTITY gravatar.enable "Enable Gravatars">
+<!ENTITY gravatar.label "Load images from">
+<!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY position.label "Позиција слике:">
 <!ENTITY position.left "лева страна">
 <!ENTITY position.right "десна страна">
@@ -24,6 +28,7 @@
 <!ENTITY directory.description1 "Називи датотека би требали бити садржине е-адресе и врсте датотеке.">
 <!ENTITY directory.description2 "Нпр. „info@mozilla.org.png“. Подржани формати слика: jpg, png, gif.">
 <!ENTITY directory.description3 "Ако датотека постоји, она ће бити приказана без обзира на друге слике.">
+<!ENTITY directory.description4 "If such a file exists, it will be displayed regardless of other photos.">
 <!ENTITY directory.browseButton "Потражи фасциклу">
 <!ENTITY directory.openButton "Отвори фасциклу">
 <!ENTITY directory.enableWildcards "Омогући домен слика">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "криво">
 <!ENTITY effects.glossHorizontal "хоризонтално">
 <!ENTITY effects.glossCorner "угласто">
+<!ENTITY specialFolders.caption "Special folders">
+<!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
+<!ENTITY specialFolders.label "Enable special folders">
 <!ENTITY clearCache.label "Очисти привремену меморију">
 <!ENTITY clearCache.description "Привремена меморија мора бити очишћена ручно само ако сте променили слику у локалној фасцикли (ово не морате да радите ако додате слику).">
 <!ENTITY pixels "тачкица/е">

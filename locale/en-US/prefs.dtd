@@ -15,7 +15,7 @@
 <!ENTITY gravatar.caption "Gravatars">
 <!ENTITY gravatar.enable "Enable Gravatars">
 <!ENTITY gravatar.label "Load images from">
-<!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The email address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
+<!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY position.label "Position of the photo:">
 <!ENTITY position.left "Left side">
 <!ENTITY position.right "Right side">
@@ -50,7 +50,7 @@
 <!ENTITY effects.glossCorner "corner">
 <!ENTITY specialFolders.caption "Special folders">
 <!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
-<!ENTITY specialFolders.label "Enabe special folders">
+<!ENTITY specialFolders.label "Enable special folders">
 <!ENTITY clearCache.label "Clear thumbnail cache">
 <!ENTITY clearCache.description "The thumbnail cache has to be cleared manually only if you have (ex)changed a photo in the local photo directory or if you want to reload all Gravatars.">
 <!ENTITY pixels "pixels">

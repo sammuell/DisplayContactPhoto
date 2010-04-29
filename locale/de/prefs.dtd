@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Allgemeine Einstellungen">
 <!ENTITY tabs.facesLocalPhotos "Faces/Lokale Fotos">
 <!ENTITY tabs.visualEffects "Visuelle Effekte">
-<!ENTITY tabs.maintenance "Wartung">
+<!ENTITY tabs.miscellaneous "Verschiedenes">
 <!ENTITY maxSize.label "Maximale Grösse des Fotos:">
 <!ENTITY defaultPhoto.caption "Standardfoto">
 <!ENTITY defaultPhoto.generic "Standard">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Standardfoto anzeigen">
 <!ENTITY defaultPhoto.hide "Leeren Bereich anzeigen">
 <!ENTITY defaultPhoto.collapse "Nichts anzeigen">
+<!ENTITY gravatar.caption "Gravatars">
+<!ENTITY gravatar.enable "Gravatars aktivieren">
+<!ENTITY gravatar.label "Bilder laden von">
+<!ENTITY gravatar.description "Gravatar (eine Abkürzung für englisch &quot;globally recognized avatar&quot; - global erkennbarer Avatar) ist ein Dienst für global einzigartige Avatars. Die  E-Mail-Adresse wird verschlüsselt und an gravatar.com gesendet. Ist der Besitzer der Adresse bei gravatar.com registriert, wird sein Avatar angezeigt, sonst wird ein Gravatar-Standardbild angezeigt. Gravatars werden lokal gecached aus Effizienzgründen und um die Netzwerkbelastung zu verkleinern.">
 <!ENTITY position.label "Position des Fotos:">
 <!ENTITY position.left "Linke Seite">
 <!ENTITY position.right "Rechte Seite">
@@ -23,7 +27,8 @@
 <!ENTITY directory.enable "Anzeige von lokalen Fotos aktivieren">
 <!ENTITY directory.description1 "Die Dateinamen sollten aus der E-Mail-Adresse sowie dem Dateityp zusammengesetzt sein (alles in Kleinschrift).">
 <!ENTITY directory.description2 "Z.B. 'info@mozilla.org.png'. Unterstützte Bildformate: jpg, png, gif.">
-<!ENTITY directory.description3 "Falls eine solche Datei existiert, wird sie unabhängig von anderen Fotos angezeigt.">
+<!ENTITY directory.description3 "Der gesamnte Dateinamen muss in Kleinschrift sein.">
+<!ENTITY directory.description4 "Falls eine solche Datei existiert, wird sie unabhängig von anderen Fotos angezeigt.">
 <!ENTITY directory.browseButton "Ordner auswählen…">
 <!ENTITY directory.openButton "Ordner öffnen">
 <!ENTITY directory.enableWildcards "Fotos einer Domain zuweisen">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "gekrümmt">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "obere Ecke">
+<!ENTITY specialFolders.caption "Spezielle Ordner">
+<!ENTITY specialFolders.description "Spezielle Ordner sind der Postausgang, der &quot;Gesendet&quot; und der &quot;Entwürfe&quot; Ordner. Nachrichten in einem dieser Ordner werden anders als die Übrigen behandelt: Anstatt des Fotos des Empfängers wird standardmässig dasjenige des Empfängers (aus Ihrem Gesichtswinkel) dargestellt. Deativieren Sie diese Option, um dieses Verhalten auszuschalten.">
+<!ENTITY specialFolders.label "Spezielle Ordner aktivieren">
 <!ENTITY clearCache.label "Miniaturansichten-Cache leeren">
-<!ENTITY clearCache.description "Der Miniaturansichten-Cache muss nur manuell geleert werden, nachdem Sie Bilder im lokalen Fotoverzeichnis abgeändert haben (Bei neu hinzugefügten Bildern ist dies nicht nötig).">
+<!ENTITY clearCache.description "Der Miniaturansichten-Cache muss nur manuell geleert werden, nachdem Sie Bilder im lokalen Fotoverzeichnis abgeändert haben oder wenn Sie alle Gravatars neu laden möchten.">
 <!ENTITY pixels "Pixel">

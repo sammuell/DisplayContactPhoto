@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Algemene instellingen">
 <!ENTITY tabs.facesLocalPhotos "Gezichten/lokale foto’s">
 <!ENTITY tabs.visualEffects "Visuele effecten">
-<!ENTITY tabs.maintenance "Onderhoud">
+<!ENTITY tabs.miscellaneous "Diversen">
 <!ENTITY maxSize.label "Maximale fotogrootte:">
 <!ENTITY defaultPhoto.caption "Standaardfoto">
 <!ENTITY defaultPhoto.generic "Mozilla-standaard">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Standaardfoto weergeven">
 <!ENTITY defaultPhoto.hide "Lege ruimte weergeven">
 <!ENTITY defaultPhoto.collapse "Niets weergeven">
+<!ENTITY gravatar.caption "Gravatars">
+<!ENTITY gravatar.enable "Gravatars inschakelen">
+<!ENTITY gravatar.label "Afbeeldingen laden van">
+<!ENTITY gravatar.description "Gravatar (een afkorting voor globally recognized avatar) is een dienst die globaal unieke avatars biedt. Het e-mailadres wordt versleuteld en verzonden naar gravatar.com. Als de eigenaar van het adres is geregistreerd op gravatar.com wordt zijn/haar avatar weergegeven, anders wordt een standaard gravatar-afbeelding weergegeven. Gravatars worden lokaal opgeslagen om prestatieredenen en om de netwerkbelasting te verminderen.">
 <!ENTITY position.label "Fotopositie:">
 <!ENTITY position.left "Links">
 <!ENTITY position.right "Rechts">
@@ -23,7 +27,8 @@
 <!ENTITY directory.enable "Weergave van lokale foto’s inschakelen">
 <!ENTITY directory.description1 "De bestandsnamen dienen te zijn opgebouwd uit het e-mailadres en het bestandstype.">
 <!ENTITY directory.description2 "B.v. ‘info@mozilla.org.png’. Ondersteunde afbeeldingstypen: jpg, png en gif.">
-<!ENTITY directory.description3 "Als een dergelijk bestand al bestaat wordt dit weergegeven, ongeacht andere foto’s.">
+<!ENTITY directory.description3 "De gehele bestandsnaam dient te bestaan uit kleine letters.">
+<!ENTITY directory.description4 "Als een dergelijk bestand bestaat wordt dit weergegeven, ongeacht andere foto’s.">
 <!ENTITY directory.browseButton "Door map bladeren…">
 <!ENTITY directory.openButton "Map openen">
 <!ENTITY directory.enableWildcards "Wildcardfoto’s voor domeinen inschakelen">
@@ -35,7 +40,7 @@
 <!ENTITY effects.borderColor "Randkleur:">
 <!ENTITY effects.colorDefaultBlack "Standaard: zwart">
 <!ENTITY effects.colorDefaultWhite "Standaard: wit">
-<!ENTITY effects.borderThin "Dunnen rand">
+<!ENTITY effects.borderThin "Dunne rand">
 <!ENTITY effects.borderBlurred "Vage dikkere rand">
 <!ENTITY effects.roundedCorners "Afgeronde hoeken">
 <!ENTITY effects.enableShadow "Schaduw weergeven">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "golvend">
 <!ENTITY effects.glossHorizontal "horizontaal">
 <!ENTITY effects.glossCorner "diagonaal">
+<!ENTITY specialFolders.caption "Speciale mappen">
+<!ENTITY specialFolders.description "Speciale mappen zijn de Postvakken UIT, Verzonden en Concepten. Berichten in één van deze mappen worden op een andere manier behandeld: ze geven standaard de foto van de ontvanger weer (vanuit u gezien). Vink het veld uit om dit gedrag uit te schakelen.">
+<!ENTITY specialFolders.label "Speciale mappen inschakelen">
 <!ENTITY clearCache.label "Miniaturencache opschonen">
 <!ENTITY clearCache.description "De miniaturencache hoeft alleen handmatig te worden opgeschoond als u een foto in de lokale fotomap heeft gewijzigd of gewisseld (het is niet nodig als u een foto toevoegt).">
 <!ENTITY pixels "pixels">

@@ -190,7 +190,6 @@ function enableGravatar() {
 	} else {
 		// if gravatar is the current default photo when it gets disabled, change the default photo
 		if (menuitemGravatar.selected) {
-			alert(3234)
 			var menuitemDiCoP = document.getElementById('DiCoP-GenericPhotoDiCoP');
 			contactPhoto.prefs.set('defaultGenericPhoto', menuitemDiCoP.value, 'char');
 			document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();

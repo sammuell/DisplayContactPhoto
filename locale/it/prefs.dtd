@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Generale">
 <!ENTITY tabs.facesLocalPhotos "Foto locali e Face">
 <!ENTITY tabs.visualEffects "Effetti visivi">
-<!ENTITY tabs.maintenance "Manutenzione">
+<!ENTITY tabs.miscellaneous "Varie">
 <!ENTITY maxSize.label "Dimensione massima foto:">
 <!ENTITY defaultPhoto.caption "Foto predefinita">
 <!ENTITY defaultPhoto.generic "Predefinita Mozilla">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "mostra una foto predefinita">
 <!ENTITY defaultPhoto.hide "mostra spazio vuoto">
 <!ENTITY defaultPhoto.collapse "non mostrare nulla">
+<!ENTITY gravatar.caption "Gravatar">
+<!ENTITY gravatar.enable "Attiva supporto gravatar">
+<!ENTITY gravatar.label "Carica immagini da">
+<!ENTITY gravatar.description "Gravatar (un'abbreviazione per avatar riconosciuti globalmente) è un servizio che associa un avatar ad un indirizzo e-mail. Inviando al sito gravatar.com  l'indirizzo e-mail cifrato è possibile ottenere l'immagine ad esso associata, se l'indirizzo e-mail non è registrato verrà restituita un'immagine predefinita. Le immagini vengono salvate localmente per aumentare le prestazioni e diminuire le chiamate remote.">
 <!ENTITY position.label "Posizionamento foto:">
 <!ENTITY position.left "a sinistra">
 <!ENTITY position.right "a destra">
@@ -23,7 +27,8 @@
 <!ENTITY directory.enable "Attiva la visualizzazione delle foto da una cartella locale">
 <!ENTITY directory.description1 "Utilizzare l'indirizzo più l'estensione come nome del file.">
 <!ENTITY directory.description2 "Ad esempio'info@mozilla.org.png'. Tipi supportati: jpg, png e gif.">
-<!ENTITY directory.description3 "Se tale file esiste verrà utilizzato indipendentemente dalla presenza di altre foto.">
+<!ENTITY directory.description3 "Per il nome del file è necessario usare solo lettere minuscole.">
+<!ENTITY directory.description4 "Se un tale file esiste esso verrà utilizzato indipendentemente dalla presenza di altre foto.">
 <!ENTITY directory.browseButton "Seleziona cartella…">
 <!ENTITY directory.openButton "Apri cartella">
 <!ENTITY directory.enableWildcards "Attiva foto jolly per un intero dominio">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "incurvato">
 <!ENTITY effects.glossHorizontal "orizzontale">
 <!ENTITY effects.glossCorner "agli angoli">
+<!ENTITY specialFolders.caption "Cartelle speciali">
+<!ENTITY specialFolders.description "Posta in uscita, Posta inviata e Bozze sono considerate cartelle speciali, in quanto per i messaggi presenti in queste cartelle verrà mostrata l'immagine del destinatario e non del mittente (dal proprio punto di vista). Togliere la spunta per non applicare questo comportamento.">
+<!ENTITY specialFolders.label "Attiva cartelle speciali">
 <!ENTITY clearCache.label "Cancella la cache delle miniature">
 <!ENTITY clearCache.description "La cache delle miniature deve essere cancellata manualmente solo se è stata modificata una foto nella cartella locale (l'operazione non è richiesta quando si aggiunge una foto).">
 <!ENTITY pixels "pixel">

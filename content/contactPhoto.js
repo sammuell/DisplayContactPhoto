@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.1b2';
+contactPhoto.currentVersion = '1.1b3';
 contactPhoto.debug = false;
 
 contactPhoto.genericInit = function() {
@@ -453,6 +453,32 @@ contactPhoto.cache = {
 	directory: 'contactPhotoThumbnails',
 	// clear: empties the cache
 	clear: function() {
+		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
+			.getService(Components.interfaces.nsIProperties)
+			.get("ProfD", Components.interfaces.nsIFile);
+		cacheDir.append(contactPhoto.cache.directory);
+
+		if (cacheDir.exists() && cacheDir.isDirectory()) {
+			var enumerator = cacheDir.directoryEntries;
+			while (enumerator.hasMoreElements()) {
+			
+				var entry = enumerator.getNext().QueryInterface(Components.interfaces.nsIFile);
+				
+				if (entry.exists() && entry.isDirectory()) {
+					try {
+						entry.remove(true); // remove the directory and all its contents
+					} catch (e) { 
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
+		
+	/*
 		var oldDir = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
@@ -468,6 +494,22 @@ contactPhoto.cache = {
 			
 		contactPhoto.cache.checkDirectory();
 		return true;
+		*/
+	},
+	
+	// createSubDirectory: creates a directory in the thumbnail directory if it does not exist
+	createSubDirectory: function(name) {
+		var newDir = Components.classes["@mozilla.org/file/directory_service;1"]
+					.getService(Components.interfaces.nsIProperties)
+					.get("ProfD", Components.interfaces.nsIFile);
+		newDir.append(contactPhoto.cache.directory);
+		newDir.append(name);
+		
+		if (newDir.exists() && newDir.isDirectory()) {
+			return;
+		}
+		
+		newDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
 	},
 
 	// checkDirectory: checks if all cache directories exist, else create them
@@ -482,7 +524,7 @@ contactPhoto.cache = {
 		}
 
 		
-		
+		/*
 		subdirectories = [contactPhoto.prefs.get('smallIconSize', 'int'), ''+contactPhoto.prefs.get('photoSize', 'int')];
 			
 		for (var i in subdirectories) {
@@ -498,6 +540,7 @@ contactPhoto.cache = {
 			
 			newDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
 		}
+		*/
 	},
 
 	// removeThumbnail: delete a specific thumbnail from the cache
@@ -724,6 +767,9 @@ contactPhoto.resizer = {
 						 .getService(Components.interfaces.nsIIOService);
 		var source = io.newURI(contactPhoto.resizer.canvas.toDataURL('image/png', ''), 'UTF8', null);
 
+		// check if the thumbnail folder exists
+		contactPhoto.cache.createSubDirectory(contactPhoto.resizer.currentImage.size);
+		
 		// prepare to save the canvas data
 		var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
 							.createInstance(Components.interfaces.nsIWebBrowserPersist);

@@ -3,7 +3,7 @@
 <!ENTITY tabs.generalSettings "Generelle indstillinger">
 <!ENTITY tabs.facesLocalPhotos "Lokale fotos">
 <!ENTITY tabs.visualEffects "Visuelle effekter">
-<!ENTITY tabs.maintenance "Vedligeholdelse">
+<!ENTITY tabs.miscellaneous "Miscellaneous">
 <!ENTITY maxSize.label "Maximum størrelse af ét billede:">
 <!ENTITY defaultPhoto.caption "Standard billede">
 <!ENTITY defaultPhoto.generic "Mozilla standard">
@@ -12,6 +12,10 @@
 <!ENTITY defaultPhoto.show "Vis standard billede">
 <!ENTITY defaultPhoto.hide "Vis tom plads">
 <!ENTITY defaultPhoto.collapse "Vis ingenting">
+<!ENTITY gravatar.caption "Gravatars">
+<!ENTITY gravatar.enable "Enable Gravatars">
+<!ENTITY gravatar.label "Load images from">
+<!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY position.label "Position af billedet:">
 <!ENTITY position.left "Venstre side">
 <!ENTITY position.right "Højre side">
@@ -24,6 +28,7 @@
 <!ENTITY directory.description1 "Filnavnene bør bestå af e-mail adresse og filtype.">
 <!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Understøttede billed typer: jpg, png, gif.">
 <!ENTITY directory.description3 "Hvis sådan fik eksistere, vil den blive vist uanset om der er andre billeder.">
+<!ENTITY directory.description4 "If such a file exists, it will be displayed regardless of other photos.">
 <!ENTITY directory.browseButton "Søg mappe...">
 <!ENTITY directory.openButton "Åben mappe">
 <!ENTITY directory.enableWildcards "Muliggør domæne wildcard billeder">
@@ -43,6 +48,9 @@
 <!ENTITY effects.glossCurved "buet">
 <!ENTITY effects.glossHorizontal "Horisontal">
 <!ENTITY effects.glossCorner "Hjørne">
+<!ENTITY specialFolders.caption "Special folders">
+<!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
+<!ENTITY specialFolders.label "Enable special folders">
 <!ENTITY clearCache.label "Ryd thumbnail cache">
 <!ENTITY clearCache.description "Thumbnail cachen skal ryddes manuelt, hvis du har (eks.) ændret et billede i den lokale foto mappe (Du behøver ikke at gøre dette, hvis du tilføjer et foto).">
 <!ENTITY pixels "Pixels">
