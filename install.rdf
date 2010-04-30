@@ -12,7 +12,7 @@
 		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>
 		<em:optionsURL>chrome://contactPhoto/content/prefs.xul</em:optionsURL>
 		<em:iconURL>chrome://contactPhoto/skin/icon.png</em:iconURL>
-		<em:homepageURL>https://addons.mozilla.org/de/thunderbird/addon/58034</em:homepageURL>
+		<em:homepageURL>https://addons.mozilla.org/thunderbird/addon/58034</em:homepageURL>
 		
 		<!-- de -->
 		<em:localized>
