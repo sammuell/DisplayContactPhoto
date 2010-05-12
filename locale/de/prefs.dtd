@@ -2,6 +2,7 @@
 <!ENTITY window.title "Display Contact Photo Einstellungen">
 <!ENTITY tabs.generalSettings "Allgemeine Einstellungen">
 <!ENTITY tabs.facesLocalPhotos "Faces/Lokale Fotos">
+<!ENTITY tabs.remotePhotos "Internetfotos">
 <!ENTITY tabs.visualEffects "Visuelle Effekte">
 <!ENTITY tabs.miscellaneous "Verschiedenes">
 <!ENTITY maxSize.label "Maximale Grösse des Fotos:">
@@ -12,10 +13,13 @@
 <!ENTITY defaultPhoto.show "Standardfoto anzeigen">
 <!ENTITY defaultPhoto.hide "Leeren Bereich anzeigen">
 <!ENTITY defaultPhoto.collapse "Nichts anzeigen">
-<!ENTITY gravatar.caption "Gravatars">
 <!ENTITY gravatar.enable "Gravatars aktivieren">
-<!ENTITY gravatar.label "Bilder laden von">
 <!ENTITY gravatar.description "Gravatar (eine Abkürzung für englisch &quot;globally recognized avatar&quot; - global erkennbarer Avatar) ist ein Dienst für global einzigartige Avatars. Die  E-Mail-Adresse wird verschlüsselt und an gravatar.com gesendet. Ist der Besitzer der Adresse bei gravatar.com registriert, wird sein Avatar angezeigt, sonst wird ein Gravatar-Standardbild angezeigt. Gravatars werden lokal gecached aus Effizienzgründen und um die Netzwerkbelastung zu verkleinern.">
+<!ENTITY gravatar.default "Standard-Gravatar">
+<!ENTITY gravatar.defaultLogo "Standardfoto">
+<!ENTITY gravatar.defaultWavatar "Wavatar">
+<!ENTITY gravatar.defaultMonsterid "Monsterid">
+<!ENTITY gravatar.defaultIdenticon "Identicon">
 <!ENTITY position.label "Position des Fotos:">
 <!ENTITY position.left "Linke Seite">
 <!ENTITY position.right "Rechte Seite">

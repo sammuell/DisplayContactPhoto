@@ -2,6 +2,7 @@
 <!ENTITY window.title "Opzioni di Display Contact Photo">
 <!ENTITY tabs.generalSettings "Generale">
 <!ENTITY tabs.facesLocalPhotos "Foto locali e Face">
+<!ENTITY tabs.remotePhotos "Remote photos">
 <!ENTITY tabs.visualEffects "Effetti visivi">
 <!ENTITY tabs.miscellaneous "Varie">
 <!ENTITY maxSize.label "Dimensione massima foto:">
@@ -12,10 +13,13 @@
 <!ENTITY defaultPhoto.show "mostra una foto predefinita">
 <!ENTITY defaultPhoto.hide "mostra spazio vuoto">
 <!ENTITY defaultPhoto.collapse "non mostrare nulla">
-<!ENTITY gravatar.caption "Gravatar">
 <!ENTITY gravatar.enable "Attiva supporto gravatar">
-<!ENTITY gravatar.label "Carica immagini da">
 <!ENTITY gravatar.description "Gravatar (un'abbreviazione per avatar riconosciuti globalmente) è un servizio che associa un avatar ad un indirizzo e-mail. Inviando al sito gravatar.com  l'indirizzo e-mail cifrato è possibile ottenere l'immagine ad esso associata, se l'indirizzo e-mail non è registrato verrà restituita un'immagine predefinita. Le immagini vengono salvate localmente per aumentare le prestazioni e diminuire le chiamate remote.">
+<!ENTITY gravatar.default "Default Gravatar:">
+<!ENTITY gravatar.defaultLogo "Default Image">
+<!ENTITY gravatar.defaultWavatar "Wavatar">
+<!ENTITY gravatar.defaultMonsterid "Monsterid">
+<!ENTITY gravatar.defaultIdenticon "Identicon">
 <!ENTITY position.label "Posizionamento foto:">
 <!ENTITY position.left "a sinistra">
 <!ENTITY position.right "a destra">
