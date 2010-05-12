@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.1b3';
+contactPhoto.currentVersion = '1.1b4';
 contactPhoto.debug = false;
 
 contactPhoto.genericInit = function() {
