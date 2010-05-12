@@ -21,6 +21,7 @@
 	<preference id="extensions.contactPhoto.enableDomainWildcardPhotos" name="extensions.contactPhoto.enableDomainWildcardPhotos" type="bool"/>
 	<preference id="extensions.contactPhoto.defaultPhoto" name="extensions.contactPhoto.defaultPhoto" type="string"/>
 	<preference id="extensions.contactPhoto.enableGravatar" name="extensions.contactPhoto.enableGravatar" type="bool" instantApply="true"/>
+	<preference id="extensions.contactPhoto.defaultGravatar" name="extensions.contactPhoto.defaultGravatar" type="string"/>
 	<preference id="extensions.contactPhoto.drawBackgroundColor" name="extensions.contactPhoto.drawBackgroundColor" type="bool" instantApply="true"/>
 	<preference id="extensions.contactPhoto.backgroundColor" name="extensions.contactPhoto.backgroundColor" type="string" instantApply="true"/>
 	<preference id="extensions.contactPhoto.effectBorder" name="extensions.contactPhoto.effectBorder" type="bool" instantApply="true"/>
@@ -38,6 +39,7 @@
 		<tab label="&tabs.generalSettings;"/>
 		<tab label="&tabs.visualEffects;"/>
 		<tab label="&tabs.facesLocalPhotos;"/>
+		<tab label="&tabs.remotePhotos;"/>
 		<tab label="&tabs.miscellaneous;"/>
 	</tabs>
 	
@@ -96,28 +98,11 @@
 
 				</groupbox>
 				
-				<!-- GRAVATAR -->
-				<groupbox>
-					<caption label="&gravatar.caption;"/>
-					
-					<hbox align="center">
-						<label value="&gravatar.label;" style="margin-right:0px;"/>
-						<label value="http://www.gravatar.com" onclick="loadWebsite(event);" style="margin-left:2px;" class="text-link"/>
-						
-						<image class="moreinfo" popup="moreinfo-gravatar"/>
-						<panel id="moreinfo-gravatar" class="moreinfo" position="end_before">
-							<description>&gravatar.description;</description>
-						</panel>
-					</hbox>
-					
-					<checkbox label="&gravatar.enable;" oncommand="enableGravatar();" id="checkboxEnableGravatar" preference="extensions.contactPhoto.enableGravatar"/>
-				</groupbox>
-				
 			</vbox>
 		</tabpanel>
 		
-		<tabpanel id="visualTab">		
-			<!-- VISUAL EFFECTS -->
+		<!-- VISUAL EFFECTS -->
+		<tabpanel id="visualTab">
 			<vbox flex="1">
 				
 				<groupbox>
@@ -228,8 +213,35 @@
 			</vbox>
 		</tabpanel>
 		
+		<!-- REMOTE PHOTOS -->
+		<tabpanel id="remoteTab">
+			<!-- GRAVATAR -->
+			<groupbox>
+				<caption>
+					<checkbox label="&gravatar.enable;" oncommand="enableGravatar();" id="checkboxEnableGravatar" preference="extensions.contactPhoto.enableGravatar"/>
+				</caption>
+				
+				
+				<description width="350">&gravatar.description;
+					<label value="http://www.gravatar.com" onclick="loadWebsite(event);" style="margin-left:2px;" class="text-link"/>
+				</description>
+				
+				<hbox align="center">
+					<label value="&gravatar.default;"/>
+					<menulist id="defaultGravatar" preference="extensions.contactPhoto.defaultGravatar">
+						<menupopup>
+							<menuitem label="&gravatar.defaultLogo;" class="menuitem-iconic" image="chrome://contactPhoto/skin/genericIcons/gravatar-tiny.png" value=""/>
+							<menuitem label="&gravatar.defaultIdenticon;" class="menuitem-iconic" image="chrome://contactPhoto/skin/gravatar-identicon.png" value="identicon"/>
+							<menuitem label="&gravatar.defaultWavatar;" class="menuitem-iconic" image="chrome://contactPhoto/skin/gravatar-wavatar.png" value="wavatar"/>
+							<menuitem label="&gravatar.defaultMonsterid;" class="menuitem-iconic" image="chrome://contactPhoto/skin/gravatar-monsterid.png" value="monsterid"/>
+						</menupopup>
+					</menulist>
+				</hbox>
+			</groupbox>
+		</tabpanel>
+		
+		<!-- MISCELLANEOUS -->
 		<tabpanel id="miscellaneousTab">
-			<!-- MISCELLANEOUS -->
 			<vbox width="350">
 				<groupbox>
 					<caption label="&specialFolders.caption;"/>

@@ -269,6 +269,7 @@ contactPhoto.messageDisplay = {
 				contactPhoto.messageDisplay.getPhoto();
 				break;
 
+				case 'defaultGravatar':
 				case 'drawBackgroundColor':
 				case 'backgroundColor':
 				case 'effectBorder':

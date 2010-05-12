@@ -1,4 +1,5 @@
 pref('extensions.contactPhoto.currentVersion', '');
+pref('extensions.contactPhoto.folderDebug', false);
 
 pref('extensions.contactPhoto.photoSize', 75);
 pref('extensions.contactPhoto.smallIconSize', 20);
@@ -10,6 +11,7 @@ pref('extensions.contactPhoto.overrideFaces', true);
 pref('extensions.contactPhoto.enableLocalPhotos', false);
 pref('extensions.contactPhoto.enableDomainWildcardPhotos', false);
 pref('extensions.contactPhoto.enableGravatar', false);
+pref('extensions.contactPhoto.defaultGravatar', '');
 
 pref('extensions.contactPhoto.drawBackgroundColor', false);
 pref('extensions.contactPhoto.backgroundColor', '#ffffff');

@@ -263,10 +263,10 @@ contactPhoto.display = {
 
 	gravatar: function(photoInfo) {
 		if (contactPhoto.debug) alert('disp gravatar')
-		
+
 		var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
-		var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?s='+photoInfo.size;
-		
+		var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
+
 		contactPhoto.display.checkPhoto(gravatarURI, photoInfo, true);
 	},
 	
@@ -1121,6 +1121,14 @@ contactPhoto.utils = {
 			const folderFlags = Components.interfaces.nsMsgFolderFlags;
 			var currentFolder = gMessageDisplay.displayedMessage.folder;
 			while (currentFolder) {
+				if (contactPhoto.prefs.get('folderDebug', 'bool')) {
+					var msg = 'Folder name: '+currentFolder.prettiestName;
+					msg += '\n------------------------------';
+					msg += '\nFlag Outbox: '+(currentFolder.flags & folderFlags.Queue);
+					msg += '\nFlag Drafts: '+(currentFolder.flags & folderFlags.Drafts);
+					msg += '\nFlag Sent: '+(currentFolder.flags & folderFlags.SentMail);
+					alert(msg)
+				}
 				if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) return true;
 				currentFolder = currentFolder.parent;
 			}

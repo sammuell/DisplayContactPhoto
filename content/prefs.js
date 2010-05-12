@@ -186,6 +186,7 @@ function enableGravatar() {
 	
 	if (document.getElementById('checkboxEnableGravatar').checked) {
 		menuitemGravatar.disabled = false;
+		document.getElementById('defaultGravatar').disabled = false;
 		
 	} else {
 		// if gravatar is the current default photo when it gets disabled, change the default photo
@@ -196,6 +197,7 @@ function enableGravatar() {
 		}
 		
 		menuitemGravatar.disabled = true;
+		document.getElementById('defaultGravatar').disabled = true;
 	}
 }
 
