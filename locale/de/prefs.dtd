@@ -49,7 +49,7 @@
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "obere Ecke">
 <!ENTITY specialFolders.caption "Spezielle Ordner">
-<!ENTITY specialFolders.description "Spezielle Ordner sind der Postausgang, der &quot;Gesendet&quot; und der &quot;Entwürfe&quot; Ordner. Nachrichten in einem dieser Ordner werden anders als die Übrigen behandelt: Anstatt des Fotos des Empfängers wird standardmässig dasjenige des Empfängers (aus Ihrem Gesichtswinkel) dargestellt. Deativieren Sie diese Option, um dieses Verhalten auszuschalten.">
+<!ENTITY specialFolders.description "Spezielle Ordner sind der Postausgang, der &quot;Gesendet&quot; und der &quot;Entwürfe&quot; Ordner. Nachrichten in einem dieser Ordner werden anders als die Übrigen behandelt: Anstatt des Fotos des Absenders wird standardmässig dasjenige des Empfängers (aus Ihrem Gesichtswinkel) dargestellt. Deativieren Sie diese Option, um dieses Verhalten auszuschalten.">
 <!ENTITY specialFolders.label "Spezielle Ordner aktivieren">
 <!ENTITY clearCache.label "Miniaturansichten-Cache leeren">
 <!ENTITY clearCache.description "Der Miniaturansichten-Cache muss nur manuell geleert werden, nachdem Sie Bilder im lokalen Fotoverzeichnis abgeändert haben oder wenn Sie alle Gravatars neu laden möchten.">

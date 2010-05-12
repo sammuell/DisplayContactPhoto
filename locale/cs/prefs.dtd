@@ -1,5 +1,5 @@
 <!-- do not translate 'Display Contact Photo' -->
-<!ENTITY window.title "Display Contact Photo Options">
+<!ENTITY window.title "Display Contact Photo možnosti">
 <!ENTITY tabs.generalSettings "Obecné nastavení">
 <!ENTITY tabs.facesLocalPhotos "Tváře/Místní fotografie">
 <!ENTITY tabs.visualEffects "Vizuální efekty">
@@ -27,13 +27,13 @@
 <!ENTITY directory.enable "Povolit zobrazení místních fotografií">
 <!ENTITY directory.description1 "Názvy souborů by měly být složeny z e-mailovou adresu a přípony souboru.">
 <!ENTITY directory.description2 "Např. 'info@mozilla.org.png'. Podporované typy souborů: jpg, png, gif.">
-<!ENTITY directory.description3 "Pokud takový soubor existuje, bude zobrazen bez ohledu na další fotografie.">
+<!ENTITY directory.description3 "Celý název souboru musí být malými znaky.">
 <!ENTITY directory.description4 "Pokud takový soubor existuje, bude zobrazen bez ohledu na další fotografie.">
 <!ENTITY directory.browseButton "Procházet…">
 <!ENTITY directory.openButton "Otevřít adresář">
 <!ENTITY directory.enableWildcards "Povolit domény zástupných fotografie">
 <!ENTITY directory.wildcardDescription "Tyto fotografie jsou zařazeny do celé domény a bude se zobrazí, pokud neexistuje žádná jiná fotka k zobrazení. Název souboru by měl být složen ze znaku @ a následuje doménové jméno a přípona souboru, např. '@ Mozilla.org.png'">
-<!ENTITY effects.enableBackgroundColor "Vyplňit průhledné oblasti s barvou:">
+<!ENTITY effects.enableBackgroundColor "Vyplnit průhledné oblasti s barvou:">
 <!ENTITY effects.backgroundLabel "Barva pro průhledné oblasti fotografie (např.. Png,. Gif):">
 <!ENTITY effects.label "Vizuální efekty">
 <!ENTITY effects.enableBorder "Zobrazit ohraničení fotky">

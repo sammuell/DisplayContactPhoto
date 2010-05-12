@@ -2,7 +2,7 @@ content   contactPhoto   content/
 
 skin   contactPhoto   classic   skin/
 
-locale   contactPhoto   cs-CZ	locale/cs-CZ/
+locale   contactPhoto   cs		locale/cs/
 locale   contactPhoto   da		locale/da/
 locale   contactPhoto   de		locale/de/
 locale   contactPhoto   en-US	locale/en-US/
