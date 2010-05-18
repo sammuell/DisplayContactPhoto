@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.1b4';
+contactPhoto.currentVersion = '1.1';
 contactPhoto.debug = false;
 
 contactPhoto.genericInit = function() {
@@ -810,15 +810,21 @@ contactPhoto.imageFX = {
 
 		var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
 		grad.addColorStop(0, 'rgba(255,255,255,0.4)');
-		grad.addColorStop(gradPos+.1, 'rgba(255,255,255,0.1)');
-		grad.addColorStop(gradPos+.1, 'rgba(255,255,255,0)');
+		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
+		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0)');
+		
+		var dark = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+		dark.addColorStop(Math.max(0, gradPos-.1), 'rgba(0,0,0,0)');
+		dark.addColorStop(1, 'rgba(0,0,0,0.1)');
+		contactPhoto.resizer.ctx.fillStyle = dark;
+		contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 
 		switch (contactPhoto.prefs.get('effectGlossType', 'int')) {
 			case 0:	// curved gradient
 				contactPhoto.resizer.ctx.beginPath();
 				contactPhoto.resizer.ctx.moveTo(0, 0);
 				contactPhoto.resizer.ctx.lineTo(0, h*gradPos);
-				contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*(gradPos+.1), w*.8, h*(gradPos+.1), w, h*gradPos)
+				contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*Math.min(1, gradPos+.1), w*.8, h*Math.min(1, gradPos+.1), w, h*gradPos)
 				contactPhoto.resizer.ctx.lineTo(w, 0);
 				contactPhoto.resizer.ctx.closePath();
 				contactPhoto.resizer.ctx.fillStyle = grad;

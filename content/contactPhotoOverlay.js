@@ -1,47 +1,13 @@
 ﻿if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.onLoad = function() {
-	contactPhoto.photoBox = document.getElementById('DiCoP-Box');
-	if (!contactPhoto.photoBox) {
-		return; // only execute this function further in contactPhotoOverlay.xul
-	}
-
-	// display the photo at the right position
-	contactPhoto.messageDisplay.setPhotoPosition();
-
-	// register preferences observer
-	contactPhoto.messageDisplay.prefObserver.register();
-
-	// check if all custom headers are present
-	contactPhoto.prefs.checkCustomHeaders();	
-
-	// Check if thumbnailDirectory exists, else create it
-	contactPhoto.cache.checkDirectory();
-
-	contactPhoto.messageDisplay.imgObj = document.getElementById('DiCoP-Image');
-	contactPhoto.messageDisplay.imgObj.style.background = '0px 0px no-repeat';
-	contactPhoto.messageDisplay.imgObj.addEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
-
-	gMessageListeners.push(contactPhoto.messageDisplay.messageListener); // hook to endHeader notifications
-
-	// Add an address book listener so the photo can be updated.
-	Components.classes["@mozilla.org/abmanager;1"]
-		.getService(Components.interfaces.nsIAbManager)
-		.addAddressBookListener(contactPhoto.addressBookListener,
-			Components.interfaces.nsIAbListener.all);
-
-	contactPhoto.messageDisplay.setPhotoSize(); // set the size from the preferences
-
-	window.addEventListener('unload', contactPhoto.onUnload, false);
-}
-
-
 contactPhoto.messageDisplay = {
 	photoInfo: null,
 	cardWindow: null,
 	imgObj: null,
 	
 	getPhoto: function() {
+		// clear the existing image
+		contactPhoto.messageDisplay.imgObj.style.listStyleImage = '';
 		
 		var headerToParse = (contactPhoto.utils.isSentMessage())? currentHeaderData['to'].headerValue: currentHeaderData['from'].headerValue;
 
@@ -284,19 +250,54 @@ contactPhoto.messageDisplay = {
 				break;
 			}
 		}
+	},
+
+	onLoad: function() {
+		contactPhoto.photoBox = document.getElementById('DiCoP-Box');
+		if (!contactPhoto.photoBox) {
+			return; // only execute this function further in contactPhotoOverlay.xul
+		}
+
+		// display the photo at the right position
+		contactPhoto.messageDisplay.setPhotoPosition();
+
+		// register preferences observer
+		contactPhoto.messageDisplay.prefObserver.register();
+
+		// check if all custom headers are present
+		contactPhoto.prefs.checkCustomHeaders();	
+
+		// Check if thumbnailDirectory exists, else create it
+		contactPhoto.cache.checkDirectory();
+
+		contactPhoto.messageDisplay.imgObj = document.getElementById('DiCoP-Image');
+		contactPhoto.messageDisplay.imgObj.style.background = '0px 0px no-repeat';
+		contactPhoto.messageDisplay.imgObj.addEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
+
+		gMessageListeners.push(contactPhoto.messageDisplay.messageListener); // hook to endHeader notifications
+
+		// Add an address book listener so the photo can be updated.
+		Components.classes["@mozilla.org/abmanager;1"]
+			.getService(Components.interfaces.nsIAbManager)
+			.addAddressBookListener(contactPhoto.addressBookListener,
+				Components.interfaces.nsIAbListener.all);
+
+		contactPhoto.messageDisplay.setPhotoSize(); // set the size from the preferences
+
+		window.addEventListener('unload', contactPhoto.messageDisplay.onUnload, false);
+	},
+	
+	onUnload: function() {
+		contactPhoto.messageDisplay.imgObj.removeEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
+
+		Components.classes["@mozilla.org/abmanager;1"]
+			.getService(Components.interfaces.nsIAbManager)
+			.removeAddressBookListener(contactPhoto.addressBookListener);
+
+		contactPhoto.messageDisplay.prefObserver.unregister();
 	}
 }
 
-
-contactPhoto.onUnload = function() {
-	contactPhoto.messageDisplay.imgObj.removeEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
-
-	Components.classes["@mozilla.org/abmanager;1"]
-		.getService(Components.interfaces.nsIAbManager)
-		.removeAddressBookListener(contactPhoto.addressBookListener);
-
-	contactPhoto.messageDisplay.prefObserver.unregister();
-}
 
 contactPhoto.addressBookListener = {
 	onItemAdded: function(aParentDir, aItem) {
@@ -312,4 +313,4 @@ contactPhoto.addressBookListener = {
 	}
 }
 
-window.addEventListener('load', contactPhoto.onLoad, false);
+window.addEventListener('load', contactPhoto.messageDisplay.onLoad, false);

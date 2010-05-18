@@ -2,7 +2,7 @@
 <!ENTITY window.title "Display Contact Photo možnosti">
 <!ENTITY tabs.generalSettings "Obecné nastavení">
 <!ENTITY tabs.facesLocalPhotos "Tváře/Místní fotografie">
-<!ENTITY tabs.remotePhotos "Remote photos">
+<!ENTITY tabs.remotePhotos "Odebrat fotograie">
 <!ENTITY tabs.visualEffects "Vizuální efekty">
 <!ENTITY tabs.miscellaneous "Různé">
 <!ENTITY maxSize.label "Maximální velikost fotografie:">
@@ -15,8 +15,8 @@
 <!ENTITY defaultPhoto.collapse "Nezobrazovat nic.">
 <!ENTITY gravatar.enable "Povolit gravatary">
 <!ENTITY gravatar.description "Gravatar (zkratka pro celosvětově uznávaný avatar) je služba pro poskytování globálně-jedinečného avataru. E-mailová adresa je zašifrována a odeslána do gravatar.com. Pokud je vlastník adresy zapsána v gravatar.com, jeho avatar se zobrazí, jinak Gravatar zobrazuje výchozího obrázek. Gravatary jsou uložené lokálně z důvodů výkonu a snížení zatížení sítě.">
-<!ENTITY gravatar.default "Default Gravatar:">
-<!ENTITY gravatar.defaultLogo "Default Image">
+<!ENTITY gravatar.default "Výchozí Gravatar:">
+<!ENTITY gravatar.defaultLogo "Výchozí obrázek">
 <!ENTITY gravatar.defaultWavatar "Wavatar">
 <!ENTITY gravatar.defaultMonsterid "Monsterid">
 <!ENTITY gravatar.defaultIdenticon "Identicon">

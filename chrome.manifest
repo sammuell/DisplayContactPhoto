@@ -11,7 +11,7 @@ locale   contactPhoto   fr		locale/fr/
 locale   contactPhoto   it		locale/it/
 locale   contactPhoto   nl		locale/nl/
 locale   contactPhoto   pt-BR	locale/pt-BR/
-locale   contactPhoto   sr-RS	locale/sr-RS/
+locale   contactPhoto   sr		locale/sr/
 
 overlay   chrome://messenger/content/msgHdrViewOverlay.xul   chrome://contactPhoto/content/contactPhotoOverlay.xul
 overlay   chrome://messenger/content/addressbook/abCardOverlay.xul   chrome://contactPhoto/content/editCardOverlay.xul

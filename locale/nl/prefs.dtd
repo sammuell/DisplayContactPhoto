@@ -2,7 +2,7 @@
 <!ENTITY window.title "Display Contact Photo opties">
 <!ENTITY tabs.generalSettings "Algemene instellingen">
 <!ENTITY tabs.facesLocalPhotos "Gezichten/lokale foto’s">
-<!ENTITY tabs.remotePhotos "Remote photos">
+<!ENTITY tabs.remotePhotos "Foto’s op afstand">
 <!ENTITY tabs.visualEffects "Visuele effecten">
 <!ENTITY tabs.miscellaneous "Diversen">
 <!ENTITY maxSize.label "Maximale fotogrootte:">
@@ -15,8 +15,8 @@
 <!ENTITY defaultPhoto.collapse "Niets weergeven">
 <!ENTITY gravatar.enable "Gravatars inschakelen">
 <!ENTITY gravatar.description "Gravatar (een afkorting voor globally recognized avatar) is een dienst die globaal unieke avatars biedt. Het e-mailadres wordt versleuteld en verzonden naar gravatar.com. Als de eigenaar van het adres is geregistreerd op gravatar.com wordt zijn/haar avatar weergegeven, anders wordt een standaard gravatar-afbeelding weergegeven. Gravatars worden lokaal opgeslagen om prestatieredenen en om de netwerkbelasting te verminderen.">
-<!ENTITY gravatar.default "Default Gravatar:">
-<!ENTITY gravatar.defaultLogo "Default Image">
+<!ENTITY gravatar.default "Standaard Gravatar:">
+<!ENTITY gravatar.defaultLogo "Standaardafbeelding">
 <!ENTITY gravatar.defaultWavatar "Wavatar">
 <!ENTITY gravatar.defaultMonsterid "Monsterid">
 <!ENTITY gravatar.defaultIdenticon "Identicon">

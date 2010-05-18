@@ -222,7 +222,7 @@
 				</caption>
 				
 				
-				<description width="350">&gravatar.description;
+				<description width="400">&gravatar.description;
 					<label value="http://www.gravatar.com" onclick="loadWebsite(event);" style="margin-left:2px;" class="text-link"/>
 				</description>
 				
@@ -242,7 +242,7 @@
 		
 		<!-- MISCELLANEOUS -->
 		<tabpanel id="miscellaneousTab">
-			<vbox width="350">
+			<vbox width="400">
 				<groupbox>
 					<caption label="&specialFolders.caption;"/>
 					<description>&specialFolders.description;</description>

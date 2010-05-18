@@ -2,7 +2,7 @@
 <!ENTITY window.title "Options de Display Contact Photo">
 <!ENTITY tabs.generalSettings "Paramètres généraux">
 <!ENTITY tabs.facesLocalPhotos "Photos (visage, lieu…)">
-<!ENTITY tabs.remotePhotos "Remote photos">
+<!ENTITY tabs.remotePhotos "Photos à distance">
 <!ENTITY tabs.visualEffects "Effets">
 <!ENTITY tabs.miscellaneous "Divers">
 <!ENTITY maxSize.label "Taille maximale d'une photo :">
@@ -15,8 +15,8 @@
 <!ENTITY defaultPhoto.collapse "Ne rien afficher">
 <!ENTITY gravatar.enable "Activer les Univatars">
 <!ENTITY gravatar.description "Univatar (de l'anglais « Gravatar » signifiant « globally recognized avatar », ou « avatar universel ») est un service permettant d'utiliser un seul et même avatar. L'adresse électronique est cryptée et envoyée au site gravatar.com. Si le propriétaire de cette adresse est enregistré sur gravatar.com, son avatar sera affiché (sinon ce sera une image par défaut). Les images Gravatar son placées en mémoire cache pour des raisons de performance et afin de réduire le téléchargement.">
-<!ENTITY gravatar.default "Default Gravatar:">
-<!ENTITY gravatar.defaultLogo "Default Image">
+<!ENTITY gravatar.default "Univatar par défaut :">
+<!ENTITY gravatar.defaultLogo "Image par défaut">
 <!ENTITY gravatar.defaultWavatar "Wavatar">
 <!ENTITY gravatar.defaultMonsterid "Monsterid">
 <!ENTITY gravatar.defaultIdenticon "Identicon">
