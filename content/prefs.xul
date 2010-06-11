@@ -140,9 +140,10 @@
 					<checkbox label="&effects.enableGloss;" id="checkboxEnableGloss" oncommand="enableGlossOptions();" preference="extensions.contactPhoto.effectGloss"/>
 					<menulist id="effectGlossTypes" preference="extensions.contactPhoto.effectGlossType">
 						<menupopup>
-							<menuitem value="0" label="&effects.glossCurved;"/>
-							<menuitem value="1" label="&effects.glossHorizontal;"/>
-							<menuitem value="2" label="&effects.glossCorner;"/>
+							<menuitem value="0" class="menuitem-iconic" image="chrome://contactPhoto/skin/gloss-style1.png" label="&effects.glossCurved;"/>
+							<menuitem value="1" class="menuitem-iconic" image="chrome://contactPhoto/skin/gloss-style2.png" label="&effects.glossHorizontal;"/>
+							<menuitem value="2" class="menuitem-iconic" image="chrome://contactPhoto/skin/gloss-style3.png" label="&effects.glossCorner;"/>
+							<menuitem value="3" class="menuitem-iconic" image="chrome://contactPhoto/skin/gloss-style4.png" label="&effects.glossEdge;"/>
 						</menupopup>
 					</menulist>
 				</hbox>

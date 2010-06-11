@@ -49,9 +49,10 @@
 <!ENTITY effects.roundedCorners "Show rounded corners">
 <!ENTITY effects.enableShadow "Show a drop shadow">
 <!ENTITY effects.enableGloss "Add a glossy effect to the photo:">
-<!ENTITY effects.glossCurved "curved">
-<!ENTITY effects.glossHorizontal "horizontal">
-<!ENTITY effects.glossCorner "corner">
+<!ENTITY effects.glossCurved "Curved">
+<!ENTITY effects.glossHorizontal "Horizontal">
+<!ENTITY effects.glossCorner "Top left corner">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Special folders">
 <!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
 <!ENTITY specialFolders.label "Enable special folders">

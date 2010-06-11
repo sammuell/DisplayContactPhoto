@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.1';
-contactPhoto.debug = false;
+contactPhoto.currentVersion = '1.2b1';
+contactPhoto.debug = 0;
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -196,7 +196,7 @@ contactPhoto.display = {
 			}
 		}
 
-		if (isMessagePhoto) {
+		//if (isMessagePhoto) {
 			// if we are here, then there is no photo nor face to show
 			switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
 				case 'show':
@@ -205,20 +205,22 @@ contactPhoto.display = {
 				break;
 				
 				case 'hide':
+					if (isMessagePhoto) 
 					contactPhoto.messageDisplay.imgObj.style.display = 'none';
 					return;
 				break;
 				
 				default:
+					if (isMessagePhoto) 
 					contactPhoto.photoBox.setAttribute('hidden', true);
 			}
-		}
+		//}
 		// in case the photo is not displayed in a message header, do nothing
 		
 	},
 
 	photo: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp photo')
+		//if (contactPhoto.debug) alert('disp photo')
 		
 		var origFile = Components.classes["@mozilla.org/file/directory_service;1"]
 						.getService(Components.interfaces.nsIProperties)
@@ -230,7 +232,7 @@ contactPhoto.display = {
 	},
 	
 	genericPhoto: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp gen photo')
+		//if (contactPhoto.debug) alert('disp gen photo')
 		
 		if (contactPhoto.prefs.get('enableGravatar', 'bool') && photoInfo.genericPhotoURI.indexOf('gravatar') > -1) {
 			contactPhoto.display.gravatar(photoInfo);
@@ -241,19 +243,19 @@ contactPhoto.display = {
 	},
 
 	localPhoto: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp loc photo')
+		//if (contactPhoto.debug) alert('disp loc photo')
 
 		contactPhoto.display.checkPhoto(photoInfo.localPhotoURI, photoInfo);
 	},
 	
 	domainWildcard: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp wild')
+		//if (contactPhoto.debug) alert('disp wild')
 		
 		contactPhoto.display.checkPhoto(photoInfo.domainWildcardURI, photoInfo);
 	},
 
 	face: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp face')
+		//if (contactPhoto.debug) alert('disp face')
 		
 		photoInfo.photoObject.style.width = '48px';
 		photoInfo.photoObject.style.height = '48px';
@@ -262,7 +264,7 @@ contactPhoto.display = {
 	},
 
 	gravatar: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp gravatar')
+		//if (contactPhoto.debug) alert('disp gravatar')
 
 		var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
 		var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
@@ -271,7 +273,7 @@ contactPhoto.display = {
 	},
 	
 	defaultPhoto: function(photoInfo) {
-		if (contactPhoto.debug) alert('disp def photo')
+		//if (contactPhoto.debug) alert('disp def photo')
 		
 		var defaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 		
@@ -283,7 +285,7 @@ contactPhoto.display = {
 		contactPhoto.display.checkPhoto(defaultPhoto, photoInfo);
 	},
 	
-	// checkPhoto: checks if the thumbnails exists starts the loader, else starts the resizer
+	// checkPhoto: checks if the thumbnails exists -> starts the loader, else starts the resizer
 	checkPhoto: function(srcURI, photoInfo, isGravatar) {
 		var thumbnailName;
 		
@@ -302,39 +304,42 @@ contactPhoto.display = {
 		thumbnailFile.append(thumbnailName+'.png');
 
 		if (thumbnailFile.exists()) { // if the thumbnail already exists, display it
-			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo.photoObject);
+			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 
 		} else { // generate it			
 			
 			contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
 			var callbackFunc = function() {
-				contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo.photoObject);
+				contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 			}
 
 			contactPhoto.resizer.startProcessing(null, callbackFunc);
 		}
 	},
 	
-	dummyPhotos: [],
+	// soft cache of Image() elements, used for drawing in canvas
+	photoCache: [],
 
 	// photoLoader: pre-loads the photo to determine the dimensions, then displays the photo
-	photoLoader: function(URI, photoObject) {
+	photoLoader: function(URI, photoInfo) {
 		var dummyPhoto = new Image();
 		
 		dummyPhoto.addEventListener('load', function() {
-				photoObject.style.width = dummyPhoto.width+'px';
-				photoObject.style.height = dummyPhoto.height+'px';
+				photoInfo.photoObject.style.width = dummyPhoto.width+'px';
+				photoInfo.photoObject.style.height = dummyPhoto.height+'px';
 
 				URI = URI+'?'+Math.floor(Math.random()*1000000000); // force to load photo every time
-				photoObject.style.listStyleImage = 'url("'+URI+'")';
-				photoObject.style.display = 'block';
+				photoInfo.photoObject.style.listStyleImage = 'url("'+URI+'")';
+				photoInfo.photoObject.style.display = 'block';
+				
+				
+				contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
 				
 				if (contactPhoto.debug) dump('photo loaded: '+URI);
 			}, false);
 		
 		dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
-		contactPhoto.display.dummyPhotos.push(dummyPhoto);
 	}
 }
 
@@ -813,9 +818,10 @@ contactPhoto.imageFX = {
 		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
 		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0)');
 		
+		// slightly darken the lower part of the image
 		var dark = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
 		dark.addColorStop(Math.max(0, gradPos-.1), 'rgba(0,0,0,0)');
-		dark.addColorStop(1, 'rgba(0,0,0,0.1)');
+		dark.addColorStop(1, 'rgba(0,0,0,0.07)');
 		contactPhoto.resizer.ctx.fillStyle = dark;
 		contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 
@@ -841,8 +847,24 @@ contactPhoto.imageFX = {
 				contactPhoto.resizer.ctx.moveTo(0, 0);
 				contactPhoto.resizer.ctx.lineTo(w, 0);
 				contactPhoto.resizer.ctx.lineTo(w, h*.1);
-				contactPhoto.resizer.ctx.quadraticCurveTo(w*.33, h*.20, 0, h*.4)
+				contactPhoto.resizer.ctx.quadraticCurveTo(w*.33, h*.20, 0, h*.4);
 				contactPhoto.resizer.ctx.closePath();
+				contactPhoto.resizer.ctx.fillStyle = grad;
+				contactPhoto.resizer.ctx.fill();
+			break;
+			
+			case 3: // right edge
+				contactPhoto.resizer.ctx.beginPath();
+				contactPhoto.resizer.ctx.moveTo(w, 0);
+				//contactPhoto.resizer.ctx.lineTo(w, .95*h);
+				//contactPhoto.resizer.ctx.quadraticCurveTo(w, .3*h, .55*w, 0);
+				contactPhoto.resizer.ctx.lineTo(w, h);
+				contactPhoto.resizer.ctx.quadraticCurveTo(.8*w, .4*h, .85*w, 0);
+				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+				grad.addColorStop(0, 'rgba(255,255,255,0.6)');
+				grad.addColorStop(1, 'rgba(255,255,255,0.0)');
 				contactPhoto.resizer.ctx.fillStyle = grad;
 				contactPhoto.resizer.ctx.fill();
 			break;
@@ -878,9 +900,12 @@ contactPhoto.imageFX = {
 	
 	roundCorners: function() {
 		contactPhoto.resizer.ctx.save();
-		var cornerRadius = contactPhoto.prefs.get('effectCornerRadius', 'int');
 		var w = contactPhoto.resizer.canvas.width;
 		var h = contactPhoto.resizer.canvas.height;
+		
+		var cornerRadius = Math.min(w, h)/4;
+		//var cornerRadius = Math.max(w, h)/5;
+		//var cornerRadius = contactPhoto.prefs.get('effectCornerRadius', 'int');
 	
 		var oldGlobalCompositeOperation = contactPhoto.resizer.ctx.globalCompositeOperation;
 		contactPhoto.resizer.ctx.globalCompositeOperation = 'destination-in';

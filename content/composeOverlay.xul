@@ -6,6 +6,7 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 <script type="application/javascript" src="chrome://contactPhoto/content/contactPhoto.js"/>
+<script type="application/javascript" src="chrome://contactPhoto/content/canvasPerspectiveWarp.js"/>
 <script type="application/javascript" src="chrome://contactPhoto/content/composeOverlay.js"/>
 
 <hbox id="msgheaderstoolbar-box">
