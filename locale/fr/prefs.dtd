@@ -52,6 +52,7 @@
 <!ENTITY effects.glossCurved "incurvé">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "coin">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Dossiers spéciaux">
 <!ENTITY specialFolders.description "Les dossiers spéciaux sont « Messages en attente », « Envoyés » et « Brouillons ». Les messages de ces dossiers sont traités autrement : ils affichent l'image par défaut de leur destinataire (selon votre point de vue). Décocher cette case pour désactiver cette fonction.">
 <!ENTITY specialFolders.label "Activer les dossiers spéciaux">

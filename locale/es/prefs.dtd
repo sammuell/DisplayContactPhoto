@@ -54,6 +54,7 @@ Tipos de imagen soportados: jpg, png, gif.">
 <!ENTITY effects.glossCurved "curvo">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "esquina">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Carpetas especiales">
 <!ENTITY specialFolders.description "Las carpetas especiales son la Bandeja de salida, enviados y la carpeta de Borradores. Los mensajes en una de estas carpetas se tratan de una manera distinta: mostrar la foto del receptor (desde su punto de vista) de forma predeterminada. Desactive la casilla de verificación para desactivar este comportamiento.">
 <!ENTITY specialFolders.label "Habilitar las carpetas especiales">

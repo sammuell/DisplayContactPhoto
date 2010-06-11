@@ -52,6 +52,7 @@
 <!ENTITY effects.glossCurved "zakřivený">
 <!ENTITY effects.glossHorizontal "vodorovný">
 <!ENTITY effects.glossCorner "roh">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Speciální adresáře">
 <!ENTITY specialFolders.description "Zvláštní složky jsou složky K odeslání, Odeslané a Koncepty. Zprávy v z těchto složkách jsou ošetřeny jinak: ve výchozím nastavení se zobrazí fotografie příjemce (z vašeho pohledu). Zrušte zaškrtnutí políčka pro vypnutí tohoto chování.">
 <!ENTITY specialFolders.label "Povolit speciální adresáře">

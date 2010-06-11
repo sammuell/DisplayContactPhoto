@@ -52,6 +52,7 @@
 <!ENTITY effects.glossCurved "incurvato">
 <!ENTITY effects.glossHorizontal "orizzontale">
 <!ENTITY effects.glossCorner "agli angoli">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Cartelle speciali">
 <!ENTITY specialFolders.description "Posta in uscita, Posta inviata e Bozze sono considerate cartelle speciali, in quanto per i messaggi presenti in queste cartelle verrà mostrata l'immagine del destinatario e non del mittente (dal proprio punto di vista). Togliere la spunta per non applicare questo comportamento.">
 <!ENTITY specialFolders.label "Attiva cartelle speciali">

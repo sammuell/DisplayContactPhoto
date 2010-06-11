@@ -52,6 +52,7 @@
 <!ENTITY effects.glossCurved "golvend">
 <!ENTITY effects.glossHorizontal "horizontaal">
 <!ENTITY effects.glossCorner "diagonaal">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Speciale mappen">
 <!ENTITY specialFolders.description "Speciale mappen zijn de Postvakken UIT, Verzonden en Concepten. Berichten in één van deze mappen worden op een andere manier behandeld: ze geven standaard de foto van de ontvanger weer (vanuit u gezien). Vink het veld uit om dit gedrag uit te schakelen.">
 <!ENTITY specialFolders.label "Speciale mappen inschakelen">

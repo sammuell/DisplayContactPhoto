@@ -52,6 +52,7 @@
 <!ENTITY effects.glossCurved "криво">
 <!ENTITY effects.glossHorizontal "хоризонтално">
 <!ENTITY effects.glossCorner "угласто">
+<!ENTITY effects.glossEdge "Right edge">
 <!ENTITY specialFolders.caption "Посебне фасцикле">
 <!ENTITY specialFolders.description "Посебне фасцикле су фасцикле за одлазне, послате и поруке скице. Поруке у једном од ових фасцикла се третирају на различите начине — по подразумеваним поставкама се приказују слике примаоца (с Ваше тачке гледишта). Дештриклирајте кућицу како бисте искључили ову опцију.">
 <!ENTITY specialFolders.label "Омогући посебне фасцикле">

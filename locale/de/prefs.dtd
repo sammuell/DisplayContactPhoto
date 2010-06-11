@@ -49,9 +49,10 @@
 <!ENTITY effects.roundedCorners "Abgerundete Ecken anzeigen">
 <!ENTITY effects.enableShadow "Einen Schlagschatten anzeigen">
 <!ENTITY effects.enableGloss "Einen Glanzeffekt zum Foto hinzufügen:">
-<!ENTITY effects.glossCurved "gekrümmt">
-<!ENTITY effects.glossHorizontal "horizontal">
-<!ENTITY effects.glossCorner "obere Ecke">
+<!ENTITY effects.glossCurved "Gekrümmt">
+<!ENTITY effects.glossHorizontal "Horizontal">
+<!ENTITY effects.glossCorner "Linke obere Ecke">
+<!ENTITY effects.glossEdge "Rechter Rand">
 <!ENTITY specialFolders.caption "Spezielle Ordner">
 <!ENTITY specialFolders.description "Spezielle Ordner sind der Postausgang, der &quot;Gesendet&quot; und der &quot;Entwürfe&quot; Ordner. Nachrichten in einem dieser Ordner werden anders als die Übrigen behandelt: Anstatt des Fotos des Absenders wird standardmässig dasjenige des Empfängers (aus Ihrem Gesichtswinkel) dargestellt. Deativieren Sie diese Option, um dieses Verhalten auszuschalten.">
 <!ENTITY specialFolders.label "Spezielle Ordner aktivieren">
