@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Vis standard billede">
 <!ENTITY defaultPhoto.hide "Vis tom plads">
 <!ENTITY defaultPhoto.collapse "Vis ingenting">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Enable Gravatars">
 <!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY gravatar.default "Default Gravatar:">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Hvis runde hjørner">
 <!ENTITY effects.enableShadow "Vis skygge">
 <!ENTITY effects.enableGloss "Tilføj glossy effekt til billedet:">
-<!ENTITY effects.glossCurved "buet">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "Horisontal">
 <!ENTITY effects.glossCorner "Hjørne">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Special folders">
 <!ENTITY specialFolders.description "Special folders are the Outbox, the Sent and the Drafts folder. Messages in one of these folders are treated in a different way: they display the photo of the receiver (from your point of view) by default. Uncheck the check box to turn off this behavior.">
 <!ENTITY specialFolders.label "Enable special folders">
 <!ENTITY clearCache.label "Ryd thumbnail cache">
 <!ENTITY clearCache.description "Thumbnail cachen skal ryddes manuelt, hvis du har (eks.) ændret et billede i den lokale foto mappe (Du behøver ikke at gøre dette, hvis du tilføjer et foto).">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "Pixels">

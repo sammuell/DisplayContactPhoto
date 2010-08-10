@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Standaardfoto weergeven">
 <!ENTITY defaultPhoto.hide "Lege ruimte weergeven">
 <!ENTITY defaultPhoto.collapse "Niets weergeven">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Gravatars inschakelen">
 <!ENTITY gravatar.description "Gravatar (een afkorting voor globally recognized avatar) is een dienst die globaal unieke avatars biedt. Het e-mailadres wordt versleuteld en verzonden naar gravatar.com. Als de eigenaar van het adres is geregistreerd op gravatar.com wordt zijn/haar avatar weergegeven, anders wordt een standaard gravatar-afbeelding weergegeven. Gravatars worden lokaal opgeslagen om prestatieredenen en om de netwerkbelasting te verminderen.">
 <!ENTITY gravatar.default "Standaard Gravatar:">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Afgeronde hoeken">
 <!ENTITY effects.enableShadow "Schaduw weergeven">
 <!ENTITY effects.enableGloss "Glanzend effect aan foto toevoegen:">
-<!ENTITY effects.glossCurved "golvend">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "horizontaal">
 <!ENTITY effects.glossCorner "diagonaal">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Speciale mappen">
 <!ENTITY specialFolders.description "Speciale mappen zijn de Postvakken UIT, Verzonden en Concepten. Berichten in één van deze mappen worden op een andere manier behandeld: ze geven standaard de foto van de ontvanger weer (vanuit u gezien). Vink het veld uit om dit gedrag uit te schakelen.">
 <!ENTITY specialFolders.label "Speciale mappen inschakelen">
 <!ENTITY clearCache.label "Miniaturencache opschonen">
 <!ENTITY clearCache.description "De miniaturencache hoeft alleen handmatig te worden opgeschoond als u een foto in de lokale fotomap heeft gewijzigd of gewisseld (het is niet nodig als u een foto toevoegt).">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "pixels">

@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Mostrar a foto padrão">
 <!ENTITY defaultPhoto.hide "Mostrar espaço em branco">
 <!ENTITY defaultPhoto.collapse "Não mostrar nada">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Ativar Gravatares">
 <!ENTITY gravatar.description "Gravatar (uma abreviação de avatar globalmente reconhecido) é um serviço para fornecer avatares únicos e globais. O endereço eletrônico é criptográfico e enviado à gravatar.com. Se o proprietário do endereço for registrado no gravatar.com, seu avatar será exibido; caso contrário, uma imagem padrão será exibida. As imagens Gravatar são armazenadas localmente em cache para melhorar o desempenho e para reduzir a carga na rede.">
 <!ENTITY gravatar.default "Gravatar Padrão:">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Exibir cantos arredondados">
 <!ENTITY effects.enableShadow "Exibir uma sombra">
 <!ENTITY effects.enableGloss "Adicione um efeito brilhante para a foto:">
-<!ENTITY effects.glossCurved "curvo">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "horizontal">
 <!ENTITY effects.glossCorner "borda">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Pastas Especiais">
 <!ENTITY specialFolders.description "Pastas especiais são as pastas Saída, Enviados e Rascunhos. Mensagens em uma dessas pastas são tratadas de forma diferente: por padrão, elas exibem a foto do receptor. Desmarque a caixa de seleção para desativar esse comportamento.">
 <!ENTITY specialFolders.label "Ativar pastas especiais">
 <!ENTITY clearCache.label "Limpar cache de miniaturas">
 <!ENTITY clearCache.description "O cache de miniaturas deve ser limpo manualmente apenas se você tiver mudado uma foto na pasta local (você não precisa fazer isso se você apenas adicionou uma nova foto).">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "pixels">

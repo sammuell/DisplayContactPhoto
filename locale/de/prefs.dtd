@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Standardfoto anzeigen">
 <!ENTITY defaultPhoto.hide "Leeren Bereich anzeigen">
 <!ENTITY defaultPhoto.collapse "Nichts anzeigen">
+<!ENTITY composeWindow.label "Nachrichten verfassen">
+<!ENTITY composeWindow.showPhotos "Fotos der Empfänger anzeigen">
+<!ENTITY composeWindow.photoPosition "Position der Fotos">
 <!ENTITY gravatar.enable "Gravatars aktivieren">
 <!ENTITY gravatar.description "Gravatar (eine Abkürzung für englisch &quot;globally recognized avatar&quot; - global erkennbarer Avatar) ist ein Dienst für global einzigartige Avatars. Die  E-Mail-Adresse wird verschlüsselt und an gravatar.com gesendet. Ist der Besitzer der Adresse bei gravatar.com registriert, wird sein Avatar angezeigt, sonst wird ein Gravatar-Standardbild angezeigt. Gravatars werden lokal gecached aus Effizienzgründen und um die Netzwerkbelastung zu verkleinern.">
 <!ENTITY gravatar.default "Standard-Gravatar">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Abgerundete Ecken anzeigen">
 <!ENTITY effects.enableShadow "Einen Schlagschatten anzeigen">
 <!ENTITY effects.enableGloss "Einen Glanzeffekt zum Foto hinzufügen:">
-<!ENTITY effects.glossCurved "Gekrümmt">
+<!ENTITY effects.glossCurvedUp "Nach oben gekrümmt">
+<!ENTITY effects.glossCurvedDown "Nach unten gekrümmt">
 <!ENTITY effects.glossHorizontal "Horizontal">
 <!ENTITY effects.glossCorner "Linke obere Ecke">
 <!ENTITY effects.glossEdge "Rechter Rand">
+<!ENTITY effects.glossUpper "Obere Hälfte">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Spezielle Ordner">
 <!ENTITY specialFolders.description "Spezielle Ordner sind der Postausgang, der &quot;Gesendet&quot; und der &quot;Entwürfe&quot; Ordner. Nachrichten in einem dieser Ordner werden anders als die Übrigen behandelt: Anstatt des Fotos des Absenders wird standardmässig dasjenige des Empfängers (aus Ihrem Gesichtswinkel) dargestellt. Deativieren Sie diese Option, um dieses Verhalten auszuschalten.">
 <!ENTITY specialFolders.label "Spezielle Ordner aktivieren">
 <!ENTITY clearCache.label "Miniaturansichten-Cache leeren">
 <!ENTITY clearCache.description "Der Miniaturansichten-Cache muss nur manuell geleert werden, nachdem Sie Bilder im lokalen Fotoverzeichnis abgeändert haben oder wenn Sie alle Gravatars neu laden möchten.">
+<!ENTITY openWebsite.caption "Display Contact Photo Website">
+<!ENTITY openWebsite.label "Nach der Installation einer neuen Version die Release Notes öffnen.">
 <!ENTITY pixels "Pixel">

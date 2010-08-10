@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "mostra una foto predefinita">
 <!ENTITY defaultPhoto.hide "mostra spazio vuoto">
 <!ENTITY defaultPhoto.collapse "non mostrare nulla">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Attiva supporto gravatar">
 <!ENTITY gravatar.description "Gravatar (un'abbreviazione per avatar riconosciuti globalmente) è un servizio che associa un avatar ad un indirizzo e-mail. Inviando al sito gravatar.com  l'indirizzo e-mail cifrato è possibile ottenere l'immagine ad esso associata, se l'indirizzo e-mail non è registrato verrà restituita un'immagine predefinita. Le immagini vengono salvate localmente per aumentare le prestazioni e diminuire le chiamate remote.">
 <!ENTITY gravatar.default "Gravatar predefinito:">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Mostra bordi arrotondati">
 <!ENTITY effects.enableShadow "Mostra ombreggiatura">
 <!ENTITY effects.enableGloss "Aggiungi un effetto lucido alla foto">
-<!ENTITY effects.glossCurved "incurvato">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "orizzontale">
 <!ENTITY effects.glossCorner "agli angoli">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Cartelle speciali">
 <!ENTITY specialFolders.description "Posta in uscita, Posta inviata e Bozze sono considerate cartelle speciali, in quanto per i messaggi presenti in queste cartelle verrà mostrata l'immagine del destinatario e non del mittente (dal proprio punto di vista). Togliere la spunta per non applicare questo comportamento.">
 <!ENTITY specialFolders.label "Attiva cartelle speciali">
 <!ENTITY clearCache.label "Cancella la cache delle miniature">
 <!ENTITY clearCache.description "La cache delle miniature deve essere cancellata manualmente solo se è stata modificata una foto nella cartella locale (l'operazione non è richiesta quando si aggiunge una foto).">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "pixel">

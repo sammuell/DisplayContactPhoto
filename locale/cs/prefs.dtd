@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Zobrazit výchozí fotografii.">
 <!ENTITY defaultPhoto.hide "Zobrazit prázdné místo.">
 <!ENTITY defaultPhoto.collapse "Nezobrazovat nic.">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Povolit gravatary">
 <!ENTITY gravatar.description "Gravatar (zkratka pro celosvětově uznávaný avatar) je služba pro poskytování globálně-jedinečného avataru. E-mailová adresa je zašifrována a odeslána do gravatar.com. Pokud je vlastník adresy zapsána v gravatar.com, jeho avatar se zobrazí, jinak Gravatar zobrazuje výchozího obrázek. Gravatary jsou uložené lokálně z důvodů výkonu a snížení zatížení sítě.">
 <!ENTITY gravatar.default "Výchozí Gravatar:">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Zobrazit zakulacené rohy">
 <!ENTITY effects.enableShadow "Zobrazení stínu">
 <!ENTITY effects.enableGloss "Vložit poznámku k fotografii:">
-<!ENTITY effects.glossCurved "zakřivený">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "vodorovný">
 <!ENTITY effects.glossCorner "roh">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Speciální adresáře">
 <!ENTITY specialFolders.description "Zvláštní složky jsou složky K odeslání, Odeslané a Koncepty. Zprávy v z těchto složkách jsou ošetřeny jinak: ve výchozím nastavení se zobrazí fotografie příjemce (z vašeho pohledu). Zrušte zaškrtnutí políčka pro vypnutí tohoto chování.">
 <!ENTITY specialFolders.label "Povolit speciální adresáře">
 <!ENTITY clearCache.label "Vyčištění paměti náhledů">
 <!ENTITY clearCache.description "Vyčištění paměti náhledů musí být provedeno manuálně, pokud došlo ke změně v místním adresáři fotografií (Nemusí být provedeno při přidávání fotografií).">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "pixely">

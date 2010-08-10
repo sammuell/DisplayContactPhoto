@@ -13,6 +13,9 @@
 <!ENTITY defaultPhoto.show "Прикажи подразумевану слику">
 <!ENTITY defaultPhoto.hide "Прикажи празан простор">
 <!ENTITY defaultPhoto.collapse "Ништа не приказуј">
+<!ENTITY composeWindow.label "Compose window">
+<!ENTITY composeWindow.showPhotos "Show photos of recipients">
+<!ENTITY composeWindow.photoPosition "Position of the photos:">
 <!ENTITY gravatar.enable "Омогући Граватаре">
 <!ENTITY gravatar.description "Граватар (скраћеница за глобално препознатљив аватар) је сервис за пружање јединствених аватара. Е-адреса се шифрује и шаље на gravatar.com. Ако је власник адресе регистрован на gravatar.com, његов/њен аватар ће бити приказан, а уколико то није случај, подразумевана слика сајта биће приказана. Граватар слике се чувају на локалном нивоу ради перформанси, као и да се смањи оптерећење мреже.">
 <!ENTITY gravatar.default "Подразумевани Граватар">
@@ -49,13 +52,18 @@
 <!ENTITY effects.roundedCorners "Прикажи заобљене углове">
 <!ENTITY effects.enableShadow "Прикажи сенку">
 <!ENTITY effects.enableGloss "Додај ефекат сјаја на слику:">
-<!ENTITY effects.glossCurved "криво">
+<!ENTITY effects.glossCurvedUp "Curved up">
+<!ENTITY effects.glossCurvedDown "Curved down">
 <!ENTITY effects.glossHorizontal "хоризонтално">
 <!ENTITY effects.glossCorner "угласто">
 <!ENTITY effects.glossEdge "Right edge">
+<!ENTITY effects.glossUpper "Upper half">
+<!ENTITY effects.glossDiagonal "Diagonal">
 <!ENTITY specialFolders.caption "Посебне фасцикле">
 <!ENTITY specialFolders.description "Посебне фасцикле су фасцикле за одлазне, послате и поруке скице. Поруке у једном од ових фасцикла се третирају на различите начине — по подразумеваним поставкама се приказују слике примаоца (с Ваше тачке гледишта). Дештриклирајте кућицу како бисте искључили ову опцију.">
 <!ENTITY specialFolders.label "Омогући посебне фасцикле">
 <!ENTITY clearCache.label "Чишћење привремене меморије">
 <!ENTITY clearCache.description "Привремена меморија мора бити ручно очишћена само ако сте променили слику у локалној фасцикли или ако желите да поново учитате све Граватаре.">
+<!ENTITY openWebsite.caption "Display Contact Photo website">
+<!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "тачкица/е">
