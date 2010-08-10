@@ -1,12 +1,16 @@
 pref('extensions.contactPhoto.currentVersion', '');
+pref('extensions.contactPhoto.openWebsiteAfterInstall', true);
 pref('extensions.contactPhoto.folderDebug', false);
 
 pref('extensions.contactPhoto.photoSize', 75);
 pref('extensions.contactPhoto.smallIconSize', 20);
 pref('extensions.contactPhoto.photoPosition', 'left');
-pref('extensions.contactPhoto.3Dstack.photoSize', 50);
-pref('extensions.contactPhoto.3Dstack.display', true);
-pref('extensions.contactPhoto.3Dstack.position', 'left');
+
+pref('extensions.contactPhoto.composePhotos.display', true);
+pref('extensions.contactPhoto.composePhotos.type', '3d');
+pref('extensions.contactPhoto.composePhotos.position', 'left');
+pref('extensions.contactPhoto.composePhotos.size', 60);
+
 pref('extensions.contactPhoto.defaultPhoto', 'show');
 pref('extensions.contactPhoto.defaultGenericPhoto', 'chrome://contactPhoto/skin/genericIcons/displaycontactphoto.png');
 pref('extensions.contactPhoto.enableFaces', false);
@@ -26,10 +30,10 @@ pref('extensions.contactPhoto.effectBorder', false);
 pref('extensions.contactPhoto.effectBorderColor', '#000000');
 pref('extensions.contactPhoto.effectBorderType', 1);
 pref('extensions.contactPhoto.effectRoundedCorners', false);
-pref('extensions.contactPhoto.effectCornerRadius', 15);
 pref('extensions.contactPhoto.effectBlurWidth', 4);
 pref('extensions.contactPhoto.effectGloss', false);
 pref('extensions.contactPhoto.effectGlossType', 0);
 pref('extensions.contactPhoto.effectGlossGradientPosition', 40); // percent from the top
 
 pref('extensions.contactPhoto.specialFoldersUseToHeaders', true); // extract the email address from the 'to' header in special folders instead from the 'from' header
+pref('extensions.contactPhoto.imageExtensions', 'jpg,png,gif,jpeg');

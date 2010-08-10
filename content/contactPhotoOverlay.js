@@ -22,10 +22,12 @@ contactPhoto.messageDisplay = {
 			contactPhoto.messageDisplay.photoInfo.size = contactPhoto.prefs.get('photoSize', 'int');
 			
 			if (contactPhoto.prefs.get('enableFaces', 'bool')) {
-				var photoFace = gMessageDisplay.displayedMessage.getStringProperty('face');
+				//var photoFace = gMessageDisplay.displayedMessage.getStringProperty('face');
+				var photoFace =  currentHeaderData['face']? currentHeaderData['face'].headerValue: null;
 				if (photoFace && photoFace.length > 0) {
 					contactPhoto.messageDisplay.photoInfo.hasFace = true;
 					contactPhoto.messageDisplay.photoInfo.faceURI = 'data:image/png;base64,'+encodeURIComponent(photoFace);
+					if (!gViewAllHeaders) delete currentHeaderData['face']; //prevent header to show up in normal mode
 				}
 			}
 			
@@ -161,15 +163,6 @@ contactPhoto.messageDisplay = {
 		}
 	},
 	
-	messageListener: {
-		onStartHeaders: function() {},
-		onEndHeaders: function() {
-			contactPhoto.messageDisplay.getPhoto();
-		},
-		onEndAttachments: function() {},
-		onBeforeShowHeaderPane: function() {}
-	},
-	
 	setPhotoPosition: function() {
 		var photoPos = contactPhoto.prefs.get('photoPosition', 'char');
 		var photoBox = document.getElementById('DiCoP-Box');
@@ -249,6 +242,15 @@ contactPhoto.messageDisplay = {
 				contactPhoto.display.logic(contactPhoto.messageDisplay.photoInfo, true);
 				break;
 			}
+		}
+	},
+	
+	messageListener: {
+		onStartHeaders: function() {},
+		onEndHeaders: function() {},
+		onEndAttachments: function() {},
+		onBeforeShowHeaderPane: function() {
+			contactPhoto.messageDisplay.getPhoto();
 		}
 	},
 

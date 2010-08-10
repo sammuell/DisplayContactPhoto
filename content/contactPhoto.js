@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b1';
-contactPhoto.debug = 0;
+contactPhoto.currentVersion = '1.2b2';
+contactPhoto.debug = 1;
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -10,12 +10,12 @@ contactPhoto.genericInit = function() {
 	if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
 	
 		// remove some outdated preferences
-		var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon'];
+		var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon', 'effectCornerRadius'];
 		for (var i in prefsToRemove) {
 			try {
 				contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
 			} catch (e) {
-				if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
+				//if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
 			}
 		}
 		
@@ -23,14 +23,13 @@ contactPhoto.genericInit = function() {
 		
 		
 		// open support website in a new tab
-		/*
-		Components.classes['@mozilla.org/appshell/window-mediator;1']
-			.getService(Components.interfaces.nsIWindowMediator)
-			.getMostRecentWindow("mail:3pane")
-			.document.getElementById("tabmail")
-			.openTab("contentTab", {contentPage: 'http://displaycontactphoto.leven.ch/firstrun.php?v='+contactPhoto.currentVersion});
-		*/
-		
+		if (contactPhoto.prefs.get('openWebsiteAfterInstall', 'bool')) {
+			Components.classes['@mozilla.org/appshell/window-mediator;1']
+				.getService(Components.interfaces.nsIWindowMediator)
+				.getMostRecentWindow("mail:3pane")
+				.document.getElementById("tabmail")
+				.openTab("contentTab", {contentPage: 'http://dicop.sourceforge.net/just_installed.php?version='+contactPhoto.currentVersion});
+		}
 		
 		contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
 	}
@@ -54,6 +53,7 @@ contactPhoto.prefs = {
 	},
 
 	get: function(prefName, type) {
+		try {
 		switch (type) {
 			case 'bool':
 				return contactPhoto.prefs.branch.getBoolPref(prefName);
@@ -71,6 +71,7 @@ contactPhoto.prefs = {
 					if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
 				}
 		}
+		}catch (e){alert(prefName)}
 	},
 
 	set: function(prefName, prefValue, type) {
@@ -97,7 +98,8 @@ contactPhoto.prefs = {
 	checkCustomHeaders: function() {
 		var headerPrefs = Components.classes['@mozilla.org/preferences-service;1']
 					.getService(Components.interfaces.nsIPrefService)
-		var customDBHeaders = headerPrefs.getCharPref('mailnews.customDBHeaders').split(' ');
+		//var customDBHeaders = headerPrefs.getCharPref('mailnews.customDBHeaders').split(' ');
+		var customDBHeaders = headerPrefs.getCharPref('mailnews.headers.extraExpandedHeaders').split(' ');
 
 		var headersToAdd = [];
 		for (var i in contactPhoto.prefs.customHeaders) {
@@ -115,7 +117,8 @@ contactPhoto.prefs = {
 		}
 
 		var newCustumHeaders = customDBHeaders.concat(headersToAdd).join(' ');
-		headerPrefs.setCharPref('mailnews.customDBHeaders', newCustumHeaders);
+		//headerPrefs.setCharPref('mailnews.customDBHeaders', newCustumHeaders);
+		headerPrefs.setCharPref('mailnews.headers.extraExpandedHeaders', newCustumHeaders);
 	}
 };
 
@@ -336,7 +339,7 @@ contactPhoto.display = {
 				
 				contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
 				
-				if (contactPhoto.debug) dump('photo loaded: '+URI);
+				if (contactPhoto.debug) dump('photo loaded: '+URI+'\n');
 			}, false);
 		
 		dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
@@ -351,7 +354,7 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 	
 	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool')) {
 		try {
-			var fileTypes = ['jpg', 'png', 'gif', 'jpeg'];
+			var fileTypes = contactPhoto.prefs.get('imageExtensions', 'char').split(',');
 
 			var prefLocalPhotoDir = contactPhoto.prefs.get('photoDirectory', 'file');
 			var localPhotoDir = Components.classes["@mozilla.org/file/local;1"]
@@ -397,7 +400,7 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 		}
 	}
 
-	photoInfo.cardDetails = contactPhoto.getCard(emailAddress); // make sure we have the latest card
+	photoInfo.cardDetails = contactPhoto.getCard(emailAddress);
 
 	if (photoInfo.cardDetails && photoInfo.cardDetails.card) {
 
@@ -456,6 +459,7 @@ contactPhoto.getCard = function(emailAddress) {
 // functions for cache managing
 contactPhoto.cache = {
 	directory: 'contactPhotoThumbnails',
+	
 	// clear: empties the cache
 	clear: function() {
 		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -464,14 +468,14 @@ contactPhoto.cache = {
 		cacheDir.append(contactPhoto.cache.directory);
 
 		if (cacheDir.exists() && cacheDir.isDirectory()) {
-			var enumerator = cacheDir.directoryEntries;
-			while (enumerator.hasMoreElements()) {
+			var subDirs = cacheDir.directoryEntries;
+			while (subDirs.hasMoreElements()) {
 			
-				var entry = enumerator.getNext().QueryInterface(Components.interfaces.nsIFile);
+				var dir = subDirs.getNext().QueryInterface(Components.interfaces.nsIFile);
 				
-				if (entry.exists() && entry.isDirectory()) {
+				if (dir.exists() && dir.isDirectory()) {
 					try {
-						entry.remove(true); // remove the directory and all its contents
+						dir.remove(true); // remove the directory and all its contents
 					} catch (e) { 
 						return false;
 					}
@@ -482,24 +486,6 @@ contactPhoto.cache = {
 		}
 		
 		return false;
-		
-	/*
-		var oldDir = Components.classes["@mozilla.org/file/directory_service;1"]
-			.getService(Components.interfaces.nsIProperties)
-			.get("ProfD", Components.interfaces.nsIFile);
-		oldDir.append(contactPhoto.cache.directory);
-
-		if (oldDir.exists() && oldDir.isDirectory()) {
-			try {
-				oldDir.remove(true); // remove the directory and all its contents
-			} catch (e) { 
-				return false;
-			}
-		}
-			
-		contactPhoto.cache.checkDirectory();
-		return true;
-		*/
 	},
 	
 	// createSubDirectory: creates a directory in the thumbnail directory if it does not exist
@@ -527,25 +513,6 @@ contactPhoto.cache = {
 		if (!cacheDir.exists() || !cacheDir.isDirectory()) {
 			cacheDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
 		}
-
-		
-		/*
-		subdirectories = [contactPhoto.prefs.get('smallIconSize', 'int'), ''+contactPhoto.prefs.get('photoSize', 'int')];
-			
-		for (var i in subdirectories) {
-			var newDir = Components.classes["@mozilla.org/file/directory_service;1"]
-					.getService(Components.interfaces.nsIProperties)
-					.get("ProfD", Components.interfaces.nsIFile);
-			newDir.append(contactPhoto.cache.directory);
-			newDir.append(subdirectories[i]);
-			
-			if (newDir.exists() && newDir.isDirectory()) {
-				continue;
-			}
-			
-			newDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
-		}
-		*/
 	},
 
 	// removeThumbnail: delete a specific thumbnail from the cache
@@ -744,11 +711,13 @@ contactPhoto.resizer = {
 		
 		
 		/* IMAGE EFFECTS */
-		if (!photoInfo.noVisualEffects) {
-			if (contactPhoto.prefs.get('effectGloss', 'bool')) {
-				contactPhoto.imageFX.addGloss();
-			}
 			
+		// apply gloss effect on all images
+		if (contactPhoto.prefs.get('effectGloss', 'bool')) {
+			contactPhoto.imageFX.addGloss();
+		}
+		
+		if (!photoInfo.noVisualEffects) {
 			if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
 				contactPhoto.imageFX.roundCorners();
 			}
@@ -813,11 +782,6 @@ contactPhoto.imageFX = {
 		var w = contactPhoto.resizer.canvas.width;
 		var h = contactPhoto.resizer.canvas.height;
 
-		var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
-		grad.addColorStop(0, 'rgba(255,255,255,0.4)');
-		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
-		grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0)');
-		
 		// slightly darken the lower part of the image
 		var dark = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
 		dark.addColorStop(Math.max(0, gradPos-.1), 'rgba(0,0,0,0)');
@@ -826,38 +790,65 @@ contactPhoto.imageFX = {
 		contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 
 		switch (contactPhoto.prefs.get('effectGlossType', 'int')) {
-			case 0:	// curved gradient
+			case 0:	// gradient curved down
 				contactPhoto.resizer.ctx.beginPath();
 				contactPhoto.resizer.ctx.moveTo(0, 0);
 				contactPhoto.resizer.ctx.lineTo(0, h*gradPos);
 				contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*Math.min(1, gradPos+.1), w*.8, h*Math.min(1, gradPos+.1), w, h*gradPos)
 				contactPhoto.resizer.ctx.lineTo(w, 0);
 				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+				grad.addColorStop(0, 'rgba(255,255,255,0.5)');
+				grad.addColorStop(gradPos+.1, 'rgba(255,255,255,0.1)');
+				grad.addColorStop(gradPos+.1, 'rgba(255,255,255,0)');
 				contactPhoto.resizer.ctx.fillStyle = grad;
 				contactPhoto.resizer.ctx.fill();
 			break;
 			
-			case 1: // horizontal gradient
+			case 1:	// gradient curved up
+				contactPhoto.resizer.ctx.beginPath();
+				contactPhoto.resizer.ctx.moveTo(0, 0);
+				contactPhoto.resizer.ctx.lineTo(0, h*Math.min(1, gradPos+.1));
+				contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*gradPos, w*.8, h*gradPos, w, h*Math.min(1, gradPos+.1))
+				contactPhoto.resizer.ctx.lineTo(w, 0);
+				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+				grad.addColorStop(0, 'rgba(255,255,255,0.5)');
+				grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
+				grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0)');
+				contactPhoto.resizer.ctx.fillStyle = grad;
+				contactPhoto.resizer.ctx.fill();
+			break;
+			
+			case 2: // horizontal gradient
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+				grad.addColorStop(0, 'rgba(255,255,255,0.5)');
+				grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
+				grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0)');
 				contactPhoto.resizer.ctx.fillStyle = grad;
 				contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
 			break;
 			
-			case 2: // curved corner gradient 
+			case 3: // curved corner gradient 
 				contactPhoto.resizer.ctx.beginPath();
 				contactPhoto.resizer.ctx.moveTo(0, 0);
 				contactPhoto.resizer.ctx.lineTo(w, 0);
 				contactPhoto.resizer.ctx.lineTo(w, h*.1);
 				contactPhoto.resizer.ctx.quadraticCurveTo(w*.33, h*.20, 0, h*.4);
 				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, w, h*.4);
+				grad.addColorStop(0, 'rgba(255,255,255,0.4)');
+				grad.addColorStop(1, 'rgba(255,255,255,0.0)');
 				contactPhoto.resizer.ctx.fillStyle = grad;
 				contactPhoto.resizer.ctx.fill();
 			break;
 			
-			case 3: // right edge
+			case 4: // right edge
 				contactPhoto.resizer.ctx.beginPath();
 				contactPhoto.resizer.ctx.moveTo(w, 0);
-				//contactPhoto.resizer.ctx.lineTo(w, .95*h);
-				//contactPhoto.resizer.ctx.quadraticCurveTo(w, .3*h, .55*w, 0);
 				contactPhoto.resizer.ctx.lineTo(w, h);
 				contactPhoto.resizer.ctx.quadraticCurveTo(.8*w, .4*h, .85*w, 0);
 				contactPhoto.resizer.ctx.closePath();
@@ -865,6 +856,51 @@ contactPhoto.imageFX = {
 				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
 				grad.addColorStop(0, 'rgba(255,255,255,0.6)');
 				grad.addColorStop(1, 'rgba(255,255,255,0.0)');
+				contactPhoto.resizer.ctx.fillStyle = grad;
+				contactPhoto.resizer.ctx.fill();
+			break;
+			
+			case 5: // upper half
+				contactPhoto.resizer.ctx.beginPath();
+				contactPhoto.resizer.ctx.moveTo(0, 0);
+				contactPhoto.resizer.ctx.lineTo(0, gradPos*h);
+				contactPhoto.resizer.ctx.quadraticCurveTo(w, gradPos*.9*h, w, .05*h);
+				contactPhoto.resizer.ctx.lineTo(w, 0);
+				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
+				grad.addColorStop(0, 'rgba(255,255,255,0.05)');
+				grad.addColorStop(1, 'rgba(255,255,255,0.6)');
+				contactPhoto.resizer.ctx.fillStyle = grad;
+				contactPhoto.resizer.ctx.fill();
+			break;
+			
+			case 6: // diagonal
+				var x0 = .1*w;
+				var y0 = 0;
+				var x1 = w;
+				var y1 = .9*h;
+				
+				var m1 = (y1-y0)/(x1-x0);
+				var q1 = y0 - m1*x0;
+				
+				var m2 = -1/m1;
+				var q2 = -m2*w;
+				
+				var x3 = (q2-q1)/(m1-m2);
+				var y3 = m1*x3 + q1;
+				
+				contactPhoto.resizer.ctx.beginPath();
+				contactPhoto.resizer.ctx.moveTo(0, 0);
+				contactPhoto.resizer.ctx.lineTo(x0, y0);
+				contactPhoto.resizer.ctx.lineTo(x1, y1);
+				contactPhoto.resizer.ctx.lineTo(w, h);
+				contactPhoto.resizer.ctx.lineTo(w, 0);
+				contactPhoto.resizer.ctx.closePath();
+				
+				var grad = contactPhoto.resizer.ctx.createLinearGradient(x3, y3, w, 0);
+				grad.addColorStop(0, 'rgba(255,255,255,0.25)');
+				grad.addColorStop(.7, 'rgba(255,255,255,0.05)');
 				contactPhoto.resizer.ctx.fillStyle = grad;
 				contactPhoto.resizer.ctx.fill();
 			break;
@@ -903,9 +939,7 @@ contactPhoto.imageFX = {
 		var w = contactPhoto.resizer.canvas.width;
 		var h = contactPhoto.resizer.canvas.height;
 		
-		var cornerRadius = Math.min(w, h)/4;
-		//var cornerRadius = Math.max(w, h)/5;
-		//var cornerRadius = contactPhoto.prefs.get('effectCornerRadius', 'int');
+		var cornerRadius = Math.round(Math.min(w, h)/4);
 	
 		var oldGlobalCompositeOperation = contactPhoto.resizer.ctx.globalCompositeOperation;
 		contactPhoto.resizer.ctx.globalCompositeOperation = 'destination-in';
@@ -947,9 +981,11 @@ contactPhoto.imageFX = {
 		contactPhoto.resizer.ctx.lineWidth = 1;
 		
 		if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
-			var cornerRadius = contactPhoto.prefs.get('effectCornerRadius', 'int');
-			cornerRadius = Math.round((cornerRadius-1)*(h-2*shadowBlur)/h);
-			
+			var cornerRadius = Math.round(Math.min(w, h)/4)-2; // radius is 2px shorter to account for clipping edge
+			if (contactPhoto.prefs.get('effectShadow', 'bool')) {
+				cornerRadius = Math.round(cornerRadius * (h-2*shadowBlur)/h); // image is smaller when shadow is enabled
+			}
+
 			contactPhoto.resizer.ctx.beginPath();
 			contactPhoto.resizer.ctx.moveTo(offsetTL+.5, offsetTL+cornerRadius+.5);
 			contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, offsetTL+.5, offsetTL+cornerRadius+.5, offsetTL+.5);  

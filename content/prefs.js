@@ -14,6 +14,7 @@ function initPreferences() {
 	enableFacesOptions();
 	enableBorderTypes();
 	enableBackgroundColor();
+	enableComposePhotos();
 	
 	populateDefaultGenericPhotoList();
 	enableGravatar();
@@ -112,6 +113,14 @@ function enableGlossOptions() {
 		document.getElementById('effectGlossTypes').disabled = false;
 	} else {
 		document.getElementById('effectGlossTypes').disabled = true;
+	}
+}
+
+function enableComposePhotos() {
+	if (document.getElementById('enableComposeWindowPhotos').checked) {
+		document.getElementById('composePhotoPosition').disabled = false;
+	} else {
+		document.getElementById('composePhotoPosition').disabled = true;
 	}
 }
 
