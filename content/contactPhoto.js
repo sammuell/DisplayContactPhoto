@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b2';
-contactPhoto.debug = 1;
+contactPhoto.currentVersion = '1.2b3';
+contactPhoto.debug = 0;
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences

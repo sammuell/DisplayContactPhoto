@@ -157,8 +157,8 @@ contactPhoto.messageDisplay = {
 				card.setProperty('CropPhotoTop', returnValues.top);
 			}
 			
+			// remove thumbnail images and update the card in the address book (which triggers an update of the photo)
 			contactPhoto.cache.removeThumbnail(contactPhoto.messageDisplay.photoInfo.photoName);
-			
 			contactPhoto.messageDisplay.photoInfo.cardDetails.book.modifyCard(card);
 		}
 	},

@@ -218,10 +218,11 @@ contactPhoto.compose = {
 		}
 		
 		// remove additional boxes
-		while (contactPhoto.compose.addressTextboxes.length > i) {
+		while (contactPhoto.compose.addressTextboxes.length >= i) {
 			contactPhoto.compose.addressTextboxes.pop();
-			alert(8585)
 		}
+		
+		contactPhoto.compose.displayStackView();
 	},
 	
 	checkAllImagesLoaded: function() {
@@ -394,7 +395,7 @@ contactPhoto.compose = {
 	*/
 	
 	displayStackView: function() {
-		dump("DRAW STACK \n\n")
+		dump("DRAW STACK ")
 		
 		var currentDrawNumber = ++contactPhoto.compose.stackDrawNumber;
 		
@@ -492,6 +493,8 @@ contactPhoto.compose = {
 				
 			}
 		}
+		
+		dump('  ... finished\n-------------------------------\n');
 	}
 }
 

@@ -6,7 +6,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
-		<em:version>1.2b2</em:version>
+		<em:version>1.2b3</em:version>
 		
 		<em:creator>Samuel Müller</em:creator>
 		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>
@@ -83,6 +83,16 @@
 				<em:name>Display Contact Photo</em:name>
 				<em:description>Geeft de contactpersoonsfoto weer van de verzender of ontvanger tijden het lezen of opstellen van een bericht.</em:description>
 				<em:translator>markh van BabelZilla.org</em:translator>
+			</Description>
+		</em:localized>
+		
+		<!-- pl -->
+		<em:localized>
+			<Description>
+				<em:locale>pl</em:locale>
+				<em:name>Display Contact Photo</em:name>
+				<em:description>Wyświetla fotkę kontaktu nadwacy lub odbiorcy podczas czytani lub tworzenia wiadomości.</em:description>
+				<em:translator>Staszek Cieślicki (stahoo@poczta.onet.pl)</em:translator>
 			</Description>
 		</em:localized>
 		
