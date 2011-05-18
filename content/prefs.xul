@@ -299,7 +299,11 @@
 					<caption label="&clearCache.label;"/>
 					
 					<description>&clearCache.description;</description>
-					<button icon="clear" id="clearCache" label="&clearCache.label;" oncommand="clearCache();"/>
+					<hbox>
+						<spacer flex="1"/>
+						<button icon="clear" id="clearCache" label="&clearCache.label;" oncommand="clearCache();"/>
+						<spacer flex="1"/>
+					</hbox>
 				</groupbox>
 				
 				<groupbox>

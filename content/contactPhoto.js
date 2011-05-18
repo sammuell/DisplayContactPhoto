@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b3';
-contactPhoto.debug = 0;
+contactPhoto.currentVersion = '1.2b4';
+contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -71,7 +71,9 @@ contactPhoto.prefs = {
 					if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
 				}
 		}
-		}catch (e){alert(prefName)}
+		} catch (e){
+			if (contactPhoto.debug) alert('pref.get() failed: '+prefName)
+		}
 	},
 
 	set: function(prefName, prefValue, type) {
@@ -270,8 +272,10 @@ contactPhoto.display = {
 		//if (contactPhoto.debug) alert('disp gravatar')
 
 		var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
-		var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
-
+		
+		var gravatarURI = contactPhoto.prefs.get('gravatarServer', 'char')+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
+		//var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
+		
 		contactPhoto.display.checkPhoto(gravatarURI, photoInfo, true);
 	},
 	
@@ -307,6 +311,7 @@ contactPhoto.display = {
 		thumbnailFile.append(thumbnailName+'.png');
 
 		if (thumbnailFile.exists()) { // if the thumbnail already exists, display it
+			
 			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 
 		} else { // generate it			
@@ -314,6 +319,7 @@ contactPhoto.display = {
 			contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
 			var callbackFunc = function() {
+				if (contactPhoto.debug > 1) dump('photo GENERATED: '+photoInfo.size+'  '+photoInfo.emailAddress+'\n');
 				contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 			}
 
@@ -339,7 +345,7 @@ contactPhoto.display = {
 				
 				contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
 				
-				if (contactPhoto.debug) dump('photo loaded: '+URI+'\n');
+				if (contactPhoto.debug > 1) dump('photo LOADED: '+URI+'\n');
 			}, false);
 		
 		dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
@@ -456,7 +462,7 @@ contactPhoto.getCard = function(emailAddress) {
 }
 
 
-// functions for cache managing
+// functions for disk cache managing
 contactPhoto.cache = {
 	directory: 'contactPhotoThumbnails',
 	
@@ -1029,7 +1035,7 @@ contactPhoto.imageFX = {
 
 		var imgData = contactPhoto.resizer.ctx.getImageData(0, 0, w, h);
 
-		convolutionMatrix = contactPhoto.imageFX._getGaussMatrix(7, 1.5);
+		var convolutionMatrix = contactPhoto.imageFX._getGaussMatrix(7, 1.5);
 		var gaussSize = Math.floor(convolutionMatrix.length/2);
 
 		var blurArea = [
@@ -1039,7 +1045,7 @@ contactPhoto.imageFX = {
 			{x0: 0, 			y0: h-blurWidth, 	x1: w, 			y1: h}, // bottom strip
 		];
 
-		for (z=0; z<blurArea.length; z++) {
+		for (var z=0; z<blurArea.length; z++) {
 
 			var imgBlur = contactPhoto.resizer.ctx.getImageData(
 							blurArea[z].x0,
@@ -1107,7 +1113,7 @@ contactPhoto.imageFX = {
 	_getGaussMatrix: function(size, sigma) {
 		var matrix = [];
 		var sum = 0;
-		halfsize = Math.floor(size/2);
+		var halfsize = Math.floor(size/2);
 		for (var i=-halfsize; i<=halfsize; i++) {
 			var row = [];
 			for (var j=-halfsize; j<=halfsize; j++) {
@@ -1277,29 +1283,33 @@ contactPhoto.utils = {
 	},
 	
 	// mydump: a debug function to quickly inspect objects
-	mydump: function(what) {
+	mydump: function(what, useAlert) {
 		if (typeof what == 'undefined') {
 			alert('undefined');
 			return;
 		}
 		
-		a = '';
-		i = 0;
-		j = 0;
+		var a = '';
+		var i = 0;
+		var j = 0;
 		for (x in what) {
 			i++;
 
 			a = a+x+'  --  '+what[x]+'\n\n';
 
 			if (i == 5) {
-				alert(a);
+				if (useAlert) alert(a);
+				else dump(a)
 				a = '';
 				i = 0;
 				j++;
 			}
 		}
 
-		if (j == 0) alert(a);
+		if (j == 0) {
+			if (useAlert) alert(a);
+			else dump(a)
+		}
 	}
 	
 };

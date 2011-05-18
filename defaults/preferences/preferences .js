@@ -9,7 +9,7 @@ pref('extensions.contactPhoto.photoPosition', 'left');
 pref('extensions.contactPhoto.composePhotos.display', true);
 pref('extensions.contactPhoto.composePhotos.type', '3d');
 pref('extensions.contactPhoto.composePhotos.position', 'left');
-pref('extensions.contactPhoto.composePhotos.size', 60);
+pref('extensions.contactPhoto.composePhotos.size', 65);
 
 pref('extensions.contactPhoto.defaultPhoto', 'show');
 pref('extensions.contactPhoto.defaultGenericPhoto', 'chrome://contactPhoto/skin/genericIcons/displaycontactphoto.png');
@@ -19,6 +19,7 @@ pref('extensions.contactPhoto.enableLocalPhotos', false);
 pref('extensions.contactPhoto.enableDomainWildcardPhotos', false);
 pref('extensions.contactPhoto.enableGravatar', false);
 pref('extensions.contactPhoto.defaultGravatar', '');
+pref('extensions.contactPhoto.gravatarServer', 'http://www.gravatar.com/avatar/');
 
 pref('extensions.contactPhoto.drawBackgroundColor', false);
 pref('extensions.contactPhoto.backgroundColor', '#ffffff');

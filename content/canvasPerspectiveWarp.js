@@ -1,57 +1,103 @@
-﻿
+// canvasPerspectiveWarp warps the contents of an entire canvas (parameter sCanvas)
+// using the provided vanishing points which are relative to the source canvas
+
 function canvasPerspectiveWarp(sCanvas) {
 	this.srcCanvas = sCanvas;
 	this.destCanvas;
 	this.interpolationMethod = 'nn'; // 'nn' or 'bl' (nearest-neighbour or bilinear)
 	this.referencePoint = 'tl';
-	this.offset = {
-		x: 0,
-		y: 0
+	this.offset = { x: 0, y: 0 };
+	
+	// calculate the width and height of the bounding box of the transformed canvas
+	this.vanishingPointsBoundingBox = function(p1x, p1y, p2x, p2y) {
+		
+		var vp1 = this._makePoint(), vp2 = this._makePoint(); // coordinates of vanishing points
+		vp1.x = p1x;
+		vp1.y = p1y;
+		
+		vp2.x = p2x;
+		vp2.y = p2y;
+		
+		// corner coordinates of source canvas
+		var  pTL = this._makePoint(),  pBL = this._makePoint(),  pBR = this._makePoint(),  pTR = this._makePoint();
+		// new coordinates of corners
+		var _pTL = this._makePoint(), _pBL = this._makePoint(), _pBR = this._makePoint(), _pTR = this._makePoint();
+		
+		this._getTransformedCorners(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR);
+		
+		// height/width +1 for edge antialiasing
+		var p1 = {x: 0, y: 0}; // upper left corner
+		var p2 = {x: 0, y: this.srcCanvas.height}; // lower left corner
+		var p3 = {x: this.srcCanvas.width, y: this.srcCanvas.height}; // lower right corner
+		var p4 = {x: this.srcCanvas.width, y: 0}; // upper right corner
+		
+		var q1 = {x: p1.x+TLdx, y: p1.y+TLdy}; // upper left corner
+		var q2 = {x: p2.x+BLdx, y: p2.y+BLdy}; // lower left corner
+		var q3 = {x: p3.x+BRdx, y: p3.y+BRdy}; // lower right corner
+		var q4 = {x: p4.x+TRdx, y: p4.y+TRdy}; // upper right corner
+		
+		var min = this._makePoint(), max = this._makePoint();
+
+		min.x = Math.min(q1.x, q2.x, q3.x, q4.x);
+		min.y = Math.min(q1.y, q2.y, q3.y, q4.y);
+		max.x = Math.max(q1.x, q2.x, q3.x, q4.x);
+		max.y = Math.max(q1.y, q2.y, q3.y, q4.y);
+		
+		var boundingBox = [];
+		boundingBox['width'] = Math.ceil(Math.abs(max.x - min.x));
+		boundingBox['height'] = Math.ceil(Math.abs(max.y - min.y));
+		
+		return boundingBox;
+	},
+	
+	// transform the source canvas using the reference point and vanishing points
+	this.vanishingPoints = function(p1x, p1y, p2x, p2y) {
+	
+		var vp1 = this._makePoint(), vp2 = this._makePoint(); // coordinates of vanishing points
+		vp1.x = p1x;
+		vp1.y = p1y;
+		
+		vp2.x = p2x;
+		vp2.y = p2y;
+		
+		// corner coordinates of source canvas
+		var  pTL = this._makePoint(),  pBL = this._makePoint(),  pBR = this._makePoint(),  pTR = this._makePoint();
+		// new coordinates of corners
+		var _pTL = this._makePoint(), _pBL = this._makePoint(), _pBR = this._makePoint(), _pTR = this._makePoint();
+		
+		
+		this._getTransformedCorners(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR);
+		
+		return this._transform(_pTL.x-pTL.x, _pTL.y-pTL.y, _pBL.x-pBL.x, _pBL.y-pBL.y, _pBR.x-pBR.x, _pBR.y-pBR.y, _pTR.x-pTR.x, _pTR.y-pTR.y);
 	}
 	
-	this.vanishingPoints = function(refPoint, p1x, p1y, p2x, p2y) {
-		this.referencePoint = refPoint;
-	
-		var pTL = {
-			x: 0,
-			y: 0
-		}
-		var pBL = {
-			x: 0,
-			y: this.srcCanvas.height-1
-		}
-		var pBR = {
-			x: this.srcCanvas.width-1,
-			y: this.srcCanvas.height-1
-		}
-		var pTR = {
-			x: this.srcCanvas.width-1,
-			y: 0
-		}
+	this._getTransformedCorners = function(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR) {
+		// top left
+		pTL.x = 0;
+		pTL.y = 0;
+		// bottom left
+		pBL.x = 0;
+		pBL.y = this.srcCanvas.height-1;
+		// bottom right
+		pBR.x = this.srcCanvas.width-1;
+		pBR.y = this.srcCanvas.height-1;
+		// top right
+		pTR.x = this.srcCanvas.width-1;
+		pTR.y = 0;
 		
-		var vp1 = {
-			x: p1x,
-			y: p1y
-		}
-		var vp2 = {
-			x: p2x,
-			y: p2y
-		}
-		
-
 		// p1 and p2 are relative to the canvas coordinates system
 		// make sure they are not inside the canvas
 		try {
-			if ((0 <= p1x && p1x <= this.srcCanvas.width) && (0 <= p1y && p1y <= this.srcCanvas.height)) throw 1;
-			if ((0 <= p2x && p2x <= this.srcCanvas.width) && (0 <= p2y && p2y <= this.srcCanvas.height)) throw 2;
+			if ((0 <= vp1.x && vp1.x <= this.srcCanvas.width) && (0 <= vp1.y && vp1.y <= this.srcCanvas.height)) throw "vp1 is within the canvas";
+			if ((0 <= vp2.x && vp2.x <= this.srcCanvas.width) && (0 <= vp2.y && vp2.y <= this.srcCanvas.height)) throw "vp2 is within the canvas";
 		} catch (e) {
 			alert('error: '+e)
 			return
 		}
 
-		
+		// no valid reference point specified
+		// choosing the most distant corner is most of the time the best choice
 		if (this.referencePoint != 'tl' && this.referencePoint != 'bl' && this.referencePoint != 'tr' && this.referencePoint != 'br') {
-			// choosing the most distant corner is most of the time the best choice
 			var dx, dy, sum, sum2, sum3, sum4;
 			
 			dx = Math.pow(vp1.x-pTL.x, 2) + Math.pow(vp2.x-pTL.x, 2);
@@ -80,34 +126,27 @@ function canvasPerspectiveWarp(sCanvas) {
 			sum4 = dx+dy;
 			if (sum4 > sum) {
 				this.referencePoint = 'br';
-			}	
+			}
 		}
 		
-		
-		var _pBL, _pBR, _pTL, _pTR;
-		
 		switch (this.referencePoint) {
-		
 			case 'tl':
-				_pTL = pTL; // tl remains the same
-			
+				_pTL.x = pTL.x; // tl remains the same
+				_pTL.y = pTL.y; // tl remains the same
+				
 				// _pBL: get line through pTL and VP1 and intersection with line pBL-pBR
 				var m1 = (pTL.y-vp1.y)/(pTL.x-vp1.x);
 				var q1 = vp1.y - m1*vp1.x;
 			
-				_pBL = {
-					x: Math.round((pBL.y-q1)/m1),
-					y: pBL.y
-				}
+				_pBL.x = (pBL.y-q1)/m1;
+				_pBL.y = pBL.y;
 				
 				// _pTR: get line through pTL and VP2 and intersection with line pTR-pBR
 				var m2 = (pTL.y-vp2.y)/(pTL.x-vp2.x);
 				var q2 = vp2.y - m2*vp2.x;
 				
-				_pTR = {
-					x: pTR.x,
-					y: Math.round(m2*pTR.x+q2)
-				}
+				_pTR.x = pTR.x;
+				_pTR.y = m2*pTR.x+q2;
 				
 				// _pBR: get the lines _pTR-VP1 and _pBL-VP2 and their intersection
 				var m3 = (_pTR.y-vp1.y)/(_pTR.x-vp1.x);
@@ -116,32 +155,27 @@ function canvasPerspectiveWarp(sCanvas) {
 				var m4 = (_pBL.y-vp2.y)/(_pBL.x-vp2.x);
 				var q4 = vp2.y - m4*vp2.x;
 				
-				_pBR = {
-					x: Math.round((q3-q4)/(m4-m3)),
-					y: Math.round((m3*q4-m4*q3)/(m3-m4))
-				}
+				_pBR.x = (q3-q4)/(m4-m3);
+				_pBR.y = (m3*q4-m4*q3)/(m3-m4);
 			break;
 			
 			case 'bl':
-				 _pBL = pBL; // bl remains the same
+				_pBL.x = pBL.x; // bl remains the same
+				_pBL.y = pBL.y; // bl remains the same
 			
 				// _pTL: get line through pBL and VP1 and intersection with line pTL-pTR
 				var m1 = (pBL.y-vp1.y)/(pBL.x-vp1.x);
 				var q1 = vp1.y - m1*vp1.x;
-			
-				_pTL = {
-					x: Math.round((pTL.y-q1)/m1),
-					y: pTL.y
-				}
+				
+				_pTL.x = (pTL.y-q1)/m1;
+				_pTL.y = pTL.y;
 				
 				// _pBR: get line through pBL and VP2 and intersection with line pTR-pBR
 				var m2 = (pBL.y-vp2.y)/(pBL.x-vp2.x);
 				var q2 = vp2.y - m2*vp2.x;
 				
-				_pBR = {
-					x: pBR.x,
-					y: Math.round(m2*pBR.x+q2)
-				}
+				_pBR.x = pBR.x;
+				_pBR.y = m2*pBR.x+q2;
 				
 				// _pTR: get the lines _pBR-VP1 and _pTL-VP2 and their intersection
 				var m3 = (_pBR.y-vp1.y)/(_pBR.x-vp1.x);
@@ -150,32 +184,28 @@ function canvasPerspectiveWarp(sCanvas) {
 				var m4 = (_pTL.y-vp2.y)/(_pTL.x-vp2.x);
 				var q4 = vp2.y - m4*vp2.x;
 				
-				_pTR = {
-					x: Math.round((q3-q4)/(m4-m3)),
-					y: Math.round((m3*q4-m4*q3)/(m3-m4))
-				}
+				_pTR.x = (q3-q4)/(m4-m3);
+				_pTR.y = (m3*q4-m4*q3)/(m3-m4);
+				
 			break;
 			
 			case 'br':
-				_pBR = pBR; // br remains the same
+				_pBR.x = pBR.x; // br remains the same
+				_pBR.y = pBR.y; // br remains the same
 			
 				// _pTR: get line through pBR and VP1 and intersection with line pTL-pTR
 				var m1 = (pBR.y-vp1.y)/(pBR.x-vp1.x);
 				var q1 = vp1.y - m1*vp1.x;
 			
-				_pTR = {
-					x: Math.round((pTR.y-q1)/m1),
-					y: pTR.y
-				}
+				_pTR.x = (pTR.y-q1)/m1;
+				_pTR.y = pTR.y;
 				
 				// _pBL: get line through pBR and VP2 and intersection with line pTL-pBL
 				var m2 = (pBR.y-vp2.y)/(pBR.x-vp2.x);
 				var q2 = vp2.y - m2*vp2.x;
 				
-				_pBL = {
-					x: pBL.x,
-					y: Math.round(m2*pBL.x+q2)
-				}
+				_pBL.x = pBL.x;
+				_pBL.y = m2*pBL.x+q2;
 				
 				// _pTL: get the lines _pBL-VP1 and _pTR-VP2 and their intersection
 				var m3 = (_pBL.y-vp1.y)/(_pBL.x-vp1.x);
@@ -184,32 +214,27 @@ function canvasPerspectiveWarp(sCanvas) {
 				var m4 = (_pTR.y-vp2.y)/(_pTR.x-vp2.x);
 				var q4 = vp2.y - m4*vp2.x;
 				
-				_pTL = {
-					x: Math.round((q3-q4)/(m4-m3)),
-					y: Math.round((m3*q4-m4*q3)/(m3-m4))
-				}
+				_pTL.x = (q3-q4)/(m4-m3);
+				_pTL.y = (m3*q4-m4*q3)/(m3-m4);
 			break;
 			
 			case 'tr':
-				_pTR = pTR; // tr remains the same
+				_pTR.x = pTR.x; // tr remains the same
+				_pTR.y = pTR.y; // tr remains the same
 			
 				// _pBR: get line through pTR and VP1 and intersection with line pBL-pBR
 				var m1 = (pTR.y-vp1.y)/(pTR.x-vp1.x);
 				var q1 = vp1.y - m1*vp1.x;
 			
-				_pBR = {
-					x: Math.round((pBR.y-q1)/m1),
-					y: pBR.y
-				}
+				_pBR.x = (pBR.y-q1)/m1;
+				_pBR.y = pBR.y;
 				
 				// _pTL: get line through pTR and VP2 and intersection with line pTL-pBL
 				var m2 = (pTR.y-vp2.y)/(pTR.x-vp2.x);
 				var q2 = vp2.y - m2*vp2.x;
 				
-				_pTL = {
-					x: pTL.x,
-					y: Math.round(m2*pTL.x+q2)
-				}
+				_pTL.x = pTL.x;
+				_pTL.y = m2*pTL.x+q2;
 				
 				// _pBL: get the lines _pTL-VP1 and _pBR-VP2 and their intersection
 				var m3 = (_pTL.y-vp1.y)/(_pTL.x-vp1.x);
@@ -218,33 +243,29 @@ function canvasPerspectiveWarp(sCanvas) {
 				var m4 = (_pBR.y-vp2.y)/(_pBR.x-vp2.x);
 				var q4 = vp2.y - m4*vp2.x;
 				
-				_pBL = {
-					x: Math.round((q3-q4)/(m4-m3)),
-					y: Math.round((m3*q4-m4*q3)/(m3-m4))
-				}
+				_pBL.x = (q3-q4)/(m4-m3);
+				_pBL.y = (m3*q4-m4*q3)/(m3-m4);
+				
 			break;
-		}
-
-		return this.transform(_pTL.x-pTL.x, _pTL.y-pTL.y, _pBL.x-pBL.x, _pBL.y-pBL.y, _pBR.x-pBR.x, _pBR.y-pBR.y, _pTR.x-pTR.x, _pTR.y-pTR.y);
+		} // end switch
 	}
 
-	this.transform = function(TLdx, TLdy, BLdx, BLdy, BRdx, BRdy, TRdx, TRdy) {
+	// transform a canvas using the displacements of the corners
+	this._transform = function(TLdx, TLdy, BLdx, BLdy, BRdx, BRdy, TRdx, TRdy) {
 
+		// height/width +1 for edge antialiasing
 		var p1 = {x: 0, y: 0}; // upper left corner
-		var p2 = {x: 0, y: (this.srcCanvas.height)}; // lower left corner
-		var p3 = {x: this.srcCanvas.width, y: (this.srcCanvas.height)}; // lower right corner
+		var p2 = {x: 0, y: this.srcCanvas.height}; // lower left corner
+		var p3 = {x: this.srcCanvas.width, y: this.srcCanvas.height}; // lower right corner
 		var p4 = {x: this.srcCanvas.width, y: 0}; // upper right corner
 		
-
 
 		var q1 = {x: p1.x+TLdx, y: p1.y+TLdy}; // upper left corner
 		var q2 = {x: p2.x+BLdx, y: p2.y+BLdy}; // lower left corner
 		var q3 = {x: p3.x+BRdx, y: p3.y+BRdy}; // lower right corner
 		var q4 = {x: p4.x+TRdx, y: p4.y+TRdy}; // upper right corner
 		
-
-
-
+		
 		//////////////////////////////////////////////////////////
 		// get the dimensions of the transformed image
 		var min = {};
@@ -254,13 +275,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		min.y = Math.min(q1.y, q2.y, q3.y, q4.y);
 		max.x = Math.max(q1.x, q2.x, q3.x, q4.x);
 		max.y = Math.max(q1.y, q2.y, q3.y, q4.y);
-		//alert('min.x: '+min.x+'\nmin.y: '+min.y+'\nmax.x: '+max.x+'\nmax.y: '+max.y)
 
-		//var offsetX = -Math.floor(min.x);
-		//var offsetY = -Math.floor(min.y);
 		this.offset.x = -Math.floor(min.x);
 		this.offset.y = -Math.floor(min.y);
-		//alert('offset\n'+offsetX+'   '+offsetY)
 
 		var destWidth = Math.ceil(Math.abs(max.x - min.x));
 		var destHeight = Math.ceil(Math.abs(max.y - min.y));
@@ -274,20 +291,20 @@ function canvasPerspectiveWarp(sCanvas) {
 		// calculate the perspective transformation matrix
 		
 		// the order of the points does not matter as long as it is the same in both calculateMatrix() calls
-		var ps = this.adjoint33(this.calculateMatrix(p1, p2, p3, p4));
-		var sq = this.calculateMatrix(q1, q2, q3, q4);
+		var ps = this._adjoint33(this._calculateMatrix(p1, p2, p3, p4));
+		var sq = this._calculateMatrix(q1, q2, q3, q4);
 
 		var mTranslation = [[1, 0, this.offset.x], [0, 1, this.offset.y], [0, 0, 1]];
-		this.transpose33(mTranslation);
+		this._transpose33(mTranslation);
 
-		var mPerspective = this.matrix33();
+		var mPerspective = this._matrix33();
 
-		this.mult33(ps, sq, mPerspective);
+		this._mult33(ps, sq, mPerspective);
 
-		var fw_trafo = this.matrix33();
-		this.mult33(mPerspective, mTranslation, fw_trafo);
+		var fw_trafo = this._matrix33();
+		this._mult33(mPerspective, mTranslation, fw_trafo);
 
-		var bw_trafo = this.adjoint33(fw_trafo);
+		var bw_trafo = this._adjoint33(fw_trafo);
 		
 
 		//////////////////////////////////////////////////////////
@@ -301,7 +318,7 @@ function canvasPerspectiveWarp(sCanvas) {
 
 		// create two-dimensional array for storing the source data
 		var srcCtx = this.srcCanvas.getContext('2d');
-		srcData = srcCtx.getImageData(0, 0, this.srcCanvas.width, this.srcCanvas.height);
+		var srcData = srcCtx.getImageData(0, 0, this.srcCanvas.width, this.srcCanvas.height);
 		
 		var srcPixelData = new Array(srcData.width);
 		for (var x=0; x<srcData.width; x++) {
@@ -347,12 +364,12 @@ function canvasPerspectiveWarp(sCanvas) {
 				if (1) {
 				//if (destCtx.isPointInPath(x, y)) {
 				
-					var srcCoord = this.applyTrafo(x, y, bw_trafo);
+					var srcCoord = this._applyTrafo(x, y, bw_trafo);
 					
 					if (this.interpolationMethod == 'nn') {
-						destPixelData[x][y] = this.interpolateNN(srcCoord, srcPixelData)
+						destPixelData[x][y] = this._interpolateNN(srcCoord, srcPixelData)
 					} else {
-						destPixelData[x][y] = this.interpolateBL(srcCoord, srcPixelData)
+						destPixelData[x][y] = this._interpolateBL(srcCoord, srcPixelData)
 					}
 					
 				} else {
@@ -386,7 +403,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		return this.destCanvas;
 	}
 
-	this.interpolateNN = function(srcCoord, srcPixelData) {
+	this._interpolateNN = function(srcCoord, srcPixelData) {
 		var w = srcPixelData[srcPixelData.length-2];
 		var h = srcPixelData[srcPixelData.length-1];
 
@@ -406,7 +423,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		return srcPixelData[x0][y0];
 	}
 
-	this.interpolateBL = function(srcCoord, srcPixelData) {
+	this._interpolateBL = function(srcCoord, srcPixelData) {
 		var w = srcPixelData[srcPixelData.length-2];
 		var h = srcPixelData[srcPixelData.length-1];
 		
@@ -486,7 +503,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		return pixel;
 	}
 
-	this.applyTrafo = function(x, y, trafo) {
+	this._applyTrafo = function(x, y, trafo) {
 		var w = trafo[0][2]*x + trafo[1][2]*y + trafo[2][2];
 		if (w == 0) w = 1;
 
@@ -494,7 +511,7 @@ function canvasPerspectiveWarp(sCanvas) {
 				y: (trafo[0][1]*x + trafo[1][1]*y + trafo[2][1])/w};
 	}
 
-	this.mult33 = function(m1, m2, result) {
+	this._mult33 = function(m1, m2, result) {
 		for (var i=0; i<3; i++) {
 			for (var j=0; j<3; j++) {
 				for (var k=0; k<3; k++) {
@@ -504,7 +521,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		}
 	}
 
-	this.det22 = function(m11, m12, m21, m22) {
+	this._det22 = function(m11, m12, m21, m22) {
 		/*
 		m11  m12
 		m21  m22
@@ -512,7 +529,8 @@ function canvasPerspectiveWarp(sCanvas) {
 		return m11*m22 - m12*m21;
 	}
 
-	this.transpose33 = function(matrix) {
+	this._transpose33 = function(matrix) {
+		var tmp;
 		tmp = matrix[0][1];
 		matrix[0][1] = matrix[1][0];
 		matrix[1][0] = tmp;
@@ -526,7 +544,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		matrix[2][1] = tmp;
 	}
 
-	this.calculateMatrix = function(p0, p1, p2, p3) {
+	this._calculateMatrix = function(p0, p1, p2, p3) {
 		/*
 		a	d	g
 		b	e	h
@@ -555,15 +573,15 @@ function canvasPerspectiveWarp(sCanvas) {
 			var dy1 = p1.y - p2.y;
 			var dy2 = p3.y - p2.y;
 
-			var det = this.det22(dx1, dx2, dy1, dy2);
+			var det = this._det22(dx1, dx2, dy1, dy2);
 
 			if (det == 0) {
 				alert('det=0');
 				return;
 			}
 
-			g = this.det22(sx, dx2, sy, dy2)/det;
-			h = this.det22(dx1, sx, dy1, sy)/det;
+			g = this._det22(sx, dx2, sy, dy2)/det;
+			h = this._det22(dx1, sx, dy1, sy)/det;
 
 			a = p1.x - p0.x + g*p1.x;
 			b = p3.x - p0.x + h*p3.x;
@@ -579,11 +597,11 @@ function canvasPerspectiveWarp(sCanvas) {
 		return out;
 	}
 
-	this.matrix33 = function() {
+	this._matrix33 = function() {
 		return [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	}
 
-	this.det33 = function(matrix) {
+	this._det33 = function(matrix) {
 		a1 = matrix[0][0]*matrix[1][1]*matrix[2][2];
 		a2 = matrix[1][0]*matrix[2][1]*matrix[0][2];
 		a3 = matrix[2][0]*matrix[0][1]*matrix[1][2];
@@ -594,7 +612,7 @@ function canvasPerspectiveWarp(sCanvas) {
 		return  a1+a2+a3-s1-s2-s3;
 	}
 
-	this.adjoint33 = function(matrix) {
+	this._adjoint33 = function(matrix) {
 		/* using homogeneous coordinates, the adjoint can be used instead of the inverse of a matrix
 		[[a, b, c], [d, e, f], [g, h, i]]
 		m11 = e*i - h*f;
@@ -610,21 +628,25 @@ function canvasPerspectiveWarp(sCanvas) {
 		m33 = a*e - b*d;
 		*/
 
-		m11 = matrix[1][1]*matrix[2][2] - matrix[2][1]*matrix[1][2];
-		m12 = matrix[0][2]*matrix[2][1] - matrix[0][1]*matrix[2][2];
-		m13 = matrix[0][1]*matrix[1][2] - matrix[0][2]*matrix[1][1];
+		var m11 = matrix[1][1]*matrix[2][2] - matrix[2][1]*matrix[1][2];
+		var m12 = matrix[0][2]*matrix[2][1] - matrix[0][1]*matrix[2][2];
+		var m13 = matrix[0][1]*matrix[1][2] - matrix[0][2]*matrix[1][1];
 
-		m21 = matrix[1][2]*matrix[2][0] - matrix[1][0]*matrix[2][2];
-		m22 = matrix[0][0]*matrix[2][2] - matrix[0][2]*matrix[2][0];
-		m23 = matrix[0][2]*matrix[1][0] - matrix[0][0]*matrix[1][2];
+		var m21 = matrix[1][2]*matrix[2][0] - matrix[1][0]*matrix[2][2];
+		var m22 = matrix[0][0]*matrix[2][2] - matrix[0][2]*matrix[2][0];
+		var m23 = matrix[0][2]*matrix[1][0] - matrix[0][0]*matrix[1][2];
 
-		m31 = matrix[1][0]*matrix[2][1] - matrix[1][1]*matrix[2][0];
-		m32 = matrix[0][1]*matrix[2][0] - matrix[0][0]*matrix[2][1];
-		m33 = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
+		var m31 = matrix[1][0]*matrix[2][1] - matrix[1][1]*matrix[2][0];
+		var m32 = matrix[0][1]*matrix[2][0] - matrix[0][0]*matrix[2][1];
+		var m33 = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
 
 		return [[m11, m12, m13], [m21, m22, m23], [m31, m32, m33]];
 	}
 
+	this._makePoint = function() {
+		return { x:0, y:0 };
+	}
+	
 	this.dumpMatrix = function(trafo) {
 		alert((trafo[0][0]/trafo[2][2]).toFixed(3)+'    '+(trafo[0][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[0][2]/trafo[2][2]).toFixed(3)+'\n'+(trafo[1][0]/trafo[2][2])
 	.toFixed(3)+'    '+(trafo[1][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[1][2]/trafo[2][2]).toFixed(3)+'\n'+(trafo[2][0]/trafo[2][2]).toFixed(3)+'    '+(trafo[2][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[2][2]/trafo[2][2]).toFixed(3))
