@@ -1,0 +1,4 @@
+<!ENTITY window.title "修剪联系人照片">
+<!ENTITY removeselection.label "移除选择">
+<!ENTITY squareselection.label "方形选择">
+<!ENTITY donotcrop.description "选择任何时不要显示整个照片。">

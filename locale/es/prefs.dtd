@@ -35,8 +35,16 @@
 <!ENTITY directory.description1 "Los nombres de archivo deben estar compuesto por la dirección de
 
 
+
+
+
+
 correo electrónico y el tipo de archivo.">
 <!ENTITY directory.description2 "Por ejemplo &quot;info@mozilla.org.png&quot;.
+
+
+
+
 
 
 Tipos de imagen soportados: jpg, png, gif.">
