@@ -7,6 +7,7 @@
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
 		<em:version>1.2b4</em:version>
+		<em:type>2</em:type>
 		
 		<em:creator>Samuel Müller</em:creator>
 		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>

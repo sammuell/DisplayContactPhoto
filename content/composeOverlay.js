@@ -393,7 +393,9 @@ contactPhoto.compose = {
 				newBox.setAttribute('height', boxSize);
 				newBox.style.height = boxSize+'px';
 				newBox.style.width = boxSize+'px';
-				newBox.setAttribute('onclick', 'this.nextSibling.select();');
+				newBox.addEventListener('click', function(e) {
+					this.nextSibling.select();
+				}, false);
 
 				var newImage = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
 				newImage.style.listStyleImage = contactPhoto.compose.defaultIconURI;
