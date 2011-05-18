@@ -60,7 +60,7 @@ contactPhoto.compose = {
 			canvas.height = contactPhoto.compose.photoStack.height;
 			canvas.style.width = contactPhoto.compose.photoStack.width+'px';
 			canvas.style.height = contactPhoto.compose.photoStack.height+'px';
-			canvas.style.border = '1px solid green'
+			//canvas.style.border = '1px solid green'
 
 			canvas.addEventListener('click', function() {
 				if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
