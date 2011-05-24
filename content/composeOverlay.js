@@ -450,6 +450,7 @@ contactPhoto.compose = {
 	},
 	
 	displayOffset: 0, // offset to shift photos (click on stack)
+	
 	displayStackView: function() {
 		if (contactPhoto.debug) dump("DRAW STACK ")
 
@@ -488,9 +489,12 @@ contactPhoto.compose = {
 		}
 		alert(tt)
 		*/
+		
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
 
 		if (addresses.length == 0) { 
 			if (contactPhoto.debug) dump("addresses.length == 0\n\n"); 
+			stackCanvas.width = stackCanvas.width; // clear the canvas
 			return; 
 		}
 		
@@ -502,7 +506,6 @@ contactPhoto.compose = {
 			addresses.unshift(addresses.pop());
 			
 			
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
 		stackCanvas.width = stackCanvas.width; // clear the canvas
 		var stackCtx = stackCanvas.getContext('2d');
 

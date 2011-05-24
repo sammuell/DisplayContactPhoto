@@ -6,7 +6,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
-		<em:version>1.2b4</em:version>
+		<em:version>1.2b5</em:version>
 		<em:type>2</em:type>
 		
 		<em:creator>Samuel Müller</em:creator>
@@ -134,7 +134,7 @@
 			<Description>
 				<em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
 				<em:minVersion>2.0</em:minVersion>
-				<em:maxVersion>2.0.*</em:maxVersion>
+				<em:maxVersion>2.1b3</em:maxVersion>
 			</Description>
 		</em:targetApplication>
 		

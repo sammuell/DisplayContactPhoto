@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b4';
-contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+contactPhoto.currentVersion = '1.2b5';
+contactPhoto.debug = 1; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -36,6 +36,16 @@ contactPhoto.genericInit = function() {
 
 	// load localized javascript variables
 	contactPhoto.localizedJS = document.getElementById('DiCoP-LocalizedJS');
+	
+	
+	// add add-on uninstall listener to remove thumbnail directory
+	var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
+	Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', contactPhoto.cache.removeCacheDirectory );
+	
+	// debug stuff
+	if (contactPhoto.debug > 0) { // auto-open javascript console
+		//Application.console.open();
+	}
 }
 window.addEventListener('load', contactPhoto.genericInit, false);
 
@@ -441,20 +451,20 @@ contactPhoto.getCard = function(emailAddress) {
 	var cardDetails = {};
 
 	while (allAddressBooks.hasMoreElements()) {
-		let ab = allAddressBooks.getNext();
-		
-		if (ab instanceof Components.interfaces.nsIAbDirectory) {} // hack
+		let ab = allAddressBooks.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
+		if (ab.isRemote) continue; // skip ldap directories
 		
 		try {
-			var card = ab.cardForEmailAddress(emailAddress);
+			var card = ab.cardForEmailAddress(emailAddress).QueryInterface(Components.interfaces.nsIAbCard);
 			
-			if (card instanceof Components.interfaces.nsIAbCard) {
-				cardDetails = {
-					book: ab,
-					card: card
-				};
-				break;
-			}
+			if (card == null) continue;
+			
+			cardDetails = {
+				book: ab,
+				card: card
+			};
+			break;
+			
 		} catch (ex) { }
 	}
 
@@ -536,6 +546,18 @@ contactPhoto.cache = {
 			if (removeFile.exists()) {
 				removeFile.remove(false);
 			}
+		}
+	},
+	
+	// delete the entire cache directory on add-on uninstall
+	removeCacheDirectory: function() {
+		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
+			.getService(Components.interfaces.nsIProperties)
+			.get("ProfD", Components.interfaces.nsIFile);
+		cacheDir.append(contactPhoto.cache.directory);
+		
+		if (cacheDir.exists()) {
+			cacheDir.remove(true); // remove recursively
 		}
 	}
 };
