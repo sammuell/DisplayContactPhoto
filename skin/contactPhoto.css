@@ -10,8 +10,11 @@
 	-moz-box-shadow: #444 2px 2px 5px;
 }
 
+#DiCoP-PhotoStack { /* canvas in compose window */
+	margin: 0px;
+}
+
 box.DiCoP-ComposeImageBox {
-	/*border: 1px dashed red;*/
 	margin: 0px;
 	margin: 0 2px;
 }

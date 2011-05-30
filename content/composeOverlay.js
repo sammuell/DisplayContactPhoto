@@ -4,7 +4,8 @@ if (!contactPhoto) var contactPhoto = {};
 contactPhoto.compose = {
 	photoStack: {
 		width: 250,
-		height: 90
+		height: 90,
+		padding: 2
 	},
 	stackDrawNumber: 0,
 
@@ -27,7 +28,7 @@ contactPhoto.compose = {
 		contactPhoto.compose.photoStackInitDone = true;
 
 
-		contactPhoto.compose.widget = document.getElementById('addressingWidget');
+		contactPhoto.compose.widget = document.getElementById('addressingWidget'); /* addressingWidget is a <listbox> */
 
 		// init first textbox
 		contactPhoto.compose.newListitem(contactPhoto.compose.widget.getElementsByTagName('listitem')[0]);
@@ -49,7 +50,8 @@ contactPhoto.compose = {
 			hbox.flex = '1';
 			hbox.id = 'DiCoP-AddressingContainer';
 			wParent.insertBefore(hbox, contactPhoto.compose.widget.nextSibling);
-
+			
+			// create a box around the canvas to center the canvas
 			var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
 			box.align = 'center';
 			box.id = 'DiCoP-PhotoStackContainer';
@@ -60,7 +62,6 @@ contactPhoto.compose = {
 			canvas.height = contactPhoto.compose.photoStack.height;
 			canvas.style.width = contactPhoto.compose.photoStack.width+'px';
 			canvas.style.height = contactPhoto.compose.photoStack.height+'px';
-			//canvas.style.border = '1px solid green'
 
 			canvas.addEventListener('click', function() {
 				if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -74,8 +75,27 @@ contactPhoto.compose = {
 				alert(tt)
 				*/
 				
-				contactPhoto.compose.displayOffset++;
-				contactPhoto.compose.displayStackView();
+				var widget = document.getElementById('addressingWidget');
+				
+				var textboxes = widget.getElementsByTagName("textbox");
+				
+				if (textboxes.length > 1) {
+				
+					// get type and value of first row
+					var popup = awGetPopupElement(1);
+					var type = popup.selectedItem.getAttribute("value");
+					
+					var input = awGetInputElement(1);
+					var value = input.value;
+					
+					//function awDeleteRow(rowToDelete)
+					awDeleteRow(1);
+					
+					//function awAddRecipient(recipientType, address)
+					awAddRecipient(type, value);
+					
+					//gAWContentHeight
+				}
 			}, false);
 
 			box.appendChild(canvas);
@@ -138,8 +158,6 @@ contactPhoto.compose = {
 	},
 
 	defaultIconURI: 'url("chrome://messenger/skin/addressbook/icons/abcard.png")',
-	//addressTextboxesValues: [], // complete values of the textboxes
-	//addressTextboxesEmail: [], // extracted e-mail addresses of the textboxes
 	textboxCounter: 0, // counter for continuous identification of textboxes
 
 
@@ -158,17 +176,13 @@ contactPhoto.compose = {
 		if (contactPhoto.debug) dump('num boxes found: '+bxs.length+'\n')
 
 		for (var i=0; i<bxs.length; i++) {
-			//alert(bxs[i].tagName+'\n'+bxs[i].parentNode.tagName+'\n'+bxs[i].parentNode.parentNode.tagName+'\n'+bxs[i].parentNode.parentNode.parentNode.tagName+'\n'+bxs[i].parentNode.parentNode.parentNode.parentNode.tagName+'\n')
-
-			//if (typeof bxs[i] != 'object') continue;
-			// init textbox object if necessary
 
 			var boxID =  bxs[i].getAttribute('DiCoP-TextboxID');
 
 			var setDefaultIcon = true;
 
-			var curBoxValue = bxs[i].currentValue //(bxs[i].getAttribute('value') == '')? bxs[i].value: bxs[i].getAttribute('value');
-			//var curBoxValue = (bxs[i].value == '')? bxs[i].getAttribute('value'): bxs[i].value;
+			var curBoxValue = bxs[i].currentValue;
+			
 			if (contactPhoto.debug) {
 				dump('current box value: '+curBoxValue+"\n")
 				dump('previous box value: '+bxs[i].previousValue+"\n")
@@ -216,10 +230,8 @@ contactPhoto.compose = {
 
 							photoInfoStack.size = contactPhoto.prefs.get('composePhotos.size', 'int');
 							photoInfoStack.photoObject = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
-							photoInfoStack.photoObject.setAttribute('collapsed', 'true');
+							photoInfoStack.photoObject.setAttribute('collapsed', 'true'); // don't show the image in the ui
 							photoInfoStack.photoObject.style.display = 'block';
-							//photoInfoStack.photoObject.style.border = '1px solid red';
-							//photoInfoStack.photoObject.style.padding = '2px';
 							document.getElementById('addressingWidget').parentNode.appendChild(photoInfoStack.photoObject);
 
 							bxs[i].imgObject = photoInfoStack.photoObject;
@@ -233,10 +245,12 @@ contactPhoto.compose = {
 								bxs[_ii_].timeoutOccurred = false;
 
 								// cancel if stack has already been redrawn in the meantime
-								if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) return;
+								if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) {
+									return;
+								}
 
 								if (contactPhoto.compose.checkAllImagesLoaded()) {
-									if (contactPhoto.debug) dump('all images loaded\n');
+									if (contactPhoto.debug) dump('all images loaded (load call)\n');
 
 									contactPhoto.compose.displayStackView();
 								}
@@ -255,7 +269,7 @@ contactPhoto.compose = {
 
 									contactPhoto.compose.displayStackView();
 								}
-							}, 3000);
+							}, 10000);
 							
 							contactPhoto.display.logic(photoInfoStack, false);
 						}
@@ -318,7 +332,7 @@ contactPhoto.compose = {
 	// it modifies the textbox inside and sets eventlisteners for value changes.
 	newListitem: function(listitem) {
 		var textboxes = listitem.getElementsByTagName('textbox');
-
+		
 		if (textboxes.length == 1) {
 			if (contactPhoto.debug) dump('INIT textbox\n')
 			//alert('counter '+contactPhoto.compose.textboxCounter)
@@ -449,7 +463,6 @@ contactPhoto.compose = {
 		}
 	},
 	
-	displayOffset: 0, // offset to shift photos (click on stack)
 	
 	displayStackView: function() {
 		if (contactPhoto.debug) dump("DRAW STACK ")
@@ -497,19 +510,11 @@ contactPhoto.compose = {
 			stackCanvas.width = stackCanvas.width; // clear the canvas
 			return; 
 		}
-		
-		// shift the photos in the stack by the offset
-		if (contactPhoto.compose.displayOffset >= addresses.length)
-			contactPhoto.compose.displayOffset = 0;
-			
-		for (var i=0; i<contactPhoto.compose.displayOffset; i++)
-			addresses.unshift(addresses.pop());
-			
 			
 		stackCanvas.width = stackCanvas.width; // clear the canvas
 		var stackCtx = stackCanvas.getContext('2d');
 
-		var size = contactPhoto.prefs.get('composePhotos.size', 'int');
+		var size = contactPhoto.prefs.get('composePhotos.size', 'int'); // max size of the foremost image
 		var sizeDistance = 0.6; // percentage of the size of the rearmost image compared to the foremost
 
 		// initialize start coordinates with dynamic values depending on the number of images
@@ -517,10 +522,12 @@ contactPhoto.compose = {
 		var tmp_w = contactPhoto.display.photoCache[addresses[addresses.length-1]+'-'+size].width; // width of foremost photo
 		
 		// draw photos along a linear slope
-		var x0 = 0;
-		var y0 = size*sizeDistance;
-		var x1 = stackCanvas.width - size; // width of foremost image
-		var y1 = stackCanvas.height;
+		var x0 = contactPhoto.compose.photoStack.padding;
+		var y0 = size*sizeDistance + contactPhoto.compose.photoStack.padding;
+		var x1 = stackCanvas.width - contactPhoto.display.photoCache[addresses[addresses.length-1]+'-'+size].width - contactPhoto.compose.photoStack.padding; // width of foremost image
+		//var x1 = stackCanvas.width - size - contactPhoto.compose.photoStack.padding; // width of foremost image
+		var y1 = stackCanvas.height - contactPhoto.compose.photoStack.padding;
+			
 		
 		/*
 		var x0 = 0;
@@ -541,12 +548,6 @@ contactPhoto.compose = {
 
 			var w = contactPhoto.display.photoCache[addresses[i]+'-'+size].width;
 			var h = contactPhoto.display.photoCache[addresses[i]+'-'+size].height;
-
-			var t = (i+1)/(addresses.length+1);
-			var t2 = (i+1)/(addresses.length);
-
-			var dw = w*(sizeDistance + t2*(1-sizeDistance));
-			var dh = h*(sizeDistance + t2*(1-sizeDistance));
 			
 			
 			/* ellipse stack
@@ -559,9 +560,55 @@ contactPhoto.compose = {
 			var dy = oY + b * -Math.sin((1-t) * (2*Math.PI/4)) -dh
 			*/
 			
+			var m = 6;
+			var k = Math.min(addresses.length-1, m);
+			
+			var n = (addresses.length == 1)? 1: addresses.length-1;
+
+			//var t = (i+1)/(addresses.length+1)*(1-k/m) + (i)/n*(k/m);
+			//var t2 = (i+1)/(addresses.length)*(1-k/m) + (i)/n*(k/m);
+			
+			var u = (i+1)/(addresses.length+1);
+			var u2 = (i+1)/(addresses.length);
+			
+			/*
+			if (addresses.length == 1) {
+				u = .75;
+				u2 = 1;
+			}*/
+			
+			var v = (i)/n;
+			var v2 = (i)/n;
+			
+			t = (1-k/m)*u + (k/m)*v; // linearly mix the two functions
+			t2 = (1-k/m)*u2 + (k/m)*v2; 
+			
+			//alert(i+"\n"+(k/m)+"\n"+(i+1)/(addresses.length)*(1-k/m)+"\n"+(i)/n*(k/m))
+			
+			
+			/*
+			if (2 <= addresses.length && addresses.length <= 4)
+				
+				*/
+			//t=t2
+			//t2 = (i)/(addresses.length-1);
+			dump("t: "+t+"\nt2: "+t2+"\n")
+
+			var dw = w*(sizeDistance + t2*(1-sizeDistance));
+			var dh = h*(sizeDistance + t2*(1-sizeDistance));
+			
+			
+			
 			var dx = x0 + t*(x1-x0);
 			var dy = y0 + t*(y1-y0) - dh;
 			
+			if (addresses.length == 1) {
+				dw = w;
+				dh = h;
+				
+				dx = ((stackCanvas.width-w)*.5 - contactPhoto.compose.photoStack.padding);
+				dy = ((stackCanvas.height-h)*.5 - contactPhoto.compose.photoStack.padding);
+			}
 			
 			if (addresses.length == 0) { // DISABLED do not warp the image if there is only one
 				if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { dump("aborted\n\n"); return; }
@@ -584,20 +631,21 @@ contactPhoto.compose = {
 				tmpCtx.rect(0, 0, dw, dh);
 				tmpCtx.fill();
 				*/
-
+				
+				// vanishing points are relative to top left of image -> adjust by position of image
 				var vp1 = { // vanishing point on the bottom side
-					x: .75 * stackCanvas.width - dx,
+					x: .95 * stackCanvas.width - dx,
 					y: 20 * stackCanvas.height - dy
 				}
 				var vp2 = { // vanishing point on the right side
 					x: 3 * stackCanvas.width - dx,
-					y: .33 * stackCanvas.height - dy
+					y: .05 * stackCanvas.height - dy
 				}
 
 				if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { dump("aborted\n\n"); return; }
 				var perspectiveWarp = new canvasPerspectiveWarp(tmpCanvas);
 				perspectiveWarp.interpolationMethod = 'bl'; // bilinear
-				perspectiveWarp.referencePoint = 'bl'; // bottom left
+				perspectiveWarp.referencePoint = 'tl'; // bottom left
 				var transformation = perspectiveWarp.vanishingPoints(vp1.x, vp1.y, vp2.x, vp2.y);
 
 				if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { dump("aborted\n\n"); return; }

@@ -1,51 +1,57 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b5';
+contactPhoto.currentVersion = '1.2b6';
 contactPhoto.debug = 1; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
 	
-	// do some version first-time run stuff
-	if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
-	
-		// remove some outdated preferences
-		var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon', 'effectCornerRadius'];
-		for (var i in prefsToRemove) {
-			try {
-				contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
-			} catch (e) {
-				//if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
-			}
-		}
-		
-		contactPhoto.cache.clear();
-		
-		
-		// open support website in a new tab
-		if (contactPhoto.prefs.get('openWebsiteAfterInstall', 'bool')) {
-			Components.classes['@mozilla.org/appshell/window-mediator;1']
-				.getService(Components.interfaces.nsIWindowMediator)
-				.getMostRecentWindow("mail:3pane")
-				.document.getElementById("tabmail")
-				.openTab("contentTab", {contentPage: 'http://dicop.sourceforge.net/just_installed.php?version='+contactPhoto.currentVersion});
-		}
-		
-		contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
-	}
-
 	// load localized javascript variables
 	contactPhoto.localizedJS = document.getElementById('DiCoP-LocalizedJS');
 	
+	// delay init stuff to improve startup time
+	window.setTimeout(function() {
+		// do some version first-time run stuff
+		if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
+		
+			// remove some outdated preferences
+			var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon', 'effectCornerRadius'];
+			for (var i in prefsToRemove) {
+				try {
+					contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
+				} catch (e) {
+					//if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
+				}
+			}
+			
+			contactPhoto.cache.clear();
+			
+			
+			// open support website in a new tab
+			if (contactPhoto.prefs.get('openWebsiteAfterInstall', 'bool')) {
+				Components.classes['@mozilla.org/appshell/window-mediator;1']
+					.getService(Components.interfaces.nsIWindowMediator)
+					.getMostRecentWindow("mail:3pane")
+					.document.getElementById("tabmail")
+					.openTab("contentTab", {contentPage: 'http://dicop.sourceforge.net/just_installed.php?version='+contactPhoto.currentVersion});
+			}
+			
+			contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
+		}
+
+		
+		
+		// add add-on uninstall listener to remove thumbnail directory
+		var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
+		Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', contactPhoto.cache.removeCacheDirectory );
 	
-	// add add-on uninstall listener to remove thumbnail directory
-	var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
-	Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', contactPhoto.cache.removeCacheDirectory );
+		// debug stuff
+		if (contactPhoto.debug > 0) { // auto-open javascript console
+			//Application.console.open();
+		}
 	
-	// debug stuff
-	if (contactPhoto.debug > 0) { // auto-open javascript console
-		//Application.console.open();
-	}
+	}, 100);
+	
 }
 window.addEventListener('load', contactPhoto.genericInit, false);
 
@@ -306,7 +312,7 @@ contactPhoto.display = {
 	checkPhoto: function(srcURI, photoInfo, isGravatar) {
 		var thumbnailName;
 		
-		// gravatar url contain illegal file name characters, so a separate name is generated
+		// gravatar url contain invalid file name characters, so a separate name is generated
 		if (isGravatar) {
 			thumbnailName = 'gravatar-'+photoInfo.emailAddress;
 		} else {
@@ -325,7 +331,7 @@ contactPhoto.display = {
 			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 
 		} else { // generate it			
-			
+			dump("generate thumb for "+srcURI+"\n")
 			contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
 			var callbackFunc = function() {
@@ -456,7 +462,6 @@ contactPhoto.getCard = function(emailAddress) {
 		
 		try {
 			var card = ab.cardForEmailAddress(emailAddress).QueryInterface(Components.interfaces.nsIAbCard);
-			
 			if (card == null) continue;
 			
 			cardDetails = {
