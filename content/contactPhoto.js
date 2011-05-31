@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
 contactPhoto.currentVersion = '1.2b6';
-contactPhoto.debug = 1; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences

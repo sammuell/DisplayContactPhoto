@@ -11,7 +11,8 @@
 }
 
 #DiCoP-PhotoStack { /* canvas in compose window */
-	margin: 0px;
+	margin: 1px;
+	/*border: 1px solid red;*/
 }
 
 box.DiCoP-ComposeImageBox {

@@ -31,10 +31,10 @@ function canvasPerspectiveWarp(sCanvas) {
 		var p3 = {x: this.srcCanvas.width, y: this.srcCanvas.height}; // lower right corner
 		var p4 = {x: this.srcCanvas.width, y: 0}; // upper right corner
 		
-		var q1 = {x: p1.x+TLdx, y: p1.y+TLdy}; // upper left corner
-		var q2 = {x: p2.x+BLdx, y: p2.y+BLdy}; // lower left corner
-		var q3 = {x: p3.x+BRdx, y: p3.y+BRdy}; // lower right corner
-		var q4 = {x: p4.x+TRdx, y: p4.y+TRdy}; // upper right corner
+		var q1 = {x: p1.x+_pTL.x-pTL.x, y: p1.y+_pTL.y-pTL.y}; // upper left corner
+		var q2 = {x: p2.x+_pBL.x-pBL.x, y: p2.y+_pBL.y-pBL.y}; // lower left corner
+		var q3 = {x: p3.x+_pBR.x-pBR.x, y: p3.y+_pBR.y-pBR.y}; // lower right corner
+		var q4 = {x: p4.x+_pTR.x-pTR.x, y: p4.y+_pTR.y-pTR.y}; // upper right corner
 		
 		var min = this._makePoint(), max = this._makePoint();
 
@@ -43,9 +43,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		max.x = Math.max(q1.x, q2.x, q3.x, q4.x);
 		max.y = Math.max(q1.y, q2.y, q3.y, q4.y);
 		
-		var boundingBox = [];
-		boundingBox['width'] = Math.ceil(Math.abs(max.x - min.x));
-		boundingBox['height'] = Math.ceil(Math.abs(max.y - min.y));
+		var boundingBox = {};
+		boundingBox.width = Math.ceil(Math.abs(max.x - min.x));
+		boundingBox.height = Math.ceil(Math.abs(max.y - min.y));
 		
 		return boundingBox;
 	},
