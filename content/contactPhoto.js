@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2b6';
+contactPhoto.currentVersion = '1.2';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
@@ -331,7 +331,7 @@ contactPhoto.display = {
 			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
 
 		} else { // generate it			
-			dump("generate thumb for "+srcURI+"\n")
+			if (contactPhoto.debug > 1) dump("generate thumb for "+srcURI+"\n")
 			contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
 			var callbackFunc = function() {
@@ -1014,7 +1014,7 @@ contactPhoto.imageFX = {
 		contactPhoto.resizer.ctx.lineWidth = 1;
 		
 		if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
-			var cornerRadius = Math.round(Math.min(w, h)/4)-2; // radius is 2px shorter to account for clipping edge
+			var cornerRadius = Math.round(Math.min(w, h)*.2)-2; // radius is 2px shorter to account for clipping edge
 			if (contactPhoto.prefs.get('effectShadow', 'bool')) {
 				cornerRadius = Math.round(cornerRadius * (h-2*shadowBlur)/h); // image is smaller when shadow is enabled
 			}

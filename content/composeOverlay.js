@@ -12,6 +12,7 @@ contactPhoto.compose = {
 	widget: null,
 	widgetParent: null,
 	photoStackInitDone: false,
+	canvasClickTimeout: 0,
 	
 	initPhotoStack: function() {
 		if (contactPhoto.debug) dump('--------------- initPhotoStack\n')
@@ -57,15 +58,10 @@ contactPhoto.compose = {
 
 			canvas.addEventListener('click', function() {
 				if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-				/*
-				var tt = '';
-				var b = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
 				
-				for (var id=0; id<b.length; id++) {
-					tt = tt + '- ' +b[id].currentValue + ' ('+id+') '+(b[id].email)+'\n';
-				}
-				alert(tt)
-				*/
+				// capture subsequent clicks on the canvas and exit
+				if (new Date().getTime() - contactPhoto.compose.canvasClickTimeout < 500) return;
+				contactPhoto.compose.canvasClickTimeout = new Date().getTime();
 				
 				var widget = document.getElementById('addressingWidget');
 				
@@ -83,7 +79,7 @@ contactPhoto.compose = {
 					awAddRecipient(type, value);
 				}
 			}, false);
-
+			
 			box.appendChild(canvas);
 
 			if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
@@ -95,6 +91,8 @@ contactPhoto.compose = {
 			}
 
 			contactPhoto.compose.widgetParent = hbox;
+			
+			window.setTimeout(contactPhoto.compose.displayEmptyCanvas, 20);
 		}
 	},
 	
@@ -244,8 +242,8 @@ contactPhoto.compose = {
 						contactPhoto.display.logic(photoInfo, false);
 
 						if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
-
 							photoInfoStack.size = contactPhoto.prefs.get('composePhotos.size', 'int');
+							
 							photoInfoStack.photoObject = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
 							photoInfoStack.photoObject.setAttribute('collapsed', 'true'); // don't show the image in the ui
 							photoInfoStack.photoObject.style.display = 'block';
@@ -521,7 +519,8 @@ contactPhoto.compose = {
 		
 		// exit if there is nothing to draw
 		if (addresses.length == 0) { 
-			if (contactPhoto.debug) dump("addresses.length == 0\n\n"); 
+			if (contactPhoto.debug) dump("addresses.length == 0\n\n");
+			contactPhoto.compose.displayEmptyCanvas();
 			return; 
 		}
 		
@@ -544,8 +543,6 @@ contactPhoto.compose = {
 		* estimate dimensions of a transformed image at bottom right side (foremost image)
 		* determine vanishing points using an untransformed image then calculate the bounding box
 		**/
-		sizeW = contactPhoto.display.photoCache[addresses[addresses.length-1]+'-'+size].width;
-		sizeH = contactPhoto.display.photoCache[addresses[addresses.length-1]+'-'+size].height;
 		
 		var vp1 = { // vanishing point on the bottom side
 			x: vanPt1.x - (stackCanvas.width - size),//- contactPhoto.compose.photoStack.padding),
@@ -691,6 +688,24 @@ contactPhoto.compose = {
 		} // end addresses loop
 
 		if (contactPhoto.debug) dump('  ... finished\n-------------------------------\n');
+	},
+	
+	
+	displayEmptyCanvas: function() {
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var stackCtx = stackCanvas.getContext('2d');
+		
+		stackCtx.strokeStyle = 'rgba(200, 0, 0, .08)';
+		stackCtx.lineWidth = 3;
+		stackCtx.lineCap = 'round';
+		var padding = .15; // % of width, height
+		
+		// draw a cross
+		stackCtx.moveTo(stackCanvas.width*padding, stackCanvas.height*padding);
+		stackCtx.lineTo(stackCanvas.width*(1-padding), stackCanvas.height*(1-padding));
+		stackCtx.moveTo(stackCanvas.width*padding, stackCanvas.height*(1-padding));
+		stackCtx.lineTo(stackCanvas.width*(1-padding), stackCanvas.height*padding);
+		stackCtx.stroke();
 	}
 }
 
