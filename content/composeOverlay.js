@@ -222,7 +222,7 @@ contactPhoto.compose = {
 					if (numAddresses == 1 && bxs[i].email != emailAddress) {
 						setDefaultIcon = false;
 						photoChanged = true;
-						bxs[i].email = emailAddress;
+						bxs[i].email = emailAddress.toLowerCase();
 						bxs[i].imgLoaded = false;
 						var _ii_ = i; // used in event-listener-closures
 
