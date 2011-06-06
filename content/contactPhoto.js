@@ -512,8 +512,8 @@ contactPhoto.cache = {
 	// createSubDirectory: creates a directory in the thumbnail directory if it does not exist
 	createSubDirectory: function(name) {
 		var newDir = Components.classes["@mozilla.org/file/directory_service;1"]
-					.getService(Components.interfaces.nsIProperties)
-					.get("ProfD", Components.interfaces.nsIFile);
+			.getService(Components.interfaces.nsIProperties)
+			.get("ProfD", Components.interfaces.nsIFile);
 		newDir.append(contactPhoto.cache.directory);
 		newDir.append(name);
 		
@@ -554,7 +554,7 @@ contactPhoto.cache = {
 		}
 	},
 	
-	// delete the entire cache directory on add-on uninstall
+	// delete the entire cache directory (on add-on uninstall)
 	removeCacheDirectory: function() {
 		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
@@ -613,8 +613,8 @@ contactPhoto.resizer = {
 		if (typeof callbackProgress == 'function') contactPhoto.resizer.callbackProgress.push(callbackProgress);
 
 		if (contactPhoto.resizer.resizing == false) {
-			contactPhoto.resizer.processQueue();
 			contactPhoto.resizer.resizing = true;
+			contactPhoto.resizer.processQueue();
 		}
 	},
 
