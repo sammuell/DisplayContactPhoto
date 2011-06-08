@@ -137,6 +137,16 @@
 							</hbox>
 						</radiogroup>
 					</hbox>
+					<hbox align="center">
+						<label value="&composeWindow.type;"/>
+							
+						<menulist id="listComposeWindowStyle" preference="extensions.contactPhoto.composePhotos.type">
+							<menupopup>
+								<menuitem label="&composeWindow.type.3d;" class="menuitem-iconic" value="3d" />
+								<menuitem label="&composeWindow.type.grid;" class="menuitem-iconic" value="grid" />
+							</menupopup>
+						</menulist>
+					</hbox>
 
 				</groupbox>
 				

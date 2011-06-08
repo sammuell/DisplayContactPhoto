@@ -119,8 +119,10 @@ function enableGlossOptions() {
 function enableComposePhotos() {
 	if (document.getElementById('enableComposeWindowPhotos').checked) {
 		document.getElementById('composePhotoPosition').disabled = false;
+		document.getElementById('listComposeWindowStyle').disabled = false;
 	} else {
 		document.getElementById('composePhotoPosition').disabled = true;
+		document.getElementById('listComposeWindowStyle').disabled = true;
 	}
 }
 

@@ -10,6 +10,7 @@ pref('extensions.contactPhoto.composePhotos.display', true);
 pref('extensions.contactPhoto.composePhotos.type', '3d');
 pref('extensions.contactPhoto.composePhotos.position', 'left');
 pref('extensions.contactPhoto.composePhotos.size', 70);
+pref('extensions.contactPhoto.composePhotos.width', 150);
 
 pref('extensions.contactPhoto.defaultPhoto', 'show');
 pref('extensions.contactPhoto.defaultGenericPhoto', 'chrome://contactPhoto/skin/genericIcons/displaycontactphoto.png');

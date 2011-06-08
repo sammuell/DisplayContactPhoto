@@ -3,8 +3,6 @@ if (!contactPhoto) var contactPhoto = {};
 
 contactPhoto.compose = {
 	photoStack: {
-		width: 250,
-		height: 90,
 		padding: 2
 	},
 	
@@ -13,18 +11,49 @@ contactPhoto.compose = {
 	widgetParent: null,
 	photoStackInitDone: false,
 	canvasClickTimeout: 0,
+	prefBranch: null,
+	
+	/**
+	 * Listen to preference changes and update photo stack
+	 */
+	observe: function(subject, topic, data) {
+		if (topic != "nsPref:changed") {
+			return;
+		}
+
+		if(data == 'type') {
+			// Photo stack type changed (3d/grid)
+			contactPhoto.compose.displayStackView();
+		} else if(data == 'position') {
+			 // Position changed (left/right)
+			var hbox = document.getElementById('DiCoP-AddressingContainer');
+			if(hbox != null) {
+				var box = document.getElementById('DiCoP-PhotoStackContainer');
+				var splitter = document.getElementById('DiCoP-contacts-sizer');
+				var widget = document.getElementById('addressingWidget');
+				
+				if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
+					hbox.insertBefore(box, widget);
+					hbox.insertBefore(splitter, widget);
+				} else {
+					hbox.appendChild(splitter);
+					hbox.appendChild(box);
+				}
+			}
+		}
+	},
 	
 	initPhotoStack: function() {
 		if (contactPhoto.debug) dump('--------------- initPhotoStack\n')
 		if (contactPhoto.compose.photoStackInitDone) return;
 		contactPhoto.compose.photoStackInitDone = true;
 
-
-		contactPhoto.compose.widget = document.getElementById('addressingWidget'); /* addressingWidget is a <listbox> */
+		var widget = document.getElementById('addressingWidget');
+		contactPhoto.compose.widget = widget; /* addressingWidget is a <listbox> */
 
 		// init first textbox
 		contactPhoto.compose.newListitem(contactPhoto.compose.widget.getElementsByTagName('listitem')[0]);
-
+		
 		if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
 			/* replace <addressingWidget/> with
 
@@ -32,29 +61,29 @@ contactPhoto.compose = {
 				<box id="DiCoP-PhotoStackContainer'>
 					<canvas id='DiCoP-PhotoStack'/>
 				</box>
+				<splitter id="DiCoP-contacts-sizer" collapse="after"/>
 				<addressingWidget/>
 			</hbox>
 			*/
 
-			var wParent = contactPhoto.compose.widget.parentNode;
+			var addrBox = widget.parentNode;
 
 			var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'hbox');
 			hbox.flex = '1';
 			hbox.id = 'DiCoP-AddressingContainer';
-			wParent.insertBefore(hbox, contactPhoto.compose.widget.nextSibling);
+			addrBox.replaceChild(hbox, widget);
 			
 			// create a box around the canvas to center the canvas
 			var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
 			box.align = 'center';
 			box.id = 'DiCoP-PhotoStackContainer';
-			box.style.overflow = 'hidden'
+			box.style.overflow = 'hidden';
 
+			var canvasSize = contactPhoto.prefs.get('composePhotos.width', 'int');
 			var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 			canvas.id = 'DiCoP-PhotoStack';
-			canvas.width = contactPhoto.compose.photoStack.width;
-			canvas.height = contactPhoto.compose.photoStack.height;
-			canvas.style.width = contactPhoto.compose.photoStack.width+'px';
-			canvas.style.height = contactPhoto.compose.photoStack.height+'px';
+			canvas.width = canvasSize;
+			canvas.height = 1; // Later adjusted by displayStackView()
 
 			canvas.addEventListener('click', function() {
 				if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -64,7 +93,6 @@ contactPhoto.compose = {
 				contactPhoto.compose.canvasClickTimeout = new Date().getTime();
 				
 				var widget = document.getElementById('addressingWidget');
-				
 				var textboxes = widget.getElementsByTagName("textbox");
 				
 				if (textboxes.length > 1) {
@@ -80,19 +108,30 @@ contactPhoto.compose = {
 				}
 			}, false);
 			
+			var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
+			splitter.id = 'DiCoP-contacts-sizer';
+			splitter.collapse = 'before';
+			splitter.addEventListener('command', function() {
+				// Save new position of splitter and redraw photo stack
+				contactPhoto.prefs.set('composePhotos.width', box.width, 'int');
+				contactPhoto.compose.displayStackView();
+			}, false);
+
 			box.appendChild(canvas);
 
 			if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
 				hbox.appendChild(box);
-				hbox.appendChild(wParent.removeChild(contactPhoto.compose.widget));
+				hbox.appendChild(splitter);
+				hbox.appendChild(widget);
 			} else {
-				hbox.appendChild(wParent.removeChild(contactPhoto.compose.widget));
+				hbox.appendChild(widget);
+				hbox.appendChild(splitter);
 				hbox.appendChild(box);
 			}
 
 			contactPhoto.compose.widgetParent = hbox;
 			
-			window.setTimeout(contactPhoto.compose.displayEmptyCanvas, 20);
+			window.setTimeout(contactPhoto.compose.displayStackView, 20);
 		}
 	},
 	
@@ -104,10 +143,17 @@ contactPhoto.compose = {
 		contactPhoto.compose.widget.parentNode.addEventListener('DOMNodeRemoved', contactPhoto.compose.listenerNodeRemoved, false);
 		
 		// change stack height after the size addressingwidget has been changed
-		document.getElementById('compose-toolbar-sizer').addEventListener('mousedown', contactPhoto.compose.listenerSizerMouseDown, false);
+		document.getElementById('compose-toolbar-sizer').addEventListener('mouseup', contactPhoto.compose.displayStackView, false);
 
 		var composeWindow = document.getElementById("msgcomposeWindow");
 		composeWindow.addEventListener('compose-window-close', contactPhoto.compose.listenerComposeWindowClosed, false);
+		
+		// Listen to pref changes (var preBranch has to be non local, otherwise it gets garbage collected)
+		prefBranch = Components.classes["@mozilla.org/preferences-service;1"]
+					.getService(Components.interfaces.nsIPrefService)
+					.getBranch("extensions.contactPhoto.composePhotos.");
+		prefBranch.QueryInterface(Components.interfaces.nsIPrefBranch2);
+		prefBranch.addObserver("", this, false);
 	},
 
 
@@ -147,23 +193,6 @@ contactPhoto.compose = {
 			}
 		}
 	},
-	
-	
-	listenerSizerMouseDown: function() {
-		document.getElementById('compose-toolbar-sizer').addEventListener('mouseup', contactPhoto.compose.listenerSizerMouseUp, false);
-	},
-	
-	
-	listenerSizerMouseUp: function() {
-		document.getElementById('compose-toolbar-sizer').removeEventListener('mouseup', contactPhoto.compose.listenerSizerMouseUp, false);
-		
-		var listboxHeight = document.getElementById("addressingWidget").boxObject.height;
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
-		stackCanvas.style.height = (listboxHeight-2)+"px";
-		stackCanvas.height = listboxHeight-2;
-		window.setTimeout(contactPhoto.compose.displayStackView, 0);
-	},
-
 
 	resetPhoto: function(imgObj) {
 		if (contactPhoto.debug) dump('RESET img\n')
@@ -477,8 +506,28 @@ contactPhoto.compose = {
 		}
 	},
 	
-	
 	displayStackView: function() {
+		// Adjust width and height of photo stack
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var boxWidth = document.getElementById('DiCoP-PhotoStackContainer').boxObject.width;
+		var listboxHeight = document.getElementById('addressingWidget').boxObject.height;
+		stackCanvas.width = boxWidth-2;
+		stackCanvas.height = listboxHeight;
+		
+		// Render canvas
+		var type = contactPhoto.prefs.get('composePhotos.type', 'char');
+		switch(type) {
+			case 'grid':
+				contactPhoto.compose.displayGridView();
+				break;
+			case '3d':
+			default:
+				contactPhoto.compose.display3DStackView();
+				break;
+		}
+	},
+	
+	display3DStackView: function() {
 		if (contactPhoto.debug) dump("DRAW STACK ")
 
 		var currentDrawNumber = ++contactPhoto.compose.stackDrawNumber;
@@ -706,6 +755,77 @@ contactPhoto.compose = {
 		stackCtx.moveTo(stackCanvas.width*padding, stackCanvas.height*(1-padding));
 		stackCtx.lineTo(stackCanvas.width*(1-padding), stackCanvas.height*padding);
 		stackCtx.stroke();
+	},
+	
+	displayGridView: function() {
+		if (contactPhoto.debug) dump("DRAW STACK ")
+
+		var currentDrawNumber = ++contactPhoto.compose.stackDrawNumber;
+		var addresses = [];
+
+		// check if an image has been assigned and reverse the order
+		var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
+		if (contactPhoto.debug) dump('displayStackView: '+boxes.length+'\n')
+		for (var id=0; id<boxes.length; id++) {
+
+			if (boxes[id].email == '') {
+				if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (email not valid)\n');
+				continue;
+			}
+			if (boxes[id].imgObject == null) {
+				if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (no img obj)\n');
+				continue;
+			}
+			if (boxes[id].imgLoaded == false) {
+				if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (not loaded)\n');
+				continue;
+			}
+			
+			if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' added\n')
+			addresses.push(boxes[id].email);
+		}
+
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		stackCanvas.width = stackCanvas.width; // clear the canvas
+		
+		var stackCtx = stackCanvas.getContext('2d');
+		var size = contactPhoto.prefs.get('composePhotos.size', 'int'); // max size of the foremost image
+		
+		var factor = (1.0*stackCanvas.height)/stackCanvas.width;
+		var cols = 1;
+		var rows = Math.max(1, Math.floor(cols*factor));
+		while(cols*rows < addresses.length) {
+			cols++;
+			rows = Math.max(1, Math.floor(cols*factor));
+		}
+		
+		var imageSize = Math.min(Math.floor(stackCanvas.width / cols), Math.floor(stackCanvas.height / rows));
+		
+		// exit if there is nothing to draw
+		if (addresses.length == 0) {
+			var empty = new Image(imageSize, imageSize);
+			empty.addEventListener('load', function() {
+				stackCtx.drawImage(this, 0, 0, imageSize, imageSize);
+			}, false);
+			empty.src = 'chrome://contactPhoto/skin/empty.png';
+			return; 
+		}
+		
+		for (var i=0; i<addresses.length; i++) {
+			// exit if there is a more recent call to displayStackView()
+			if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { return; }
+			
+			// if there is only one image, position it in full size in the center
+			var row = Math.floor(i / cols);
+			var col = i % cols;
+				
+			var dx = (col*imageSize);
+			var dy = (row*imageSize);
+			
+			stackCtx.drawImage(contactPhoto.display.photoCache[addresses[i]+'-'+size], dx, dy, imageSize, imageSize);
+		} // end addresses loop
+
+		if (contactPhoto.debug) dump('  ... finished\n-------------------------------\n');
 	}
 }
 

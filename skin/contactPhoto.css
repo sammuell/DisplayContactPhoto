@@ -32,3 +32,8 @@ image.moreinfo {
 panel.moreinfo {
 	width: 350px;
 }
+
+#DiCoP-contacts-sizer {
+	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
+	border: none;
+}

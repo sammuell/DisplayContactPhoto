@@ -14,6 +14,7 @@
 		<em:optionsURL>chrome://contactPhoto/content/prefs.xul</em:optionsURL>
 		<em:iconURL>chrome://contactPhoto/skin/icon.png</em:iconURL>
 		<em:homepageURL>https://addons.mozilla.org/thunderbird/addon/58034</em:homepageURL>
+		<em:contributor>Sven Obser</em:contributor>
 		
 		<!-- LOCALES -->
 		

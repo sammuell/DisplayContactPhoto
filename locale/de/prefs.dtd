@@ -16,6 +16,9 @@
 <!ENTITY composeWindow.label "Nachrichten verfassen">
 <!ENTITY composeWindow.showPhotos "Fotos der Empfänger anzeigen">
 <!ENTITY composeWindow.photoPosition "Position der Fotos">
+<!ENTITY composeWindow.type "Stil">
+<!ENTITY composeWindow.type.3d "3D Photo-Stack">
+<!ENTITY composeWindow.type.grid "Grid">
 <!ENTITY gravatar.enable "Gravatars aktivieren">
 <!ENTITY gravatar.description "Gravatar (eine Abkürzung für englisch &quot;globally recognized avatar&quot; - global erkennbarer Avatar) ist ein Dienst für global einzigartige Avatars. Die  E-Mail-Adresse wird verschlüsselt und an gravatar.com gesendet. Ist der Besitzer der Adresse bei gravatar.com registriert, wird sein Avatar angezeigt, sonst wird ein Gravatar-Standardbild angezeigt. Gravatars werden lokal gecached aus Effizienzgründen und um die Netzwerkbelastung zu verkleinern.">
 <!ENTITY gravatar.default "Standard-Gravatar">
