@@ -2,6 +2,8 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://contactPhoto/skin/contactPhoto.css" type="text/css"?>
 
+<!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/contactPhotoOverlay.dtd">
+
 <overlay id="DiCoP-Compose" 
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
@@ -9,24 +11,27 @@
 <script type="application/javascript" src="chrome://contactPhoto/content/canvasPerspectiveWarp.js"/>
 <script type="application/javascript" src="chrome://contactPhoto/content/composeOverlay.js"/>
 
-<hbox id="msgheaderstoolbar-box">
-	<!--
-	<box width="40" height="40" position="1" style="background:red;">
-		<button label="test"/>
-	</box>
-	-->
-</hbox>
 
-<textbox id="addressCol2#1">
-	<!-- 
-	this image is only used to get a reference to each textbox. attaching an event does not work because they are not cloned. 
+ 
+<vbox id="addresses-box">
+
+<!--
+	<hbox insertbefore="addressingWidget" id="DiCoP-AddressingContainer" flex="1">
+		<box id="DiCoP-PhotoStackContainer" style="overflow:hidden;" collapsed="true" align="center" context="DiCoP-Contextmenu">
+			<canvas id="DiCoP-PhotoStack" width="1" height="1" />
+		</box>
+		
+		<splitter id="DiCoP-Contacts-sizer" collapse="after" />
 	
-	<image width="0" height="1" onload="contactPhoto.compose.textboxHook(this);" src="chrome://contactPhoto/skin/transparent.gif"/>
-	
-	<box align="center" pack="center" width="20" height="20" style="border: 1px dashed green;">
-		<image width="15" height="12" src="chrome://contactPhoto/skin/transparent.gif" style="display:block;background:red;"/>
-	</box>-->
-</textbox>
+	</hbox>
+-->
+ 
+ 
+	<popup id="DiCoP-Contextmenu">
+		<menuitem label="&contextmenu.prefs;" id="DiCoP-ContextmenuPrefs"
+			oncommand="contactPhoto.utils.openPreferencesWindow();"/>
+	</popup>
+</vbox>
 
 
 </overlay>

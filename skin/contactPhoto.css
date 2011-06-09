@@ -11,8 +11,13 @@
 }
 
 #DiCoP-PhotoStack { /* canvas in compose window */
-	margin: 1px;
-	/*border: 1px solid red;*/
+	/*margin: 1px;
+	border: 1px solid red;*/
+}
+
+#DiCoP-PhotoStackContainer {
+	min-width: 50px;
+	max-width: 300px;
 }
 
 box.DiCoP-ComposeImageBox {
@@ -33,7 +38,6 @@ panel.moreinfo {
 	width: 350px;
 }
 
-#DiCoP-contacts-sizer {
+#DiCoP-Contacts-sizer {
 	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
-	border: none;
 }

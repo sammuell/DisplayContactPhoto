@@ -21,25 +21,39 @@ contactPhoto.compose = {
 			return;
 		}
 
-		if(data == 'type') {
-			// Photo stack type changed (3d/grid)
-			contactPhoto.compose.displayStackView();
-		} else if(data == 'position') {
-			 // Position changed (left/right)
-			var hbox = document.getElementById('DiCoP-AddressingContainer');
-			if(hbox != null) {
-				var box = document.getElementById('DiCoP-PhotoStackContainer');
-				var splitter = document.getElementById('DiCoP-contacts-sizer');
+		switch (data) {
+			case 'type': // Photo stack type changed (3d/grid)
+				contactPhoto.compose.displayStackView();
+				break;
+			
+			case 'position': // Position changed (left/right)
+				var hbox = document.getElementById('DiCoP-AddressingContainer');
+				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
+				var splitter = document.getElementById('DiCoP-Contacts-sizer');
 				var widget = document.getElementById('addressingWidget');
 				
 				if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
-					hbox.insertBefore(box, widget);
+					hbox.insertBefore(canvasBox, widget);
 					hbox.insertBefore(splitter, widget);
+					splitter.setAttribute('collapse', 'before');
 				} else {
 					hbox.appendChild(splitter);
-					hbox.appendChild(box);
+					hbox.appendChild(canvasBox);
+					splitter.setAttribute('collapse', 'after');
 				}
-			}
+				break;
+			
+			case 'display':
+				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
+				
+				if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
+					canvasBox.collapsed = false;
+					canvasBox.width = contactPhoto.prefs.get('composePhotos.width', 'int');
+					contactPhoto.compose.displayStackView();
+				} else {
+					canvasBox.collapsed = true;
+				}
+				break;
 		}
 	},
 	
@@ -54,90 +68,106 @@ contactPhoto.compose = {
 		// init first textbox
 		contactPhoto.compose.newListitem(contactPhoto.compose.widget.getElementsByTagName('listitem')[0]);
 		
-		if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
-			/* replace <addressingWidget/> with
+		
+		/** replace <addressingWidget/> with
+		 *
+		 * <hbox id='DiCoP-AddressingContainer'>
+		 * 	<box id="DiCoP-PhotoStackContainer'>
+		 * 		<canvas id='DiCoP-PhotoStack'/>
+		 * 	</box>
+		 * 	<splitter id="DiCoP-contacts-sizer"/>
+		 * 	<addressingWidget/>
+		 * </hbox>
+		 */
 
-			<hbox id='DiCoP-AddressingContainer'>
-				<box id="DiCoP-PhotoStackContainer'>
-					<canvas id='DiCoP-PhotoStack'/>
-				</box>
-				<splitter id="DiCoP-contacts-sizer" collapse="after"/>
-				<addressingWidget/>
-			</hbox>
-			*/
+		var addrBox = widget.parentNode;
 
-			var addrBox = widget.parentNode;
+		var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'hbox');
+		hbox.flex = '1';
+		hbox.id = 'DiCoP-AddressingContainer';
+		//var hbox = document.getElementById('DiCoP-AddressingContainer');
+		addrBox.replaceChild(hbox, widget);
+		
+		// create a box around the canvas to center the canvas
+		//var box = document.getElementById('DiCoP-PhotoStackContainer');
+		var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
+		box.align = 'center';
+		box.id = 'DiCoP-PhotoStackContainer';
+		box.style.overflow = 'hidden';
+		box.collapsed = (contactPhoto.prefs.get('composePhotos.display', 'bool') == false);
+		box.setAttribute('context', 'DiCoP-Contextmenu'); // attach contextmenu
+		
 
-			var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'hbox');
-			hbox.flex = '1';
-			hbox.id = 'DiCoP-AddressingContainer';
-			addrBox.replaceChild(hbox, widget);
+		var canvasSize = contactPhoto.prefs.get('composePhotos.width', 'int');
+		var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+		canvas.id = 'DiCoP-PhotoStack';
+		//var canvas = document.getElementById('DiCoP-PhotoStack');
+		canvas.width = canvasSize;
+		canvas.height = 1; // Later adjusted by displayStackView()
+
+		// shift through recipients when clicking on the canvas
+		canvas.addEventListener('click', function() {
+			if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 			
-			// create a box around the canvas to center the canvas
-			var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
-			box.align = 'center';
-			box.id = 'DiCoP-PhotoStackContainer';
-			box.style.overflow = 'hidden';
-
-			var canvasSize = contactPhoto.prefs.get('composePhotos.width', 'int');
-			var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-			canvas.id = 'DiCoP-PhotoStack';
-			canvas.width = canvasSize;
-			canvas.height = 1; // Later adjusted by displayStackView()
-
-			canvas.addEventListener('click', function() {
-				if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-				
-				// capture subsequent clicks on the canvas and exit
-				if (new Date().getTime() - contactPhoto.compose.canvasClickTimeout < 500) return;
-				contactPhoto.compose.canvasClickTimeout = new Date().getTime();
-				
-				var widget = document.getElementById('addressingWidget');
-				var textboxes = widget.getElementsByTagName("textbox");
-				
-				if (textboxes.length > 1) {
-					// get type and value of first row
-					var type = awGetPopupElement(1).selectedItem.getAttribute("value");
-					var value = awGetInputElement(1).value;
-					
-					// remove the first row
-					awDeleteRow(1);
-					
-					// add a new row at the bottom
-					awAddRecipient(type, value);
-				}
-			}, false);
+			// capture subsequent clicks on the canvas and exit
+			if (new Date().getTime() - contactPhoto.compose.canvasClickTimeout < 500) return;
+			contactPhoto.compose.canvasClickTimeout = new Date().getTime();
 			
-			var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
-			splitter.id = 'DiCoP-contacts-sizer';
-			splitter.collapse = 'before';
-			splitter.addEventListener('command', function() {
-				// Save new position of splitter and redraw photo stack
-				contactPhoto.prefs.set('composePhotos.width', box.width, 'int');
-				contactPhoto.compose.displayStackView();
-			}, false);
-
-			box.appendChild(canvas);
-
-			if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
-				hbox.appendChild(box);
-				hbox.appendChild(splitter);
-				hbox.appendChild(widget);
-			} else {
-				hbox.appendChild(widget);
-				hbox.appendChild(splitter);
-				hbox.appendChild(box);
+			var widget = document.getElementById('addressingWidget');
+			var textboxes = widget.getElementsByTagName("textbox");
+			
+			if (textboxes.length > 1) {
+				// get type and value of first row
+				var type = awGetPopupElement(1).selectedItem.getAttribute("value");
+				var value = awGetInputElement(1).value;
+				
+				// remove the first row
+				awDeleteRow(1);
+				
+				// add a new row at the bottom
+				awAddRecipient(type, value);
 			}
+		}, false);
+		
+		
+		var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
+		splitter.id = 'DiCoP-Contacts-sizer';
+		
+		
+		//var splitter = document.getElementById('DiCoP-Contacts-sizer');
+		splitter.addEventListener('command', function() {
+			// Save new position of splitter 
+			if (box.collapsed) {
+				contactPhoto.prefs.set('composePhotos.display', false, 'bool');
+			} else {
+				contactPhoto.prefs.set('composePhotos.width', box.width, 'int');
+				contactPhoto.prefs.set('composePhotos.display', true, 'bool');
+				contactPhoto.compose.displayStackView();
+			}
+		}, false);
+		
+		box.appendChild(canvas);
 
-			contactPhoto.compose.widgetParent = hbox;
-			
-			window.setTimeout(contactPhoto.compose.displayStackView, 20);
+		if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
+			hbox.appendChild(box);
+			hbox.appendChild(splitter);
+			hbox.appendChild(widget);
+			splitter.setAttribute('collapse', 'before');
+		} else {
+			hbox.appendChild(widget);
+			hbox.appendChild(splitter);
+			hbox.appendChild(box);
+			splitter.setAttribute('collapse', 'after');
 		}
+
+		contactPhoto.compose.widgetParent = hbox;
+		
+		window.setTimeout(contactPhoto.compose.displayStackView, 20);
 	},
 	
 	
 	setupEventListeners: function() {
-		if (contactPhoto.debug) dump('--------------- setupEventListeners\n')
+		if (contactPhoto.debug) dump('--------------- setupEventListeners\n');
 
 		contactPhoto.compose.widget.parentNode.addEventListener('DOMNodeInserted', contactPhoto.compose.listenerNodeInserted, false);
 		contactPhoto.compose.widget.parentNode.addEventListener('DOMNodeRemoved', contactPhoto.compose.listenerNodeRemoved, false);
@@ -149,11 +179,12 @@ contactPhoto.compose = {
 		composeWindow.addEventListener('compose-window-close', contactPhoto.compose.listenerComposeWindowClosed, false);
 		
 		// Listen to pref changes (var preBranch has to be non local, otherwise it gets garbage collected)
-		prefBranch = Components.classes["@mozilla.org/preferences-service;1"]
+		contactPhoto.compose.prefBranch = Components.classes["@mozilla.org/preferences-service;1"]
 					.getService(Components.interfaces.nsIPrefService)
-					.getBranch("extensions.contactPhoto.composePhotos.");
-		prefBranch.QueryInterface(Components.interfaces.nsIPrefBranch2);
-		prefBranch.addObserver("", this, false);
+					.getBranch("extensions.contactPhoto.composePhotos.")
+					.QueryInterface(Components.interfaces.nsIPrefBranch2);
+		contactPhoto.compose.prefBranch.addObserver("", this, false);
+		
 	},
 
 
@@ -161,10 +192,8 @@ contactPhoto.compose = {
 		if (contactPhoto.debug) dump('WINDOW CLOSED\n\n')
 
 		// clear the stack area
-		if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
-			var stackCanvas = document.getElementById('DiCoP-PhotoStack');
-			stackCanvas.width = stackCanvas.width;
-		}
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		stackCanvas.width = stackCanvas.width;
 
 
 		// remove cached images
@@ -511,7 +540,7 @@ contactPhoto.compose = {
 		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
 		var boxWidth = document.getElementById('DiCoP-PhotoStackContainer').boxObject.width;
 		var listboxHeight = document.getElementById('addressingWidget').boxObject.height;
-		stackCanvas.width = boxWidth-2;
+		stackCanvas.width = boxWidth;
 		stackCanvas.height = listboxHeight;
 		
 		// Render canvas
@@ -578,14 +607,14 @@ contactPhoto.compose = {
 		var size = contactPhoto.prefs.get('composePhotos.size', 'int'); // max size of the foremost image
 		var sizeDistance = 0.6; // percentage of the size of the rearmost image compared to the foremost
 
-		
+		var ratio = stackCanvas.width/stackCanvas.height;
 		var vanPt1 = { // vanishing point on the bottom side
 			x: .95 * stackCanvas.width,
 			y: 20 * stackCanvas.height
 		}
-		var vanPt2 = { // vanishing point on the right side
-			x: 3 * stackCanvas.width,
-			y: .05 * stackCanvas.height
+		var vanPt2 = { // vanishing point on the right side, adjust by the size-ratio to achieve better perspective
+			x: 3 * stackCanvas.width / Math.min(1, ratio),
+			y: .05 * stackCanvas.height * Math.min(1, ratio)
 		}
 		
 		/**
@@ -740,23 +769,6 @@ contactPhoto.compose = {
 	},
 	
 	
-	displayEmptyCanvas: function() {
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
-		var stackCtx = stackCanvas.getContext('2d');
-		
-		stackCtx.strokeStyle = 'rgba(200, 0, 0, .08)';
-		stackCtx.lineWidth = 3;
-		stackCtx.lineCap = 'round';
-		var padding = .15; // % of width, height
-		
-		// draw a cross
-		stackCtx.moveTo(stackCanvas.width*padding, stackCanvas.height*padding);
-		stackCtx.lineTo(stackCanvas.width*(1-padding), stackCanvas.height*(1-padding));
-		stackCtx.moveTo(stackCanvas.width*padding, stackCanvas.height*(1-padding));
-		stackCtx.lineTo(stackCanvas.width*(1-padding), stackCanvas.height*padding);
-		stackCtx.stroke();
-	},
-	
 	displayGridView: function() {
 		if (contactPhoto.debug) dump("DRAW STACK ")
 
@@ -789,7 +801,7 @@ contactPhoto.compose = {
 		stackCanvas.width = stackCanvas.width; // clear the canvas
 		
 		var stackCtx = stackCanvas.getContext('2d');
-		var size = contactPhoto.prefs.get('composePhotos.size', 'int'); // max size of the foremost image
+		var size = contactPhoto.prefs.get('composePhotos.size', 'int');
 		
 		var factor = (1.0*stackCanvas.height)/stackCanvas.width;
 		var cols = 1;
@@ -800,32 +812,61 @@ contactPhoto.compose = {
 		}
 		
 		var imageSize = Math.min(Math.floor(stackCanvas.width / cols), Math.floor(stackCanvas.height / rows));
+		imageSize = Math.min(imageSize, size); // avoid enlarging of images (blurry)
 		
 		// exit if there is nothing to draw
 		if (addresses.length == 0) {
-			var empty = new Image(imageSize, imageSize);
-			empty.addEventListener('load', function() {
-				stackCtx.drawImage(this, 0, 0, imageSize, imageSize);
-			}, false);
-			empty.src = 'chrome://contactPhoto/skin/empty.png';
-			return; 
+			contactPhoto.compose.displayEmptyCanvas();
+			return;
 		}
 		
-		for (var i=0; i<addresses.length; i++) {
+		if (addresses.length == 1) {
+			// if there is only one image, position it in full size in the center
+			var w = contactPhoto.display.photoCache[addresses[0]+'-'+size].width;
+			var h = contactPhoto.display.photoCache[addresses[0]+'-'+size].height;
+			
+			var dx = ((stackCanvas.width-w)*.5 - contactPhoto.compose.photoStack.padding);
+			var dy = ((stackCanvas.height-h)*.5 - contactPhoto.compose.photoStack.padding);
+			
 			// exit if there is a more recent call to displayStackView()
 			if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { return; }
 			
-			// if there is only one image, position it in full size in the center
-			var row = Math.floor(i / cols);
-			var col = i % cols;
+			stackCtx.drawImage(contactPhoto.display.photoCache[addresses[0]+'-'+size], dx, dy, imageSize, imageSize);
+		} else {
+			for (var i=0; i<addresses.length; i++) {
 				
-			var dx = (col*imageSize);
-			var dy = (row*imageSize);
-			
-			stackCtx.drawImage(contactPhoto.display.photoCache[addresses[i]+'-'+size], dx, dy, imageSize, imageSize);
-		} // end addresses loop
-
+				var row = Math.floor(i / cols);
+				var col = i % cols;
+					
+				var dx = (col*imageSize);
+				var dy = (row*imageSize);
+				
+				// exit if there is a more recent call to displayStackView()
+				if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { return; }
+				
+				stackCtx.drawImage(contactPhoto.display.photoCache[addresses[i]+'-'+size], dx, dy, imageSize, imageSize);
+			} // end addresses loop
+		}
+		
 		if (contactPhoto.debug) dump('  ... finished\n-------------------------------\n');
+	},
+	
+	
+	
+	
+	
+	displayEmptyCanvas: function() {
+		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var stackCtx = stackCanvas.getContext('2d');
+		
+		var imageSize = Math.min(stackCanvas.height, stackCanvas.width);
+		var empty = new Image(imageSize, imageSize);
+		empty.addEventListener('load', function() {
+			stackCtx.globalAlpha = .15;
+			stackCtx.drawImage(this, (stackCanvas.width-imageSize)/2, (stackCanvas.height-imageSize)/2, imageSize, imageSize);
+			stackCtx.globalAlpha = 1;
+		}, false);
+		empty.src = 'chrome://contactPhoto/skin/empty.png';
 	}
 }
 

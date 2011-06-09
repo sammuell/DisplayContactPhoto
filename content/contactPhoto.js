@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2';
+contactPhoto.currentVersion = '1.2.1';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
@@ -329,6 +329,12 @@ contactPhoto.display = {
 		if (thumbnailFile.exists()) { // if the thumbnail already exists, display it
 			
 			contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
+			
+			// prune photos older than a week, they will be regenerated when they are displayed the next time
+			var oneWeekAgo = new Date().getTime() - 604800000; // 1000 * 3600 * 24 * 7;
+			if (thumbnailFile.lastModifiedTime < oneWeekAgo) {
+				thumbnailFile.remove(false);
+			}
 
 		} else { // generate it			
 			if (contactPhoto.debug > 1) dump("generate thumb for "+srcURI+"\n")
