@@ -217,25 +217,24 @@ contactPhoto.display = {
 			}
 		}
 
-		//if (isMessagePhoto) {
-			// if we are here, then there is no photo nor face to show
-			switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
-				case 'show':
-					contactPhoto.display.defaultPhoto(photoInfo);
-					return;
-				break;
-				
-				case 'hide':
-					if (isMessagePhoto) 
+		// if we are here, then there is no photo nor face to show
+		switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
+			case 'show':
+				contactPhoto.display.defaultPhoto(photoInfo);
+				return;
+			break;
+			
+			case 'hide':
+				if (isMessagePhoto) 
 					contactPhoto.messageDisplay.imgObj.style.display = 'none';
-					return;
-				break;
-				
-				default:
-					if (isMessagePhoto) 
+				return;
+			break;
+			
+			default:
+				if (isMessagePhoto) 
 					contactPhoto.photoBox.setAttribute('hidden', true);
-			}
-		//}
+		}
+			
 		// in case the photo is not displayed in a message header, do nothing
 		
 	},
@@ -286,7 +285,19 @@ contactPhoto.display = {
 
 	gravatar: function(photoInfo) {
 		//if (contactPhoto.debug) alert('disp gravatar')
-
+		
+		// don't load image if the message has been marked as junk
+		// copied from function SelectedMessagesAreJunk()
+		var isJunk;
+		try {
+			var junkScore = gFolderDisplay.selectedMessage.getStringProperty("junkscore");
+			isJunk = (junkScore != "") && (junkScore != "0");
+		} catch (ex) {
+			isJunk = false;
+		}
+		if (isJunk) return;
+		
+		// load gravatar image from gravatar server
 		var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
 		
 		var gravatarURI = contactPhoto.prefs.get('gravatarServer', 'char')+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;

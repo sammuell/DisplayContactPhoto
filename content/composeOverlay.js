@@ -29,7 +29,7 @@ contactPhoto.compose = {
 			case 'position': // Position changed (left/right)
 				var hbox = document.getElementById('DiCoP-AddressingContainer');
 				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
-				var splitter = document.getElementById('DiCoP-Contacts-sizer');
+				var splitter = document.getElementById('DiCoP-ContactsSizer');
 				var widget = document.getElementById('addressingWidget');
 				
 				if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
@@ -75,7 +75,7 @@ contactPhoto.compose = {
 		 * 	<box id="DiCoP-PhotoStackContainer'>
 		 * 		<canvas id='DiCoP-PhotoStack'/>
 		 * 	</box>
-		 * 	<splitter id="DiCoP-contacts-sizer"/>
+		 * 	<splitter id="DiCoP-ContactsSizer"/>
 		 * 	<addressingWidget/>
 		 * </hbox>
 		 */
@@ -109,7 +109,7 @@ contactPhoto.compose = {
 		canvas.addEventListener('click', function() {
 			if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 			
-			// capture subsequent clicks on the canvas and exit
+			// capture subsequent clicks (<500ms) on the canvas and exit
 			if (new Date().getTime() - contactPhoto.compose.canvasClickTimeout < 500) return;
 			contactPhoto.compose.canvasClickTimeout = new Date().getTime();
 			
@@ -131,10 +131,12 @@ contactPhoto.compose = {
 		
 		
 		var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
-		splitter.id = 'DiCoP-Contacts-sizer';
+		splitter.id = 'DiCoP-ContactsSizer';
 		
 		
-		//var splitter = document.getElementById('DiCoP-Contacts-sizer');
+		
+		
+		//var splitter = document.getElementById('DiCoP-ContactsSizer');
 		splitter.addEventListener('command', function() {
 			// Save new position of splitter 
 			if (box.collapsed) {
@@ -342,7 +344,7 @@ contactPhoto.compose = {
 
 									contactPhoto.compose.displayStackView();
 								}
-							}, 10000);
+							}, 3000); // wait 3 sec for gravatar image to load
 							
 							contactPhoto.display.logic(photoInfoStack, false);
 						}

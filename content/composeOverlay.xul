@@ -21,7 +21,7 @@
 			<canvas id="DiCoP-PhotoStack" width="1" height="1" />
 		</box>
 		
-		<splitter id="DiCoP-Contacts-sizer" collapse="after" />
+		<splitter id="DiCoP-ContactsSizer" collapse="after" />
 	
 	</hbox>
 -->

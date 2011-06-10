@@ -81,45 +81,30 @@
 						</hbox>
 					</radiogroup>
 				</hbox>
-				<!--
-				<groupbox>
-					<caption label="&position.label;"/>
-					
-					<radiogroup preference="extensions.contactPhoto.photoPosition">
-						<hbox align="center">
-							<radio value="left" label="&position.left;"/>
-							<radio value="right" label="&position.right;"/>
-						</hbox>
-					</radiogroup>
-				</groupbox>
-				-->
 				
-				<!-- DEFAULT PHOTO -->
-				<groupbox>
-					<caption label="&defaultPhoto.caption;"/>
-											
-						<label value="&defaultPhoto.labelNoPhoto;"/>
-						<radiogroup preference="extensions.contactPhoto.defaultPhoto" class="indent">
-							
-							<radio value="show" label="&defaultPhoto.show;"/>
-							<radio value="hide" label="&defaultPhoto.hide;"/>
-							<radio value="collapse" label="&defaultPhoto.collapse;"/>
-							
-						</radiogroup>
+				<hbox align="center">
+					<label value="&defaultPhoto.labelGenericList;"/>
 						
-						<separator orient="horizontal"/>
-						
-						<hbox align="center">
-							<label value="&defaultPhoto.labelGenericList;"/>
-								
-							<menulist id="listDefaultPhoto" preference="extensions.contactPhoto.defaultGenericPhoto">
-								<menupopup>
-									<!-- the mozilla default photo is already here because it is not present in the template list -->
-									<menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" value="chrome://messenger/skin/addressbook/icons/contact-generic.png" image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
-								</menupopup>
-							</menulist>
-						</hbox>
+					<menulist id="listDefaultPhoto" preference="extensions.contactPhoto.defaultGenericPhoto">
+						<menupopup>
+							<!-- the mozilla default photo is already here because it is not present in the template list -->
+							<menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" value="chrome://messenger/skin/addressbook/icons/contact-generic.png" image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
+						</menupopup>
+					</menulist>
+				</hbox>
 
+				
+				<!-- MESSAGE DISPLAY -->
+				<groupbox>
+					<caption label="&messageDisplay.caption;"/>
+											
+					<label value="&defaultPhoto.labelNoPhoto;"/>
+					<radiogroup preference="extensions.contactPhoto.defaultPhoto" class="indent">
+						<radio value="show" label="&defaultPhoto.show;"/>
+						<radio value="hide" label="&defaultPhoto.hide;"/>
+						<radio value="collapse" label="&defaultPhoto.collapse;"/>
+					</radiogroup>
+					
 				</groupbox>
 				
 				<!-- COMPOSE WINDOW -->
