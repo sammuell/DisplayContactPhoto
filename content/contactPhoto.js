@@ -41,9 +41,34 @@ contactPhoto.genericInit = function() {
 
 		
 		
-		// add add-on uninstall listener to remove thumbnail directory
-		var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
-		Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', contactPhoto.cache.removeCacheDirectory );
+		// add add-on uninstall listener to remove thumbnail directory			
+		try {
+			// thunderbird >= 5
+			Components.utils.import("resource://gre/modules/AddonManager.jsm");
+			AddonManager.addAddonListener({
+				onUninstalling: function(addon) {
+					if (addon.id == 'contactPhoto@leven.ch') {
+						contactPhoto.cache.removeCacheDirectory();
+					}
+				},
+				onOperationCancelled: function(addon) {
+					if (addon.id == 'contactPhoto@leven.ch') {
+						contactPhoto.cache.checkDirectory();
+					}
+				}
+			});
+		} catch (ex) {
+			try {
+			// thunderbird < 5
+				var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
+				Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', function() {
+					contactPhoto.cache.removeCacheDirectory();
+					//contactPhoto.prefs.deletePreferences();
+				});
+			} catch (ex) {}
+		}
+		
+		
 	
 		// debug stuff
 		if (contactPhoto.debug > 0) { // auto-open javascript console
@@ -61,10 +86,10 @@ contactPhoto.prefs = {
 
 	init: function() {
 		if (!contactPhoto.prefs.preferencesLoaded) {
+			contactPhoto.prefs.preferencesLoaded = true;
 			contactPhoto.prefs.branch = Components.classes['@mozilla.org/preferences-service;1']
 				.getService(Components.interfaces.nsIPrefService)
 				.getBranch('extensions.contactPhoto.');
-			contactPhoto.prefs.preferencesLoaded = true;
 		}
 	},
 
@@ -110,6 +135,11 @@ contactPhoto.prefs = {
 				contactPhoto.prefs.branch.setComplexValue(prefName, Components.interfaces.nsILocalFile, prefValue);
 			break;
 		}
+	},
+	
+	// delete all preferences
+	deletePreferences: function() {
+		contactPhoto.prefs.branch.deleteBranch('');
 	},
 
 	// checkCustomHeaders: adds custom headers to message index (currently only 'face') without removing existing headers
@@ -541,7 +571,7 @@ contactPhoto.cache = {
 		newDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
 	},
 
-	// checkDirectory: checks if all cache directories exist, else create them
+	// checkDirectory: checks if the cache directory exists, else creates it
 	checkDirectory: function() {
 		var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)

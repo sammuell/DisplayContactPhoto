@@ -635,7 +635,7 @@ contactPhoto.compose = {
 		var dummyCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 		dummyCanvas.width = size;
 		dummyCanvas.height = size;
-		var perspectiveWarp = new canvasPerspectiveWarp(dummyCanvas);
+		var perspectiveWarp = new contactPhoto.classes.canvasPerspectiveWarp(dummyCanvas);
 		perspectiveWarp.interpolationMethod = 'bl'; // bilinear
 		perspectiveWarp.referencePoint = 'bl'; // bottom left
 		var boundingBox = perspectiveWarp.vanishingPointsBoundingBox(vp1.x, vp1.y, vp2.x, vp2.y);
@@ -755,7 +755,7 @@ contactPhoto.compose = {
 			}
 
 			if (currentDrawNumber != contactPhoto.compose.stackDrawNumber) { return; }
-			var perspectiveWarp = new canvasPerspectiveWarp(tmpCanvas);
+			var perspectiveWarp = new contactPhoto.classes.canvasPerspectiveWarp(tmpCanvas);
 			perspectiveWarp.interpolationMethod = 'bl'; // bilinear
 			perspectiveWarp.referencePoint = 'bl'; // bottom left
 			var transformation = perspectiveWarp.vanishingPoints(vp1.x, vp1.y, vp2.x, vp2.y);

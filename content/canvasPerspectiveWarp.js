@@ -1,15 +1,19 @@
+if (!contactPhoto) var contactPhoto = {};
+if (!contactPhoto.classes) contactPhoto.classes = {};
+
 // canvasPerspectiveWarp warps the contents of an entire canvas (parameter sCanvas)
 // using the provided vanishing points which are relative to the source canvas
 
-function canvasPerspectiveWarp(sCanvas) {
-	this.srcCanvas = sCanvas;
-	this.destCanvas;
-	this.interpolationMethod = 'nn'; // 'nn' or 'bl' (nearest-neighbour or bilinear)
-	this.referencePoint = 'tl';
-	this.offset = { x: 0, y: 0 };
+// wrapping canvasPerspectiveWarp into a json object to create a 'class' inside a namespace
+contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
+	srcCanvas: sCanvas,
+	destCanvas: null,
+	interpolationMethod: 'nn', // 'nn' or 'bl' (nearest-neighbour or bilinear)
+	referencePoint: 'tl',
+	offset: { x: 0, y: 0 },
 	
-	// calculate the width and height of the bounding box of the transformed canvas
-	this.vanishingPointsBoundingBox = function(p1x, p1y, p2x, p2y) {
+	// the width and height of the bounding box of the transformed canvas
+	vanishingPointsBoundingBox: function(p1x, p1y, p2x, p2y) {
 		
 		var vp1 = this._makePoint(), vp2 = this._makePoint(); // coordinates of vanishing points
 		vp1.x = p1x;
@@ -51,7 +55,7 @@ function canvasPerspectiveWarp(sCanvas) {
 	},
 	
 	// transform the source canvas using the reference point and vanishing points
-	this.vanishingPoints = function(p1x, p1y, p2x, p2y) {
+	vanishingPoints: function(p1x, p1y, p2x, p2y) {
 	
 		var vp1 = this._makePoint(), vp2 = this._makePoint(); // coordinates of vanishing points
 		vp1.x = p1x;
@@ -69,9 +73,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		this._getTransformedCorners(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR);
 		
 		return this._transform(_pTL.x-pTL.x, _pTL.y-pTL.y, _pBL.x-pBL.x, _pBL.y-pBL.y, _pBR.x-pBR.x, _pBR.y-pBR.y, _pTR.x-pTR.x, _pTR.y-pTR.y);
-	}
+	},
 	
-	this._getTransformedCorners = function(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR) {
+	_getTransformedCorners: function(vp1, vp2, pTL, pBL, pBR, pTR, _pTL, _pBL, _pBR, _pTR) {
 		// top left
 		pTL.x = 0;
 		pTL.y = 0;
@@ -248,10 +252,10 @@ function canvasPerspectiveWarp(sCanvas) {
 				
 			break;
 		} // end switch
-	}
+	},
 
 	// transform a canvas using the displacements of the corners
-	this._transform = function(TLdx, TLdy, BLdx, BLdy, BRdx, BRdy, TRdx, TRdy) {
+	_transform: function(TLdx, TLdy, BLdx, BLdy, BRdx, BRdy, TRdx, TRdy) {
 
 		// height/width +1 for edge antialiasing
 		var p1 = {x: 0, y: 0}; // upper left corner
@@ -401,9 +405,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		destCtx.putImageData(destData, 0, 0);
 
 		return this.destCanvas;
-	}
+	},
 
-	this._interpolateNN = function(srcCoord, srcPixelData) {
+	_interpolateNN: function(srcCoord, srcPixelData) {
 		var w = srcPixelData[srcPixelData.length-2];
 		var h = srcPixelData[srcPixelData.length-1];
 
@@ -421,9 +425,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		var y0 = Math.round(srcCoord.y);
 
 		return srcPixelData[x0][y0];
-	}
+	},
 
-	this._interpolateBL = function(srcCoord, srcPixelData) {
+	_interpolateBL: function(srcCoord, srcPixelData) {
 		var w = srcPixelData[srcPixelData.length-2];
 		var h = srcPixelData[srcPixelData.length-1];
 		
@@ -501,17 +505,17 @@ function canvasPerspectiveWarp(sCanvas) {
 		if (pixel.a > 255) pixel.a = 255;
 
 		return pixel;
-	}
+	},
 
-	this._applyTrafo = function(x, y, trafo) {
+	_applyTrafo: function(x, y, trafo) {
 		var w = trafo[0][2]*x + trafo[1][2]*y + trafo[2][2];
 		if (w == 0) w = 1;
 
 		return {x: (trafo[0][0]*x + trafo[1][0]*y + trafo[2][0])/w,
 				y: (trafo[0][1]*x + trafo[1][1]*y + trafo[2][1])/w};
-	}
+	},
 
-	this._mult33 = function(m1, m2, result) {
+	_mult33: function(m1, m2, result) {
 		for (var i=0; i<3; i++) {
 			for (var j=0; j<3; j++) {
 				for (var k=0; k<3; k++) {
@@ -519,17 +523,17 @@ function canvasPerspectiveWarp(sCanvas) {
 				}
 			}
 		}
-	}
+	},
 
-	this._det22 = function(m11, m12, m21, m22) {
+	_det22: function(m11, m12, m21, m22) {
 		/*
 		m11  m12
 		m21  m22
 		*/
 		return m11*m22 - m12*m21;
-	}
+	},
 
-	this._transpose33 = function(matrix) {
+	_transpose33: function(matrix) {
 		var tmp;
 		tmp = matrix[0][1];
 		matrix[0][1] = matrix[1][0];
@@ -542,9 +546,9 @@ function canvasPerspectiveWarp(sCanvas) {
 		tmp = matrix[1][2];
 		matrix[1][2] = matrix[2][1];
 		matrix[2][1] = tmp;
-	}
+	},
 
-	this._calculateMatrix = function(p0, p1, p2, p3) {
+	_calculateMatrix: function(p0, p1, p2, p3) {
 		/*
 		a	d	g
 		b	e	h
@@ -576,7 +580,7 @@ function canvasPerspectiveWarp(sCanvas) {
 			var det = this._det22(dx1, dx2, dy1, dy2);
 
 			if (det == 0) {
-				alert('det=0');
+				dump('det=0');
 				return;
 			}
 
@@ -595,24 +599,28 @@ function canvasPerspectiveWarp(sCanvas) {
 		//transpose33(out)
 
 		return out;
-	}
+	},
 
-	this._matrix33 = function() {
+	_matrix33: function() {
 		return [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-	}
+	},
 
-	this._det33 = function(matrix) {
-		a1 = matrix[0][0]*matrix[1][1]*matrix[2][2];
-		a2 = matrix[1][0]*matrix[2][1]*matrix[0][2];
-		a3 = matrix[2][0]*matrix[0][1]*matrix[1][2];
-
-		s1 = matrix[0][0]*matrix[2][1]*matrix[1][2];
-		s2 = matrix[1][0]*matrix[0][1]*matrix[2][2];
-		s3 = matrix[2][0]*matrix[1][1]*matrix[0][2];
+	/*
+	// _det33 is not used at the moment
+	_det33: function(matrix) {
+		var a1 = matrix[0][0]*matrix[1][1]*matrix[2][2];
+		var a2 = matrix[1][0]*matrix[2][1]*matrix[0][2];
+		var a3 = matrix[2][0]*matrix[0][1]*matrix[1][2];
+		
+		var s1 = matrix[0][0]*matrix[2][1]*matrix[1][2];
+		var s2 = matrix[1][0]*matrix[0][1]*matrix[2][2];
+		var s3 = matrix[2][0]*matrix[1][1]*matrix[0][2];
+		
 		return  a1+a2+a3-s1-s2-s3;
-	}
-
-	this._adjoint33 = function(matrix) {
+	},
+	*/
+	
+	_adjoint33: function(matrix) {
 		/* using homogeneous coordinates, the adjoint can be used instead of the inverse of a matrix
 		[[a, b, c], [d, e, f], [g, h, i]]
 		m11 = e*i - h*f;
@@ -641,16 +649,15 @@ function canvasPerspectiveWarp(sCanvas) {
 		var m33 = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
 
 		return [[m11, m12, m13], [m21, m22, m23], [m31, m32, m33]];
-	}
+	},
 
-	this._makePoint = function() {
+	_makePoint: function() {
 		return { x:0, y:0 };
-	}
+	},
 	
-	this.dumpMatrix = function(trafo) {
+	dumpMatrix: function(trafo) {
 		alert((trafo[0][0]/trafo[2][2]).toFixed(3)+'    '+(trafo[0][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[0][2]/trafo[2][2]).toFixed(3)+'\n'+(trafo[1][0]/trafo[2][2])
 	.toFixed(3)+'    '+(trafo[1][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[1][2]/trafo[2][2]).toFixed(3)+'\n'+(trafo[2][0]/trafo[2][2]).toFixed(3)+'    '+(trafo[2][1]/trafo[2][2]).toFixed(3)+'    '+(trafo[2][2]/trafo[2][2]).toFixed(3))
 	}
 
-
-}
+};}

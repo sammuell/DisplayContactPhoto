@@ -246,12 +246,12 @@ contactPhoto.messageDisplay = {
 	},
 	
 	messageListener: {
-		onStartHeaders: function() {},
+		onStartHeaders: function() {contactPhoto.messageDisplay.getPhoto();},
 		onEndHeaders: function() {},
-		onEndAttachments: function() {},
-		onBeforeShowHeaderPane: function() {
+		onEndAttachments: function() {}/*, 
+		onBeforeShowHeaderPane: function() { // seamonkey does not call onBeforeShowHeaderPane anymore
 			contactPhoto.messageDisplay.getPhoto();
-		}
+		}*/
 	},
 
 	onLoad: function() {
