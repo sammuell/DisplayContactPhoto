@@ -246,8 +246,8 @@ contactPhoto.messageDisplay = {
 	},
 	
 	messageListener: {
-		onStartHeaders: function() {contactPhoto.messageDisplay.getPhoto();},
-		onEndHeaders: function() {},
+		onStartHeaders: function() {},
+		onEndHeaders: function() {contactPhoto.messageDisplay.getPhoto();},
 		onEndAttachments: function() {}/*, 
 		onBeforeShowHeaderPane: function() { // seamonkey does not call onBeforeShowHeaderPane anymore
 			contactPhoto.messageDisplay.getPhoto();
