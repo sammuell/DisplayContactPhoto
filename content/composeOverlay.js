@@ -45,13 +45,16 @@ contactPhoto.compose = {
 			
 			case 'display':
 				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
+				var splitter = document.getElementById('DiCoP-ContactsSizer');
 				
 				if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
 					canvasBox.collapsed = false;
+					splitter.collapsed = false;
 					canvasBox.width = contactPhoto.prefs.get('composePhotos.width', 'int');
 					contactPhoto.compose.displayStackView();
 				} else {
 					canvasBox.collapsed = true;
+					splitter.collapsed = true;
 				}
 				break;
 		}
@@ -133,14 +136,11 @@ contactPhoto.compose = {
 		var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
 		splitter.id = 'DiCoP-ContactsSizer';
 		
-		
-		
-		
-		//var splitter = document.getElementById('DiCoP-ContactsSizer');
 		splitter.addEventListener('command', function() {
 			// Save new position of splitter 
 			if (box.collapsed) {
 				contactPhoto.prefs.set('composePhotos.display', false, 'bool');
+				splitter.collapsed = true;
 			} else {
 				contactPhoto.prefs.set('composePhotos.width', box.width, 'int');
 				contactPhoto.prefs.set('composePhotos.display', true, 'bool');

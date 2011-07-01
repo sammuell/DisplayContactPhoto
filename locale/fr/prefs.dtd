@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Effets">
 <!ENTITY tabs.miscellaneous "Divers">
 <!ENTITY maxSize.label "Taille maximale d'une photo :">
+<!ENTITY messageDisplay.caption "Message display">
 <!ENTITY defaultPhoto.caption "Photo par défaut">
 <!ENTITY defaultPhoto.generic "Par défaut Mozilla">
 <!ENTITY defaultPhoto.labelGenericList "Choisir une photo par défaut :">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "Compose window">
 <!ENTITY composeWindow.showPhotos "Show photos of recipients">
 <!ENTITY composeWindow.photoPosition "Position of the photos:">
+<!ENTITY composeWindow.type "Style:">
+<!ENTITY composeWindow.type.3d "3D Photo stack">
+<!ENTITY composeWindow.type.grid "Photo grid">
 <!ENTITY gravatar.enable "Activer les Univatars">
 <!ENTITY gravatar.description "Univatar (de l'anglais « Gravatar » signifiant « globally recognized avatar », ou « avatar universel ») est un service permettant d'utiliser un seul et même avatar. L'adresse électronique est cryptée et envoyée au site gravatar.com. Si le propriétaire de cette adresse est enregistré sur gravatar.com, son avatar sera affiché (sinon ce sera une image par défaut). Les images Gravatar son placées en mémoire cache pour des raisons de performance et afin de réduire le téléchargement.">
 <!ENTITY gravatar.default "Univatar par défaut :">

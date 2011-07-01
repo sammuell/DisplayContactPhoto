@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Visuelle effekter">
 <!ENTITY tabs.miscellaneous "Miscellaneous">
 <!ENTITY maxSize.label "Maximum størrelse af ét billede:">
+<!ENTITY messageDisplay.caption "Message display">
 <!ENTITY defaultPhoto.caption "Standard billede">
 <!ENTITY defaultPhoto.generic "Mozilla standard">
 <!ENTITY defaultPhoto.labelGenericList "Vælg standard billede">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "Compose window">
 <!ENTITY composeWindow.showPhotos "Show photos of recipients">
 <!ENTITY composeWindow.photoPosition "Position of the photos:">
+<!ENTITY composeWindow.type "Style:">
+<!ENTITY composeWindow.type.3d "3D Photo stack">
+<!ENTITY composeWindow.type.grid "Photo grid">
 <!ENTITY gravatar.enable "Enable Gravatars">
 <!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY gravatar.default "Default Gravatar:">

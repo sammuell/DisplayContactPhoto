@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Vizuální efekty">
 <!ENTITY tabs.miscellaneous "Různé">
 <!ENTITY maxSize.label "Maximální velikost fotografie:">
+<!ENTITY messageDisplay.caption "Message display">
 <!ENTITY defaultPhoto.caption "Výchozí fotografie">
 <!ENTITY defaultPhoto.generic "Výchozí z Mozilly">
 <!ENTITY defaultPhoto.labelGenericList "Vyberte výchozí fotografii:">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "okno pro psaní">
 <!ENTITY composeWindow.showPhotos "Zobrazit fotky příjemců">
 <!ENTITY composeWindow.photoPosition "Poloha fotografie:">
+<!ENTITY composeWindow.type "Style:">
+<!ENTITY composeWindow.type.3d "3D Photo stack">
+<!ENTITY composeWindow.type.grid "Photo grid">
 <!ENTITY gravatar.enable "Povolit gravatary">
 <!ENTITY gravatar.description "Gravatar (zkratka pro celosvětově uznávaný avatar) je služba pro poskytování globálně-jedinečného avataru. E-mailová adresa je zašifrována a odeslána do gravatar.com. Pokud je vlastník adresy zapsána v gravatar.com, jeho avatar se zobrazí, jinak Gravatar zobrazuje výchozího obrázek. Gravatary jsou uložené lokálně z důvodů výkonu a snížení zatížení sítě.">
 <!ENTITY gravatar.default "Výchozí Gravatar:">

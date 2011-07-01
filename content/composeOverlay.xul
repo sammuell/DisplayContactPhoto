@@ -27,10 +27,10 @@
 -->
  
  
-	<popup id="DiCoP-Contextmenu">
+	<menupopup  id="DiCoP-Contextmenu">
 		<menuitem label="&contextmenu.prefs;" id="DiCoP-ContextmenuPrefs"
 			oncommand="contactPhoto.utils.openPreferencesWindow();"/>
-	</popup>
+	</menupopup >
 </vbox>
 
 

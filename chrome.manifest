@@ -5,6 +5,7 @@ skin   contactPhoto   classic   skin/
 locale   contactPhoto   cs		locale/cs/
 locale   contactPhoto   da		locale/da/
 locale   contactPhoto   de		locale/de/
+locale   contactPhoto   en-GB	locale/en-GB/
 locale   contactPhoto   en-US	locale/en-US/
 locale   contactPhoto   es		locale/es/
 locale   contactPhoto   fr		locale/fr/

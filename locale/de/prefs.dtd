@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Visuelle Effekte">
 <!ENTITY tabs.miscellaneous "Verschiedenes">
 <!ENTITY maxSize.label "Maximale Grösse des Fotos:">
+<!ENTITY messageDisplay.caption "Nachrichtenanzeige">
 <!ENTITY defaultPhoto.caption "Standardfoto">
 <!ENTITY defaultPhoto.generic "Standard">
 <!ENTITY defaultPhoto.labelGenericList "Wählen Sie ein Standardfoto:">

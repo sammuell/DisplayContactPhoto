@@ -803,7 +803,16 @@ contactPhoto.resizer = {
 			}
 
 			if (contactPhoto.prefs.get('effectShadow', 'bool')) {
-				contactPhoto.imageFX.addShadow();
+				var versionChecker = Components.classes["@mozilla.org/xpcom/version-comparator;1"].getService(Components.interfaces.nsIVersionComparator);
+				if (versionChecker.compare(Application.version, '5.0') >= 0 && 
+					!versionChecker.compare(Application.version, '6.0') >= 0) {
+						// code for 5.0 <= tb < 6.0
+						contactPhoto.prefs.set('effectShadow', false, 'bool');
+						contactPhoto.utils.customAlert('Thunderbird 5 contains a bug which prevents a shadow in a photo.\n Shadows have been disabled.');
+				
+				} else {
+					contactPhoto.imageFX.addShadow();
+				}
 			}
 			
 			if (contactPhoto.prefs.get('effectBorder', 'bool')) {
@@ -994,7 +1003,7 @@ contactPhoto.imageFX = {
 		var canvas = contactPhoto.resizer.canvas;
 		var shadowBlur = contactPhoto.prefs.get('effectShadowBlur', 'int');
 		var shadowOffset = contactPhoto.prefs.get('effectShadowOffset', 'int');
-	
+		
 		contactPhoto.resizer.canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 		contactPhoto.resizer.ctx = contactPhoto.resizer.canvas.getContext('2d');
 		
@@ -1007,10 +1016,11 @@ contactPhoto.imageFX = {
 		contactPhoto.resizer.ctx.shadowColor = 'rgba(0, 0, 0, .6)';
 		contactPhoto.resizer.ctx.drawImage(canvas, (shadowBlur-shadowOffset), (shadowBlur-shadowOffset), canvas.width-(2*shadowBlur), canvas.height-(2*shadowBlur));
 		
+		/* 
 		contactPhoto.resizer.ctx.shadowOffsetX = 0;
 		contactPhoto.resizer.ctx.shadowOffsetY = 0;
 		contactPhoto.resizer.ctx.shadowBlur = 0;
-		
+		*/
 		contactPhoto.resizer.ctx.restore();
 	},
 	

@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "视觉效果">
 <!ENTITY tabs.miscellaneous "其他">
 <!ENTITY maxSize.label "照片的最大尺寸：">
+<!ENTITY messageDisplay.caption "消息显示">
 <!ENTITY defaultPhoto.caption "默认照片">
 <!ENTITY defaultPhoto.generic "Mozilla 默认">
 <!ENTITY defaultPhoto.labelGenericList "选择默认照片：">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "撰写窗口">
 <!ENTITY composeWindow.showPhotos "显示收件人的照片">
 <!ENTITY composeWindow.photoPosition "照片的位置：">
+<!ENTITY composeWindow.type "样式：">
+<!ENTITY composeWindow.type.3d "3D 层叠照片">
+<!ENTITY composeWindow.type.grid "照片网格">
 <!ENTITY gravatar.enable "启用 Gravatars">
 <!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY gravatar.default "默认 Gravatar：">

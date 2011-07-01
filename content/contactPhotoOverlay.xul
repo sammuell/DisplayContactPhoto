@@ -16,12 +16,12 @@
 
 
 <hbox id="msgHeaderView">
-	<popup id="DiCoP-Contextmenu">
+	<menupopup  id="DiCoP-Contextmenu">
 		<menuitem label="&contextmenu.crop;" id="DiCoP-ContextmenuCrop"
 			oncommand="contactPhoto.messageDisplay.openCropWindow();"/>
 		<menuitem label="&contextmenu.prefs;" id="DiCoP-ContextmenuPrefs"
 			oncommand="contactPhoto.utils.openPreferencesWindow();"/>
-	</popup>
+	</menupopup >
 	
 	<hbox id="DiCoP-Box" align="center" pack="center" context="DiCoP-Contextmenu">
 		<image id="DiCoP-Image" style="display: none;" tooltiptext="&photo.tooltip;" validate="always"/>

@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "ビジュアル エフェクト">
 <!ENTITY tabs.miscellaneous "その他">
 <!ENTITY maxSize.label "写真の最大サイズ：">
+<!ENTITY messageDisplay.caption "メッセージの表示">
 <!ENTITY defaultPhoto.caption "標準の写真">
 <!ENTITY defaultPhoto.generic "Mozilla 標準">
 <!ENTITY defaultPhoto.labelGenericList "標準設定の写真の選択:">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "作成ウィンドウ">
 <!ENTITY composeWindow.showPhotos "受信者の写真の表示">
 <!ENTITY composeWindow.photoPosition "写真の位置">
+<!ENTITY composeWindow.type "スタイル:">
+<!ENTITY composeWindow.type.3d "3D での写真重ね合わせ">
+<!ENTITY composeWindow.type.grid "写真の重ね合わせ">
 <!ENTITY gravatar.enable "Gravar を有効にする">
 <!ENTITY gravatar.description "Gravatar (an abbreviation for globally recognized avatar) is a service for providing globally-unique avatars. The e-mail address is encrypted and sent to gravatar.com. If the owner of the address is registered at gravatar.com, his avatar will be displayed, otherwise a gravatar default image is displayed. Gravatar images are locally cached for performance reasons and to reduce network load.">
 <!ENTITY gravatar.default "標準の Gravatar">

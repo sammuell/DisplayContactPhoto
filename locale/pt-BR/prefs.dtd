@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Efeitos Visuais">
 <!ENTITY tabs.miscellaneous "Miscelânea">
 <!ENTITY maxSize.label "Tamanho máximo por foto:">
+<!ENTITY messageDisplay.caption "Visor de mensagens">
 <!ENTITY defaultPhoto.caption "Foto padrão">
 <!ENTITY defaultPhoto.generic "Padrão Mozilla">
 <!ENTITY defaultPhoto.labelGenericList "Escolha uma foto padrão:">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "Compose window">
 <!ENTITY composeWindow.showPhotos "Show photos of recipients">
 <!ENTITY composeWindow.photoPosition "Position of the photos:">
+<!ENTITY composeWindow.type "Estilo:">
+<!ENTITY composeWindow.type.3d "Pilha 3D">
+<!ENTITY composeWindow.type.grid "Grade de Fotos">
 <!ENTITY gravatar.enable "Ativar Gravatares">
 <!ENTITY gravatar.description "Gravatar (uma abreviação de avatar globalmente reconhecido) é um serviço para fornecer avatares únicos e globais. O endereço eletrônico é criptográfico e enviado à gravatar.com. Se o proprietário do endereço for registrado no gravatar.com, seu avatar será exibido; caso contrário, uma imagem padrão será exibida. As imagens Gravatar são armazenadas localmente em cache para melhorar o desempenho e para reduzir a carga na rede.">
 <!ENTITY gravatar.default "Gravatar Padrão:">

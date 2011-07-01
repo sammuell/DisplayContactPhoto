@@ -6,6 +6,7 @@
 <!ENTITY tabs.visualEffects "Визуелни ефекти">
 <!ENTITY tabs.miscellaneous "Остало">
 <!ENTITY maxSize.label "Максимална величина слике:">
+<!ENTITY messageDisplay.caption "Message display">
 <!ENTITY defaultPhoto.caption "Подразумевана слика">
 <!ENTITY defaultPhoto.generic "Подразумевана по Мозили">
 <!ENTITY defaultPhoto.labelGenericList "Изабери подразумевану слику:">
@@ -16,6 +17,9 @@
 <!ENTITY composeWindow.label "Compose window">
 <!ENTITY composeWindow.showPhotos "Show photos of recipients">
 <!ENTITY composeWindow.photoPosition "Position of the photos:">
+<!ENTITY composeWindow.type "Style:">
+<!ENTITY composeWindow.type.3d "3D Photo stack">
+<!ENTITY composeWindow.type.grid "Photo grid">
 <!ENTITY gravatar.enable "Омогући Граватаре">
 <!ENTITY gravatar.description "Граватар (скраћеница за глобално препознатљив аватар) је сервис за пружање јединствених аватара. Е-адреса се шифрује и шаље на gravatar.com. Ако је власник адресе регистрован на gravatar.com, његов/њен аватар ће бити приказан, а уколико то није случај, подразумевана слика сајта биће приказана. Граватар слике се чувају на локалном нивоу ради перформанси, као и да се смањи оптерећење мреже.">
 <!ENTITY gravatar.default "Подразумевани Граватар">
