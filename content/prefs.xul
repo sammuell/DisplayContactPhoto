@@ -4,12 +4,12 @@
 
 <!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/prefs.dtd">
  
-<prefwindow id="DiCoP-Prefwindow"
+<prefwindow id="DCP-PrefWindow"
 	title="&window.title;"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	
-<prefpane id="DiCoP-PreferencesPane" flex="1" label="&window.title;">
+<prefpane id="DCP-PreferencesPane" flex="1" label="&window.title;">
 
 <preferences>
 	<preference id="extensions.contactPhoto.photoSize" name="extensions.contactPhoto.photoSize" type="int"/>
@@ -319,7 +319,7 @@
 <script type="application/x-javascript" src="chrome://contactPhoto/content/prefs.js"/>
 
 <stringbundleset id="stringbundleset">
-	<stringbundle id="DiCoP-LocalizedJS" src="chrome://contactPhoto/locale/contactPhoto.properties"/>
+	<stringbundle id="DCP-LocalizedJS" src="chrome://contactPhoto/locale/contactPhoto.properties"/>
 </stringbundleset>
  
 </prefwindow>

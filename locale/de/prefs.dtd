@@ -38,11 +38,11 @@
 <!ENTITY directory.enable "Anzeige von lokalen Fotos aktivieren">
 <!ENTITY directory.description1 "Die Dateinamen sollten aus der E-Mail-Adresse sowie dem Dateityp zusammengesetzt sein (alles in Kleinschrift).">
 <!ENTITY directory.description2 "Z.B. 'info@mozilla.org.png'. Unterstützte Bildformate: jpg, png, gif.">
-<!ENTITY directory.description3 "Der gesamte Dateinamen muss in Kleinschrift sein.">
+<!ENTITY directory.description3 "Der gesamte Dateiname muss in Kleinschrift sein.">
 <!ENTITY directory.description4 "Falls eine solche Datei existiert, wird sie unabhängig von anderen Fotos angezeigt.">
 <!ENTITY directory.browseButton "Ordner auswählen…">
 <!ENTITY directory.openButton "Ordner öffnen">
-<!ENTITY directory.enableWildcards "Fotos einer Domain zuweisen">
+<!ENTITY directory.enableWildcards "Fotos einer Domain zuweisen (Wildcard)">
 <!ENTITY directory.wildcardDescription "Diese Fotos sind einer gesamten Domain zugewiesen und werden angezeigt, wenn es kein anderes Foto gibt. Der Dateinamen sollte folgendermassen zusammengesetzt sein: @-Zeichen, gefolgt von der Domain und der Dateiendung. Z.B. '@mozilla.org.jpg'">
 <!ENTITY effects.enableBackgroundColor "Transparente Bildbereiche mit einer Farbe füllen">
 <!ENTITY effects.backgroundLabel "Farbe für transparente Bereiche (z.B bei .png und .gif Bildern):">

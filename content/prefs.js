@@ -180,7 +180,7 @@ function populateDefaultGenericPhotoList() {
 	var menupopup = genericPhotoList.firstChild;
 	
 	// copy all entries from the template list into the real list
-	var templateList = document.getElementById('DiCoP-GenericPhotoListTemplate');
+	var templateList = document.getElementById('DCP-GenericPhotoListTemplate');
 	var templateMenupopup = templateList.firstChild;
 	
 	for (var i=0; i<templateMenupopup.childNodes.length; i++) {
@@ -193,7 +193,7 @@ function populateDefaultGenericPhotoList() {
 }
 
 function enableGravatar() {
-	var menuitemGravatar = document.getElementById('DiCoP-GenericPhotoGravatar');
+	var menuitemGravatar = document.getElementById('DCP-GenericPhotoGravatar');
 	
 	if (document.getElementById('checkboxEnableGravatar').checked) {
 		menuitemGravatar.disabled = false;
@@ -202,8 +202,8 @@ function enableGravatar() {
 	} else {
 		// if gravatar is the current default photo when it gets disabled, change the default photo
 		if (menuitemGravatar.selected) {
-			var menuitemDiCoP = document.getElementById('DiCoP-GenericPhotoDiCoP');
-			contactPhoto.prefs.set('defaultGenericPhoto', menuitemDiCoP.value, 'char');
+			var menuitemDCP = document.getElementById('DCP-GenericPhotoDCP');
+			contactPhoto.prefs.set('defaultGenericPhoto', menuitemDCP.value, 'char');
 			document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();
 		}
 		

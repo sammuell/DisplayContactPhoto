@@ -1,6 +1,6 @@
 ﻿@import url("chrome://messenger/skin/");
 
-#DiCoP-Box {
+#DCP-Box {
 	margin: 2px;
 	padding: 0px;
 }
@@ -10,21 +10,21 @@
 	-moz-box-shadow: #444 2px 2px 5px;
 }
 
-#DiCoP-PhotoStack { /* canvas in compose window */
+#DCP-PhotoStack { /* canvas in compose window */
 	/*margin: 1px;
 	border: 1px solid red;*/
 }
 
-#DiCoP-PhotoStackContainer {
+#DCP-PhotoStackContainer {
 	min-width: 50px;
 	max-width: 300px;
 }
 
-box.DiCoP-ComposeImageBox {
+box.DCP-ComposeImageBox {
 	margin: 0px;
 	margin: 0 2px;
 }
-box.DiCoP-ComposeImageBox  > image {
+box.DCP-ComposeImageBox  > image {
 	display: block;
 }
 
@@ -38,7 +38,7 @@ panel.moreinfo {
 	width: 350px;
 }
 
-#DiCoP-ContactsSizer {
+#DCP-ContactsSizer {
 	width: 2px;
 	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
 }

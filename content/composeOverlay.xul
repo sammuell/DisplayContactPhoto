@@ -4,7 +4,7 @@
 
 <!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/contactPhotoOverlay.dtd">
 
-<overlay id="DiCoP-Compose" 
+<overlay id="DCP-Compose" 
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 <script type="application/javascript" src="chrome://contactPhoto/content/contactPhoto.js"/>
@@ -16,21 +16,21 @@
 <vbox id="addresses-box">
 
 <!--
-	<hbox insertbefore="addressingWidget" id="DiCoP-AddressingContainer" flex="1">
-		<box id="DiCoP-PhotoStackContainer" style="overflow:hidden;" collapsed="true" align="center" context="DiCoP-Contextmenu">
-			<canvas id="DiCoP-PhotoStack" width="1" height="1" />
+	<hbox insertbefore="addressingWidget" id="DCP-AddressingContainer" flex="1">
+		<box id="DCP-PhotoStackContainer" style="overflow:hidden;" collapsed="true" align="center" context="DCP-Contextmenu">
+			<canvas id="DCP-PhotoStack" width="1" height="1" />
 		</box>
 		
-		<splitter id="DiCoP-ContactsSizer" collapse="after" />
+		<splitter id="DCP-ContactsSizer" collapse="after" />
 	
 	</hbox>
 -->
  
  
-	<menupopup  id="DiCoP-Contextmenu">
-		<menuitem label="&contextmenu.prefs;" id="DiCoP-ContextmenuPrefs"
+	<menupopup id="DCP-Contextmenu">
+		<menuitem label="&contextmenu.prefs;" id="DCP-ContextmenuPrefs"
 			oncommand="contactPhoto.utils.openPreferencesWindow();"/>
-	</menupopup >
+	</menupopup>
 </vbox>
 
 

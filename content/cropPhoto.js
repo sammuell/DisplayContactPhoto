@@ -4,9 +4,9 @@
 		
 		cropper.state = cropper.STATE_IDLE;
 		
-		cropper.canvas = document.getElementById('DiCoP-CropCanvas');
-		cropper.selection = document.getElementById('DiCoP-CropSelection');
-		cropper.selectionBG = document.getElementById('DiCoP-CropSelectionBackground');
+		cropper.canvas = document.getElementById('DCP-CropCanvas');
+		cropper.selection = document.getElementById('DCP-CropSelection');
+		cropper.selectionBG = document.getElementById('DCP-CropSelectionBackground');
 		
 		var maxSize = cropper.canvas.width;
 		
@@ -164,7 +164,7 @@
 					cropper.selTop = cropper.startY;
 				}
 				
-				if (document.getElementById('DiCoP-SquareSelection').checked) {
+				if (document.getElementById('DCP-SquareSelection').checked) {
 					var size = Math.min(cropper.canvas.width, cropper.canvas.height, Math.max(cropper.width, cropper.height))
 					cropper.height = size
 					cropper.width = size;
@@ -181,7 +181,7 @@
 				var dx = e.layerX - cropper.moveX;
 				var dy = e.layerY - cropper.moveY;
 				
-				var square = document.getElementById('DiCoP-SquareSelection').checked;
+				var square = document.getElementById('DCP-SquareSelection').checked;
 				
 				switch (cropper.resizingDirection) {
 					case 'w':

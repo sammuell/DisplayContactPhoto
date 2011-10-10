@@ -77,7 +77,7 @@ contactPhoto.messageDisplay = {
 			}
 
 			contactPhoto.messageDisplay.cardWindow = window.open('chrome://messenger/content/addressbook/abEditCardDialog.xul',
-					'DiCoP-EditContact',
+					'DCP-EditContact',
 					'chrome,resizable=no,centerscreen');
 
 			contactPhoto.messageDisplay.cardWindow.arguments = [];
@@ -165,7 +165,7 @@ contactPhoto.messageDisplay = {
 	
 	setPhotoPosition: function() {
 		var photoPos = contactPhoto.prefs.get('photoPosition', 'char');
-		var photoBox = document.getElementById('DiCoP-Box');
+		var photoBox = document.getElementById('DCP-Box');
 		var parent = photoBox.parentNode; // save reference to parent node
 
 		if (photoPos == 'left') { // default is left side
@@ -179,8 +179,8 @@ contactPhoto.messageDisplay = {
 	
 	setPhotoSize: function() {
 		var photoSize = contactPhoto.prefs.get('photoSize', 'int');
-		document.getElementById('DiCoP-Box').style.minWidth = photoSize+'px';
-		document.getElementById('DiCoP-Box').style.maxWidth = photoSize+'px';
+		document.getElementById('DCP-Box').style.minWidth = photoSize+'px';
+		document.getElementById('DCP-Box').style.maxWidth = photoSize+'px';
 		contactPhoto.messageDisplay.imgObj.style.maxWidth = photoSize+'px';
 		contactPhoto.messageDisplay.imgObj.style.maxHeight = photoSize+'px';
 	},
@@ -255,7 +255,7 @@ contactPhoto.messageDisplay = {
 	},
 
 	onLoad: function() {
-		contactPhoto.photoBox = document.getElementById('DiCoP-Box');
+		contactPhoto.photoBox = document.getElementById('DCP-Box');
 		if (!contactPhoto.photoBox) {
 			return; // only execute this function further in contactPhotoOverlay.xul
 		}
@@ -272,7 +272,7 @@ contactPhoto.messageDisplay = {
 		// Check if thumbnailDirectory exists, else create it
 		contactPhoto.cache.checkDirectory();
 
-		contactPhoto.messageDisplay.imgObj = document.getElementById('DiCoP-Image');
+		contactPhoto.messageDisplay.imgObj = document.getElementById('DCP-Image');
 		contactPhoto.messageDisplay.imgObj.style.background = '0px 0px no-repeat';
 		contactPhoto.messageDisplay.imgObj.addEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
 

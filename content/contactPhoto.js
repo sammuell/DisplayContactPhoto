@@ -1,13 +1,13 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2.2';
+contactPhoto.currentVersion = '1.2.3';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
 	
 	// load localized javascript variables
-	contactPhoto.localizedJS = document.getElementById('DiCoP-LocalizedJS');
+	contactPhoto.localizedJS = document.getElementById('DCP-LocalizedJS');
 	
 	// delay init stuff to improve startup time
 	window.setTimeout(function() {
@@ -195,22 +195,12 @@ contactPhoto.display = {
 	logic: function(photoInfo, isMessagePhoto) {
 		var cropContextmenuItem;
 		if (isMessagePhoto) {
-			cropContextmenuItem = document.getElementById('DiCoP-ContextmenuCrop');
+			cropContextmenuItem = document.getElementById('DCP-ContextmenuCrop');
 			cropContextmenuItem.disabled = true;
 		}
 		
 		if (isMessagePhoto && contactPhoto.photoBox.hasAttribute('hidden')) {
 			contactPhoto.photoBox.removeAttribute('hidden');
-		}
-
-		if (photoInfo.hasLocalPhoto) {
-			contactPhoto.display.localPhoto(photoInfo);
-			return;
-		}
-		
-		if (photoInfo.hasDomainWildcard) {
-			contactPhoto.display.domainWildcard(photoInfo);
-			return;
 		}
 
 		if (photoInfo.hasPhoto && photoInfo.hasFace) {
@@ -245,6 +235,16 @@ contactPhoto.display = {
 				if (isMessagePhoto) cropContextmenuItem.disabled = false;
 				return;
 			}
+		}
+		
+		if (photoInfo.hasLocalPhoto) {
+			contactPhoto.display.localPhoto(photoInfo);
+			return;
+		}
+		
+		if (photoInfo.hasDomainWildcard) {
+			contactPhoto.display.domainWildcard(photoInfo);
+			return;
 		}
 
 		// if we are here, then there is no photo nor face to show
@@ -478,8 +478,9 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 		if (photoType != null) {
 			if (photoType == 'generic') {
 				var photoURI = photoInfo.cardDetails.card.getProperty('PhotoURI', null);
-
-				if (photoURI != null && photoURI != '') {
+				var DCPDefaultPhotoURI = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
+				
+				if (photoURI != null && photoURI != '' && photoURI != DCPDefaultPhotoURI) {
 					photoInfo.hasGenericPhoto = true;
 					photoInfo.hasPhoto = true;
 					photoInfo.genericPhotoURI = photoURI;
@@ -585,7 +586,11 @@ contactPhoto.cache = {
 
 	// removeThumbnail: delete a specific thumbnail from the cache
 	removeThumbnail: function(fileName) {
-		subdirectories = [''+contactPhoto.prefs.get('smallIconSize', 'int'), ''+contactPhoto.prefs.get('photoSize', 'int')];
+		subdirectories = [
+			''+contactPhoto.prefs.get('smallIconSize', 'int'), 
+			''+contactPhoto.prefs.get('photoSize', 'int'),
+			''+contactPhoto.prefs.get('composePhotos.size', 'int')
+		];
 		
 		for (var i in subdirectories) {
 			var removeFile = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -803,16 +808,7 @@ contactPhoto.resizer = {
 			}
 
 			if (contactPhoto.prefs.get('effectShadow', 'bool')) {
-				var versionChecker = Components.classes["@mozilla.org/xpcom/version-comparator;1"].getService(Components.interfaces.nsIVersionComparator);
-				if (versionChecker.compare(Application.version, '5.0') >= 0 && 
-					!versionChecker.compare(Application.version, '6.0') >= 0) {
-						// code for 5.0 <= tb < 6.0
-						contactPhoto.prefs.set('effectShadow', false, 'bool');
-						contactPhoto.utils.customAlert('Thunderbird 5 contains a bug which prevents a shadow in a photo.\n Shadows have been disabled.');
-				
-				} else {
-					contactPhoto.imageFX.addShadow();
-				}
+				contactPhoto.imageFX.addShadow();
 			}
 			
 			if (contactPhoto.prefs.get('effectBorder', 'bool')) {
@@ -1071,7 +1067,7 @@ contactPhoto.imageFX = {
 		contactPhoto.resizer.ctx.lineWidth = 1;
 		
 		if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
-			var cornerRadius = Math.round(Math.min(w, h)*.2)-2; // radius is 2px shorter to account for clipping edge
+			var cornerRadius = Math.round(Math.min(w, h)/4); // radius is 2px shorter to account for clipping edge
 			if (contactPhoto.prefs.get('effectShadow', 'bool')) {
 				cornerRadius = Math.round(cornerRadius * (h-2*shadowBlur)/h); // image is smaller when shadow is enabled
 			}

@@ -6,11 +6,11 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
-		<em:version>1.2.2</em:version>
+		<em:version>1.2.3</em:version>
 		<em:type>2</em:type>
 		
-		<em:creator>Samuel Müller</em:creator>
-		<em:developer>Samuel Müller</em:developer>
+		<em:creator>Samuel Muller</em:creator>
+		<em:developer>Samuel Muller</em:developer>
 		<em:description>Displays the contact photo of the sender or recipient while reading or composing an e-mail.</em:description>
 		<em:optionsURL>chrome://contactPhoto/content/prefs.xul</em:optionsURL>
 		<em:iconURL>chrome://contactPhoto/skin/icon.png</em:iconURL>
@@ -126,12 +126,13 @@
 		<em:targetApplication>
 			<Description>
 				<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
-				<em:minVersion>3.0</em:minVersion>
-				<em:maxVersion>6.*</em:maxVersion>
+				<em:minVersion>7.0</em:minVersion>
+				<em:maxVersion>8.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
 		
 		<!-- SeaMonkey -->
+		<!-- dropped seamonkey version due to address book changes in tb 7.0 (DCP 1.2.3)
 		<em:targetApplication>
 			<Description>
 				<em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
@@ -139,6 +140,6 @@
 				<em:maxVersion>2.1.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
-		
+		-->
 	</Description>      
 </RDF>

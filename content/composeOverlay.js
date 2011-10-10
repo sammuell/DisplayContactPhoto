@@ -1,6 +1,5 @@
 if (!contactPhoto) var contactPhoto = {};
 
-
 contactPhoto.compose = {
 	photoStack: {
 		padding: 2
@@ -12,6 +11,81 @@ contactPhoto.compose = {
 	photoStackInitDone: false,
 	canvasClickTimeout: 0,
 	prefBranch: null,
+
+	
+	/**
+	 * Wrap TB core functions to catch DOM mutation events
+	 */
+	function_wrappers: {
+		// awDeleteRow(rowToDelete)
+		// deletes a row of the addressing widget
+		awDeleteRow_old: window.awDeleteRow,
+		
+		// awSetInputAndPopupValue(inputElem, inputValue, popupElem, popupValue, rowNumber)
+		// sets the value of the textbox and popup
+		awSetInputAndPopupValue_old: window.awSetInputAndPopupValue,
+		
+		// _awSetInputAndPopup(inputValue, popupValue, parentNode, templateNode)
+		// inserts a new row
+		_awSetInputAndPopup_old: window._awSetInputAndPopup,
+		
+		// awAppendNewRow(setFocus)
+		// inserts a new row
+		awAppendNewRow_old: window.awAppendNewRow,
+	},
+	
+	wrap_functions: function() {
+		// overwrite original awDeleteRow()
+		window.awDeleteRow = function () {
+			var res = contactPhoto.compose.function_wrappers.awDeleteRow_old.apply(this, arguments);
+			
+			//contactPhoto.compose.displayStackView();
+			
+			return res;
+		};
+		
+		// overwrite original awSetInputAndPopupValue()
+		window.awSetInputAndPopupValue = function() {
+			var textbox = arguments[0];
+			
+			if (!textbox.DCPInitDone) {
+				contactPhoto.compose.initTextbox(textbox);
+			}
+		
+			var res = contactPhoto.compose.function_wrappers.awSetInputAndPopupValue_old.apply(this, arguments);
+			
+			textbox.previousValue = textbox.currentValue;
+			textbox.currentValue = textbox.value;
+			
+			contactPhoto.compose.checkAllTextboxes();
+			
+			return res;
+		};
+		
+		// overwrite original _awSetInputAndPopup()
+		window._awSetInputAndPopup = function() {
+			var res = contactPhoto.compose.function_wrappers._awSetInputAndPopup_old.apply(this, arguments);
+			
+			var newTextbox = awGetInputElement(top.MAX_RECIPIENTS);
+			if (!newTextbox.DCPInitDone) {
+				contactPhoto.compose.initTextbox(newTextbox);
+			}
+			
+			return res;
+		};
+		
+		window.awAppendNewRow  = function() {
+			var res = contactPhoto.compose.function_wrappers.awAppendNewRow_old.apply(this, arguments);
+			
+			var newTextbox = awGetInputElement(top.MAX_RECIPIENTS);
+			if (!newTextbox.DCPInitDone) {
+				contactPhoto.compose.initTextbox(newTextbox);
+			}
+			
+			return res;
+		};
+	},
+	
 	
 	/**
 	 * Listen to preference changes and update photo stack
@@ -27,9 +101,9 @@ contactPhoto.compose = {
 				break;
 			
 			case 'position': // Position changed (left/right)
-				var hbox = document.getElementById('DiCoP-AddressingContainer');
-				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
-				var splitter = document.getElementById('DiCoP-ContactsSizer');
+				var hbox = document.getElementById('DCP-AddressingContainer');
+				var canvasBox = document.getElementById('DCP-PhotoStackContainer');
+				var splitter = document.getElementById('DCP-ContactsSizer');
 				var widget = document.getElementById('addressingWidget');
 				
 				if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
@@ -44,8 +118,8 @@ contactPhoto.compose = {
 				break;
 			
 			case 'display':
-				var canvasBox = document.getElementById('DiCoP-PhotoStackContainer');
-				var splitter = document.getElementById('DiCoP-ContactsSizer');
+				var canvasBox = document.getElementById('DCP-PhotoStackContainer');
+				var splitter = document.getElementById('DCP-ContactsSizer');
 				
 				if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
 					canvasBox.collapsed = false;
@@ -60,6 +134,7 @@ contactPhoto.compose = {
 		}
 	},
 	
+	
 	initPhotoStack: function() {
 		if (contactPhoto.debug) dump('--------------- initPhotoStack\n')
 		if (contactPhoto.compose.photoStackInitDone) return;
@@ -68,17 +143,17 @@ contactPhoto.compose = {
 		var widget = document.getElementById('addressingWidget');
 		contactPhoto.compose.widget = widget; /* addressingWidget is a <listbox> */
 
-		// init first textbox
-		contactPhoto.compose.newListitem(contactPhoto.compose.widget.getElementsByTagName('listitem')[0]);
+		// init the template textbox
+		contactPhoto.compose.initTemplateTextbox(awGetInputElement(1));
 		
 		
 		/** replace <addressingWidget/> with
 		 *
-		 * <hbox id='DiCoP-AddressingContainer'>
-		 * 	<box id="DiCoP-PhotoStackContainer'>
-		 * 		<canvas id='DiCoP-PhotoStack'/>
+		 * <hbox id='DCP-AddressingContainer'>
+		 * 	<box id="DCP-PhotoStackContainer'>
+		 * 		<canvas id='DCP-PhotoStack'/>
 		 * 	</box>
-		 * 	<splitter id="DiCoP-ContactsSizer"/>
+		 * 	<splitter id="DCP-ContactsSizer"/>
 		 * 	<addressingWidget/>
 		 * </hbox>
 		 */
@@ -87,24 +162,21 @@ contactPhoto.compose = {
 
 		var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'hbox');
 		hbox.flex = '1';
-		hbox.id = 'DiCoP-AddressingContainer';
-		//var hbox = document.getElementById('DiCoP-AddressingContainer');
+		hbox.id = 'DCP-AddressingContainer';
 		addrBox.replaceChild(hbox, widget);
 		
 		// create a box around the canvas to center the canvas
-		//var box = document.getElementById('DiCoP-PhotoStackContainer');
 		var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
 		box.align = 'center';
-		box.id = 'DiCoP-PhotoStackContainer';
+		box.id = 'DCP-PhotoStackContainer';
 		box.style.overflow = 'hidden';
 		box.collapsed = (contactPhoto.prefs.get('composePhotos.display', 'bool') == false);
-		box.setAttribute('context', 'DiCoP-Contextmenu'); // attach contextmenu
+		box.setAttribute('context', 'DCP-Contextmenu'); // attach contextmenu
 		
 
 		var canvasSize = contactPhoto.prefs.get('composePhotos.width', 'int');
 		var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-		canvas.id = 'DiCoP-PhotoStack';
-		//var canvas = document.getElementById('DiCoP-PhotoStack');
+		canvas.id = 'DCP-PhotoStack';
 		canvas.width = canvasSize;
 		canvas.height = 1; // Later adjusted by displayStackView()
 
@@ -134,7 +206,7 @@ contactPhoto.compose = {
 		
 		
 		var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
-		splitter.id = 'DiCoP-ContactsSizer';
+		splitter.id = 'DCP-ContactsSizer';
 		
 		splitter.addEventListener('command', function() {
 			// Save new position of splitter 
@@ -164,15 +236,13 @@ contactPhoto.compose = {
 
 		contactPhoto.compose.widgetParent = hbox;
 		
+		// draw the empty canvas
 		window.setTimeout(contactPhoto.compose.displayStackView, 20);
 	},
 	
 	
 	setupEventListeners: function() {
 		if (contactPhoto.debug) dump('--------------- setupEventListeners\n');
-
-		contactPhoto.compose.widget.parentNode.addEventListener('DOMNodeInserted', contactPhoto.compose.listenerNodeInserted, false);
-		contactPhoto.compose.widget.parentNode.addEventListener('DOMNodeRemoved', contactPhoto.compose.listenerNodeRemoved, false);
 		
 		// change stack height after the size addressingwidget has been changed
 		document.getElementById('compose-toolbar-sizer').addEventListener('mouseup', contactPhoto.compose.displayStackView, false);
@@ -187,6 +257,14 @@ contactPhoto.compose = {
 					.QueryInterface(Components.interfaces.nsIPrefBranch2);
 		contactPhoto.compose.prefBranch.addObserver("", this, false);
 		
+		
+		
+		// Add an address book listener so the photo can be updated.
+		Components.classes["@mozilla.org/abmanager;1"]
+			.getService(Components.interfaces.nsIAbManager)
+			.addAddressBookListener(contactPhoto.compose.addressBookListener,
+				Components.interfaces.nsIAbListener.all);
+		
 	},
 
 
@@ -194,21 +272,12 @@ contactPhoto.compose = {
 		if (contactPhoto.debug) dump('WINDOW CLOSED\n\n')
 
 		// clear the stack area
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var stackCanvas = document.getElementById('DCP-PhotoStack');
 		stackCanvas.width = stackCanvas.width;
 
 
 		// remove cached images
-		var hbox = document.getElementById('DiCoP-AddressingContainer');
-		var imageNodes = [];
-		for (i in hbox.childNodes) {
-			if (hbox.childNodes[i].tagName && hbox.childNodes[i].tagName.toLowerCase() == 'image') {
-				imageNodes.push(hbox.childNodes[i]);
-			}
-		}
-		for (i in imageNodes) {
-			hbox.removeChild(imageNodes[i]);
-		}
+		contactPhoto.compose.removeCachedImages();
 
 		// reset images in addressingWidget
 		var widget = document.getElementById('addressingWidget');
@@ -222,6 +291,19 @@ contactPhoto.compose = {
 			if (icon.tagName == 'image') {
 				contactPhoto.compose.resetPhoto(icon);
 			}
+		}
+	},
+	
+	removeCachedImages: function() {
+		var hbox = document.getElementById('DCP-AddressingContainer');
+		var imageNodes = [];
+		for (var i in hbox.childNodes) {
+			if (hbox.childNodes[i].tagName && hbox.childNodes[i].tagName.toLowerCase() == 'image') {
+				imageNodes.push(hbox.childNodes[i]);
+			}
+		}
+		for (i in imageNodes) {
+			hbox.removeChild(imageNodes[i]);
 		}
 	},
 
@@ -252,7 +334,7 @@ contactPhoto.compose = {
 
 		for (var i=0; i<bxs.length; i++) {
 
-			var boxID =  bxs[i].getAttribute('DiCoP-TextboxID');
+			var boxID =  bxs[i].getAttribute('DCP-TextboxID');
 
 			var setDefaultIcon = true;
 
@@ -284,9 +366,9 @@ contactPhoto.compose = {
 						photoChanged = true;
 						bxs[i].email = emailAddress.toLowerCase();
 						bxs[i].imgLoaded = false;
-						var _ii_ = i; // used in event-listener-closures
+						let _ii_ = i; // used in event-listener-closures
 
-						if (contactPhoto.debug > 1) dump('loading photo for '+emailAddress+'\n');
+						if (contactPhoto.debug) dump('loading photo for '+emailAddress+'\n');
 
 
 						var photoInfo = contactPhoto.photoForEmailAddress(emailAddress);
@@ -309,10 +391,10 @@ contactPhoto.compose = {
 							photoInfoStack.photoObject.style.display = 'block';
 							document.getElementById('addressingWidget').parentNode.appendChild(photoInfoStack.photoObject);
 
-							bxs[i].imgObject = photoInfoStack.photoObject;
+							bxs[_ii_].imgObject = photoInfoStack.photoObject;
 
 							photoInfoStack.photoObject.addEventListener('load', function() {
-								if (contactPhoto.debug) dump(bxs[_ii_].email+' loaded '+_ii_+'----------\n')
+								if (contactPhoto.debug) dump(bxs[_ii_].email+' loaded, #'+_ii_+'----------\n')
 								bxs[_ii_].imgLoaded = true;
 								
 								// clear abort timeout
@@ -332,8 +414,8 @@ contactPhoto.compose = {
 							}, false);
 
 							// add a timeout in case a photo can't be loaded (error-event does not work)
-							bxs[i].loadTimeout = window.setTimeout(function() {
-								if (contactPhoto.debug) dump('photo load timeout for '+_ii_+'  '+bxs[_ii_].email+'\n');
+							bxs[_ii_].loadTimeout = window.setTimeout(function() {
+								if (contactPhoto.debug) dump('photo load timeout for '+_ii_+', adr: '+bxs[_ii_].email+'\n');
 								
 								
 								bxs[_ii_].timeoutOccurred = true;
@@ -378,7 +460,7 @@ contactPhoto.compose = {
 	},
 
 	checkAllImagesLoaded: function() {
-		if (contactPhoto.debug) dump('checkAllImagesLoaded\n');
+		if (contactPhoto.debug) dump('\ncheckAllImagesLoaded\n');
 
 		var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
 		for (var id=0; id<boxes.length; id++) {
@@ -403,144 +485,96 @@ contactPhoto.compose = {
 	},
 
 
-	// this function is called when a new listitem is inserted into the addressingwidget.
-	// it modifies the textbox inside and sets eventlisteners for value changes.
-	newListitem: function(listitem) {
-		var textboxes = listitem.getElementsByTagName('textbox');
+	// this function is called if DCPInitDone has not been set on a textbox
+	// it sets custom properties and attaches several event listeners
+	initTextbox: function(textbox) {
+		if (contactPhoto.debug) dump('INIT textbox '+textbox.id+'\n')
+		textbox.DCPInitDone = true;
 		
-		if (textboxes.length == 1) {
-			if (contactPhoto.debug) dump('INIT textbox\n')
-			//alert('counter '+contactPhoto.compose.textboxCounter)
+		contactPhoto.compose.resetPhoto(textbox.previousSibling.firstChild);
 
-			textboxes[0].value = '';
-			textboxes[0].setAttribute('value', '');
+		var boxID = 'box'+(contactPhoto.compose.textboxCounter++);
+		textbox.setAttribute('DCP-TextboxID', boxID);
 
-			var boxID = 'box'+(contactPhoto.compose.textboxCounter++);
-			textboxes[0].setAttribute('DiCoP-TextboxID', boxID);
-
-			textboxes[0].currentValue = '';
-			textboxes[0].previousValue = '';
-			textboxes[0].email = '';
-			textboxes[0].imgObject = null;
-			textboxes[0].imgLoaded = false;
-			textboxes[0].timeoutOccurred = false;
+		textbox.currentValue = '';
+		textbox.previousValue = '';
+		textbox.email = '';
+		textbox.imgObject = null;
+		textbox.imgLoaded = false;
+		textbox.timeoutOccurred = false;
 
 
-			// listen for user-based changes which fire after the textbox loses focus
-			textboxes[0].addEventListener('change', function(e) {
-				if (contactPhoto.debug) dump('\nvalue changed: '+e.target.getAttribute('DiCoP-TextboxID')+' --> '+e.target.value+'\n')
+		// listen for user-based changes which fire after the textbox loses focus
+		textbox.addEventListener('change', function(e) {
+			if (contactPhoto.debug) dump('\nvalue changed: '+e.target.getAttribute('DCP-TextboxID')+' --> '+e.target.value+'\n')
 
-				textboxes[0].previousValue = textboxes[0].currentValue;
-				textboxes[0].currentValue = e.target.value;
+			textbox.previousValue = textbox.currentValue;
+			textbox.currentValue = e.target.value;
 
+			contactPhoto.compose.checkAllTextboxes();
+		}, false);
+
+		// listen for input changes, but only do something when the box is cleared (for performance reasons)
+		textbox.addEventListener('input', function(e) {
+			if (textbox.value != '') return;
+
+			textbox.previousValue = textbox.currentValue;
+			textbox.currentValue = e.target.value;
+
+			contactPhoto.compose.checkAllTextboxes();
+		}, false);
+		
+		// catch the case when the user drops something into the textbox
+		// this case is not handled by the addressing widget
+		textbox.addEventListener('drop', function(e) {
+			window.setTimeout(function() {
+				textbox.previousValue = textbox.currentValue;
+				textbox.currentValue = textbox.value;
+				
 				contactPhoto.compose.checkAllTextboxes();
-			}, false);
+			}, 20);
+		}, false);
 
-			// listen for script-based changes
-			textboxes[0].addEventListener('DOMAttrModified', function(e) {
-				if (e.attrName != 'value') return;
-				if (contactPhoto.debug) dump('\nvalue modified: '+e.target.getAttribute('DiCoP-TextboxID')+' --> '+e.target.getAttribute('value')+'\n')
-
-				textboxes[0].previousValue = textboxes[0].currentValue;
-				textboxes[0].currentValue = e.target.getAttribute('value');
-
-				contactPhoto.compose.checkAllTextboxes();
-			}, false);
-
-			// listen for input changes, but only do something when the box is cleared (for performance reasons)
-			textboxes[0].addEventListener('input', function(e) {
-				if (textboxes[0].value != '') return;
-
-				textboxes[0].previousValue = textboxes[0].currentValue;
-				textboxes[0].currentValue = e.target.value;
-
-				contactPhoto.compose.checkAllTextboxes();
-			}, false);
-
-
-			// add a 'change' event to the ontextentered attribute (textentered event is not fired)
-			var eventCode = 'e = document.createEvent("UIEvents");';
-			eventCode = eventCode + 'e.initUIEvent("change", true, true, window, 1);';
-			eventCode = eventCode + 'this.dispatchEvent(e);';
-			textboxes[0].setAttribute('ontextentered', textboxes[0].getAttribute('ontextentered')+';'+eventCode)
-
-
-
-
-			if (!contactPhoto.compose.hasImageBox(listitem)) {
-				// hide the existing icon
-				textboxes[0].firstChild.hidden = true;
-
-				// create a new icon outside the textbox
-				var newBox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
-				newBox.setAttribute('name', 'DiCoP-Photobox');
-				newBox.className = 'DiCoP-ComposeImageBox';
-				newBox.setAttribute('align', 'center');
-				newBox.setAttribute('pack', 'center');
-				var boxSize = contactPhoto.prefs.get('smallIconSize', 'int');
-				newBox.setAttribute('width', boxSize);
-				newBox.setAttribute('height', boxSize);
-				newBox.style.height = boxSize+'px';
-				newBox.style.width = boxSize+'px';
-				newBox.addEventListener('click', function(e) {
-					this.nextSibling.select();
-				}, false);
-
-				var newImage = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
-				newImage.style.listStyleImage = contactPhoto.compose.defaultIconURI;
-				newBox.appendChild(newImage);
-
-				textboxes[0].parentNode.insertBefore(newBox, textboxes[0]);
-
-			} else {
-				contactPhoto.compose.resetPhoto(textboxes[0].previousSibling.firstChild);
-			}
-		}
+		/*
+		// add a 'change' event to the ontextentered attribute (textentered event is not fired)
+		var eventCode = 'e = document.createEvent("UIEvents");';
+		eventCode = eventCode + 'e.initUIEvent("change", true, true, window, 1);';
+		eventCode = eventCode + 'this.dispatchEvent(e);';
+		textbox.setAttribute('ontextentered', textbox.getAttribute('ontextentered')+';'+eventCode);
+		*/
 	},
+	
+	// modify the template listitem
+	initTemplateTextbox: function(textbox) {
+		if (contactPhoto.debug) dump('INIT TEMPLATE textbox\n')
+		
+		// hide the existing icon
+		textbox.firstChild.setAttribute('hidden', 'true');
 
-	// check whether there is box which contains the image
-	hasImageBox: function(listitem) {
-		var boxes = listitem.getElementsByTagName('box');
-		for (var i in boxes) {
-			if (typeof boxes[i] != 'object') continue;
-			if (boxes[i].getAttribute('name') == 'DiCoP-Photobox') return true;
-		}
-		return false;
-	},
+		// create a new icon outside the textbox
+		var newBox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
+		newBox.setAttribute('name', 'DCP-Photobox');
+		newBox.className = 'DCP-ComposeImageBox';
+		newBox.setAttribute('align', 'center');
+		newBox.setAttribute('pack', 'center');
+		var boxSize = contactPhoto.prefs.get('smallIconSize', 'int');
+		newBox.setAttribute('width', boxSize);
+		newBox.setAttribute('height', boxSize);
+		newBox.style.height = boxSize+'px';
+		newBox.style.width = boxSize+'px';
+		newBox.setAttribute('onclick', 'this.nextSibling.select();'); // use the onclick attribute to enable cloning of the action
 
-	// event-listener for DOMNodeInserted events
-	listenerNodeInserted: function(e) {
-		if (contactPhoto.debug) dump('node inserted: '+e.target.tagName+'\n')
-		if (e.target.tagName == 'listitem') {
-			contactPhoto.compose.newListitem(e.target);
-		}
-	},
+		var newImage = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
+		newImage.style.listStyleImage = contactPhoto.compose.defaultIconURI;
+		newBox.appendChild(newImage);
 
-	// event-listener for DOMNodeRemoved events, fires before a node is removed
-	listenerNodeRemoved: function(e) {
-		var textbox = e.target.getElementsByTagName('textbox');
-		if (textbox.length == 1) {
-			if (contactPhoto.debug) dump('******** textbox removed: '+textbox[0].getAttribute('DiCoP-TextboxID')+'\n\n');
-
-			// when a textbox is removed, redraw the stack if the email property is not a nullstring
-			// in the latter case, the textbox has been empty oder the stack has already been redrawn
-			if (textbox[0].email != '') {
-				textbox[0].value = '';
-				textbox[0].email = '';
-				textbox[0].currentValue = '';
-				textbox[0].previousValue = '';
-				textbox[0].imgLoaded = false;
-				textbox[0].imgObject = null;
-
-				contactPhoto.compose.displayStackView(); // redraw the photo stack
-			}
-		}
+		textbox.parentNode.insertBefore(newBox, textbox);
 	},
 	
 	displayStackView: function() {
 		// Adjust width and height of photo stack
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
-		var boxWidth = document.getElementById('DiCoP-PhotoStackContainer').boxObject.width;
+		var stackCanvas = document.getElementById('DCP-PhotoStack');
+		var boxWidth = document.getElementById('DCP-PhotoStackContainer').boxObject.width;
 		var listboxHeight = document.getElementById('addressingWidget').boxObject.height;
 		stackCanvas.width = boxWidth;
 		stackCanvas.height = listboxHeight;
@@ -566,13 +600,14 @@ contactPhoto.compose = {
 		var bxs = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
 
 		
-		var maxAddresses = 10; // max of displayed addresses
+		var maxAddresses = 10; // max displayed addresses
 		var addresses = [];
 
 		// check if an image has been assigned and reverse the order
 		var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
 		if (contactPhoto.debug) dump('displayStackView: '+boxes.length+'\n')
 		for (var id=0; id<boxes.length; id++) {
+			if (typeof boxes[id].email == 'undefined') continue;
 
 			if (boxes[id].email == '') {
 				if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (email not valid)\n');
@@ -594,7 +629,7 @@ contactPhoto.compose = {
 		}
 
 		
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var stackCanvas = document.getElementById('DCP-PhotoStack');
 		stackCanvas.width = stackCanvas.width; // clear the canvas
 		
 		// exit if there is nothing to draw
@@ -799,7 +834,7 @@ contactPhoto.compose = {
 			addresses.push(boxes[id].email);
 		}
 
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		var stackCanvas = document.getElementById('DCP-PhotoStack');
 		stackCanvas.width = stackCanvas.width; // clear the canvas
 		
 		var stackCtx = stackCanvas.getContext('2d');
@@ -854,28 +889,52 @@ contactPhoto.compose = {
 	},
 	
 	
-	
-	
-	
 	displayEmptyCanvas: function() {
-		var stackCanvas = document.getElementById('DiCoP-PhotoStack');
+		if (contactPhoto.debug) dump("display empty canvas\n");
+		var stackCanvas = document.getElementById('DCP-PhotoStack');
 		var stackCtx = stackCanvas.getContext('2d');
 		
 		var imageSize = Math.min(stackCanvas.height, stackCanvas.width);
 		var empty = new Image(imageSize, imageSize);
 		empty.addEventListener('load', function() {
 			stackCtx.globalAlpha = .15;
-			stackCtx.drawImage(this, (stackCanvas.width-imageSize)/2, (stackCanvas.height-imageSize)/2, imageSize, imageSize);
+			stackCtx.drawImage(empty, (stackCanvas.width-imageSize)/2, (stackCanvas.height-imageSize)/2, imageSize, imageSize);
 			stackCtx.globalAlpha = 1;
 		}, false);
 		empty.src = 'chrome://contactPhoto/skin/empty.png';
-	}
+	},
+	
+	addressBookListener: {
+		onItemAdded: function(aParentDir, aItem) {
+			contactPhoto.compose.forceCompleteImageReload();
+		},
+
+		onItemRemoved: function(aParentDir, aItem) {
+			contactPhoto.compose.forceCompleteImageReload();
+		},
+
+		onItemPropertyChanged: function(aItem, aProperty, aOldValue, aNewValue) {
+			contactPhoto.compose.forceCompleteImageReload();
+		}
+	},
+	
+	forceCompleteImageReload: function() {
+		// reset internal values so that a reload is triggered
+		var bxs = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
+		for (var i=0; i<bxs.length; i++) {
+			bxs[i].previousValue = '';
+			bxs[i].email = '';
+		}
+		
+		contactPhoto.compose.removeCachedImages();
+		contactPhoto.compose.checkAllTextboxes();
+	},
 }
 
 window.addEventListener('load', function() {
-	if (contactPhoto.debug) dump("event load\n");
-	
+	if (contactPhoto.debug) dump("event window load\n");
 	// no possiblity to delay - setup of photostack has to be done before the addresses are filled in
+	contactPhoto.compose.wrap_functions();
 	contactPhoto.compose.initPhotoStack();
 	contactPhoto.compose.setupEventListeners();
 } , false);

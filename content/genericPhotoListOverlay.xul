@@ -4,20 +4,20 @@
 
 <!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/genericPhotos.dtd">
 
-<overlay id="DiCoP-GenericPhotoList" 
+<overlay id="DCP-GenericPhotoList" 
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 
 <!-- abCardOverlay.xul -->	
 <hbox id="abPhotoTab">
 
-	<menulist id="DiCoP-GenericPhotoListTemplate" hidden="true">
+	<menulist id="DCP-GenericPhotoListTemplate" hidden="true">
 		<menupopup>
-			<menuitem label="&genericphoto.dicop;" id="DiCoP-GenericPhotoDiCoP" class="menuitem-iconic"
+			<menuitem label="&genericphoto.dicop;" id="DCP-GenericPhotoDCP" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/displaycontactphoto.png"
 					image="chrome://contactPhoto/skin/genericIcons/displaycontactphoto-tiny.png"/>
 					
-			<menuitem label="&genericphoto.gravatar;" id="DiCoP-GenericPhotoGravatar" class="menuitem-iconic"
+			<menuitem label="&genericphoto.gravatar;" id="DCP-GenericPhotoGravatar" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/gravatar.png"
 					image="chrome://contactPhoto/skin/genericIcons/gravatar-tiny.png"/>
 
@@ -67,13 +67,13 @@
 <!-- prefs.xul -->
 <tabpanel id="generalTab">
 
-	<menulist id="DiCoP-GenericPhotoListTemplate" hidden="true">
+	<menulist id="DCP-GenericPhotoListTemplate" hidden="true">
 		<menupopup>
-			<menuitem label="&genericphoto.dicop;" id="DiCoP-GenericPhotoDiCoP" class="menuitem-iconic"
+			<menuitem label="&genericphoto.dicop;" id="DCP-GenericPhotoDCP" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/displaycontactphoto.png"
 					image="chrome://contactPhoto/skin/genericIcons/displaycontactphoto-tiny.png"/>
 					
-			<menuitem label="&genericphoto.gravatar;" id="DiCoP-GenericPhotoGravatar" class="menuitem-iconic"
+			<menuitem label="&genericphoto.gravatar;" id="DCP-GenericPhotoGravatar" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/gravatar.png"
 					image="chrome://contactPhoto/skin/genericIcons/gravatar-tiny.png"/>
 

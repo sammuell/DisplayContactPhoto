@@ -2,17 +2,17 @@
 
 contactPhoto.editCard = {
 	displayGenericPhotos: function() {
+		// display more generic photos. copy them from the hidden list to the #GenericPhotoList
+	
 		var genericPhotoList = document.getElementById('GenericPhotoList');
-		var oldPhotoListValue = genericPhotoList.value;
-		
-		var menupopup = genericPhotoList.getElementsByTagName('menupopup')[0];
+		var menupopup = genericPhotoList.firstChild;
 		
 		// update existing entries to iconic style
 		for (var i=0; i<menupopup.childNodes.length; i++) {
 			menupopup.childNodes[i].className += ' menuitem-iconic';
 		}
 
-		var templateList = document.getElementById('DiCoP-GenericPhotoListTemplate');
+		var templateList = document.getElementById('DCP-GenericPhotoListTemplate');
 		var templateMenupopup = templateList.firstChild;
 		
 		for (var i=0; i<templateMenupopup.childNodes.length; i++) {
@@ -20,20 +20,68 @@ contactPhoto.editCard = {
 			menupopup.appendChild(clone);
 		}
 		
-		genericPhotoList.value = oldPhotoListValue; // update the generated list
-		
-		// if gravatar is disabled, disable the menuitem
-		if (contactPhoto.prefs.get('enableGravatar', 'bool') == false) {
-			var menuitemGravatar = document.getElementById('DiCoP-GenericPhotoGravatar');
+	},
+	
+	newGenericPhotoHandler: {
+		onLoad: function(aCard, aDocument) {
+			var genericPhotoList = document.getElementById('GenericPhotoList');
+			
+			var photoURI = aCard.getProperty('PhotoURI', '');
+			if (photoURI == '') {
+				 // if photoURI is empty, assign the default photo, 
+				 // this will be done as soon as the preferences are available (load event)
+				genericPhotoList.showDefaultPhoto = true;
+			} else {
+				genericPhotoList.value = photoURI;
+			}
+			
+			return true;
+		},
 
+		onShow: function(aCard, aDocument, aTargetID) {
+			var genericPhotoList = document.getElementById('GenericPhotoList');
+			
+			aDocument.getElementById(aTargetID).setAttribute('src', genericPhotoList.value);
+			return true;
+		},
+
+		onSave: function(aCard, aDocument) {
+			// If we had the photo saved locally, clear it.
+			removePhoto(aCard.getProperty('PhotoName', null));
+			aCard.setProperty('PhotoName', null);
+			aCard.setProperty('PhotoType', 'generic');
+			
+			var genericPhotoList = document.getElementById('GenericPhotoList');
+			
+			aCard.setProperty('PhotoURI', genericPhotoList.value);
+			return true;
+		}
+	},
+	
+	// check if gravatar is enabled, else disable menuitem and assign default URI if gravatar has been selected
+	// select the correct default photo from DCP prefs
+	checkDCPDefaultPrefs: function() {
+		var genericPhotoList = document.getElementById('GenericPhotoList');
+		
+		if (contactPhoto.prefs.get('enableGravatar', 'bool') == false) {
+			var menuitemGravatar = document.getElementById('DCP-GenericPhotoGravatar');
+			
 			if (menuitemGravatar.selected) {
-				var menuitemDiCoP = document.getElementById('DiCoP-GenericPhotoDiCoP');
-				menuitemDiCoP.parentNode.parentNode.value = menuitemDiCoP.value;
+				genericPhotoList.value = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 			}
 			
 			menuitemGravatar.disabled = true;
 		}
-	}
+		
+		// assign the default photo from DCP prefs if necessary
+		if (genericPhotoList.showDefaultPhoto) {
+			genericPhotoList.value = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
+		}
+	},
 }
 
-window.addEventListener('load', contactPhoto.editCard.displayGenericPhotos, false);
+RegisterLoadListener(contactPhoto.editCard.displayGenericPhotos);
+
+registerPhotoHandler('generic', contactPhoto.editCard.newGenericPhotoHandler);
+
+window.addEventListener('load', contactPhoto.editCard.checkDCPDefaultPrefs, false);
