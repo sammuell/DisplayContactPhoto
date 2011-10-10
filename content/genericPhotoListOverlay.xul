@@ -28,8 +28,8 @@
 					image="chrome://contactPhoto/skin/genericIcons/person-silhouette8-tiny.png"/>
 			
 			<menuitem label="&genericphoto.male2;" class="menuitem-iconic"
-					value="chrome://contactPhoto/skin/genericIcons/person-silhouette2.png"
-					image="chrome://contactPhoto/skin/genericIcons/person-silhouette2-tiny.png"/>					
+					value="chrome://contactPhoto/skin/genericIcons/person-silhouette1.png"
+					image="chrome://contactPhoto/skin/genericIcons/person-silhouette1-tiny.png"/>					
 			
 			<menuitem label="&genericphoto.male3;" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/person-silhouette2.png"
@@ -84,8 +84,8 @@
 					image="chrome://contactPhoto/skin/genericIcons/person-silhouette8-tiny.png"/>
 			
 			<menuitem label="&genericphoto.male2;" class="menuitem-iconic"
-					value="chrome://contactPhoto/skin/genericIcons/person-silhouette2.png"
-					image="chrome://contactPhoto/skin/genericIcons/person-silhouette2-tiny.png"/>					
+					value="chrome://contactPhoto/skin/genericIcons/person-silhouette1.png"
+					image="chrome://contactPhoto/skin/genericIcons/person-silhouette1-tiny.png"/>					
 			
 			<menuitem label="&genericphoto.male3;" class="menuitem-iconic"
 					value="chrome://contactPhoto/skin/genericIcons/person-silhouette2.png"

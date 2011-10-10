@@ -5,19 +5,22 @@
 	padding: 0px;
 }
 
-#photo  { /* photo from edit card dialog */
-	border: 1px solid black;
-	-moz-box-shadow: #444 2px 2px 5px;
+#photo  { /* photo in edit card dialog */
+	box-shadow: #444 2px 2px 5px;
 }
 
 #DCP-PhotoStack { /* canvas in compose window */
-	/*margin: 1px;
-	border: 1px solid red;*/
+
 }
 
 #DCP-PhotoStackContainer {
 	min-width: 50px;
 	max-width: 300px;
+}
+#DCP-VerticalSizer { /* sizer in compose window to adjust stack width */
+	width: 2px;
+	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
+	margin: 2px 0px;
 }
 
 box.DCP-ComposeImageBox {
@@ -28,7 +31,7 @@ box.DCP-ComposeImageBox  > image {
 	display: block;
 }
 
-image.moreinfo {
+image.moreinfo { /* panel providing explanations in prefwindow */
 	cursor: pointer;
 	width: 16px;
 	height: 16px;
@@ -36,9 +39,4 @@ image.moreinfo {
 }
 panel.moreinfo {
 	width: 350px;
-}
-
-#DCP-ContactsSizer {
-	width: 2px;
-	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
 }

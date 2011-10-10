@@ -16,26 +16,12 @@ contactPhoto.compose = {
 	/**
 	 * Wrap TB core functions to catch DOM mutation events
 	 */
-	function_wrappers: {
-		// awDeleteRow(rowToDelete)
-		// deletes a row of the addressing widget
-		awDeleteRow_old: window.awDeleteRow,
-		
-		// awSetInputAndPopupValue(inputElem, inputValue, popupElem, popupValue, rowNumber)
-		// sets the value of the textbox and popup
-		awSetInputAndPopupValue_old: window.awSetInputAndPopupValue,
-		
-		// _awSetInputAndPopup(inputValue, popupValue, parentNode, templateNode)
-		// inserts a new row
-		_awSetInputAndPopup_old: window._awSetInputAndPopup,
-		
-		// awAppendNewRow(setFocus)
-		// inserts a new row
-		awAppendNewRow_old: window.awAppendNewRow,
-	},
+	function_wrappers: {},
 	
 	wrap_functions: function() {
-		// overwrite original awDeleteRow()
+		// awDeleteRow(rowToDelete)
+		// deletes a row of the addressing widget
+		contactPhoto.compose.function_wrappers.awDeleteRow_old = window.awDeleteRow;
 		window.awDeleteRow = function () {
 			var res = contactPhoto.compose.function_wrappers.awDeleteRow_old.apply(this, arguments);
 			
@@ -44,7 +30,9 @@ contactPhoto.compose = {
 			return res;
 		};
 		
-		// overwrite original awSetInputAndPopupValue()
+		// awSetInputAndPopupValue(inputElem, inputValue, popupElem, popupValue, rowNumber)
+		// sets the value of the textbox and popup
+		contactPhoto.compose.function_wrappers.awSetInputAndPopupValue_old = window.awSetInputAndPopupValue;
 		window.awSetInputAndPopupValue = function() {
 			var textbox = arguments[0];
 			
@@ -62,7 +50,9 @@ contactPhoto.compose = {
 			return res;
 		};
 		
-		// overwrite original _awSetInputAndPopup()
+		// _awSetInputAndPopup(inputValue, popupValue, parentNode, templateNode)
+		// inserts a new row
+		contactPhoto.compose.function_wrappers._awSetInputAndPopup_old = window._awSetInputAndPopup;
 		window._awSetInputAndPopup = function() {
 			var res = contactPhoto.compose.function_wrappers._awSetInputAndPopup_old.apply(this, arguments);
 			
@@ -74,6 +64,9 @@ contactPhoto.compose = {
 			return res;
 		};
 		
+		// awAppendNewRow(setFocus)
+		// inserts a new row
+		contactPhoto.compose.function_wrappers.awAppendNewRow_old = window.awAppendNewRow;
 		window.awAppendNewRow  = function() {
 			var res = contactPhoto.compose.function_wrappers.awAppendNewRow_old.apply(this, arguments);
 			
@@ -88,7 +81,7 @@ contactPhoto.compose = {
 	
 	
 	/**
-	 * Listen to preference changes and update photo stack
+	 * Listen to preference changes and update photo stack accordingly
 	 */
 	observe: function(subject, topic, data) {
 		if (topic != "nsPref:changed") {
@@ -153,7 +146,7 @@ contactPhoto.compose = {
 		 * 	<box id="DCP-PhotoStackContainer'>
 		 * 		<canvas id='DCP-PhotoStack'/>
 		 * 	</box>
-		 * 	<splitter id="DCP-ContactsSizer"/>
+		 * 	<splitter id="DCP-VerticalSizer"/>
 		 * 	<addressingWidget/>
 		 * </hbox>
 		 */
@@ -206,7 +199,7 @@ contactPhoto.compose = {
 		
 		
 		var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
-		splitter.id = 'DCP-ContactsSizer';
+		splitter.id = 'DCP-VerticalSizer';
 		
 		splitter.addEventListener('command', function() {
 			// Save new position of splitter 
