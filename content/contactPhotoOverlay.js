@@ -48,54 +48,20 @@ contactPhoto.messageDisplay = {
 	},
 	
 	editPhoto: function(event) {
-		if (event.button != 0) return;
+		if (event.button != 0) return; // do nothing if not left click
 
 		if (contactPhoto.messageDisplay.photoInfo 
 				&& contactPhoto.messageDisplay.photoInfo.cardDetails
 				&& contactPhoto.messageDisplay.photoInfo.cardDetails.card) {
-			/*
-			var cardWindow = window.openDialog('chrome://messenger/content/addressbook/abEditCardDialog.xul',
-						  '',
-						  'chrome,resizable=no,centerscreen',
-						  { abURI: contactPhoto.cardDetails.book.URI,
-							card: contactPhoto.cardDetails.card });
-			*/
-
-			/*
-			Opening a dialog does not work as expected, instead a regular window is opened.
-			The faked argument mechanism seems to work quite well, it's a bit risky, but the variables
-				are set before they are used in the new window. It's not likely to produce an error, since
-				it takes about 250ms to load the window on my machine. I was not able to produce any error in this way.
-			Because the window is not modal, it may have to be closed 'manually' using its blur event.
-			However on a double click on the image thunderbird attempts to open two windows, which crashes the
-				application. That's why there is an additional check if the card is open.
-			*/
 			
-
-			if (contactPhoto.messageDisplay.cardWindow && !contactPhoto.messageDisplay.cardWindow.closed) {
-				contactPhoto.messageDisplay.cardWindow.close();
-			}
-
-			contactPhoto.messageDisplay.cardWindow = window.open('chrome://messenger/content/addressbook/abEditCardDialog.xul',
-					'DCP-EditContact',
-					'chrome,resizable=no,centerscreen');
-
-			contactPhoto.messageDisplay.cardWindow.arguments = [];
-			contactPhoto.messageDisplay.cardWindow.arguments[0] = {
-				abURI: contactPhoto.messageDisplay.photoInfo.cardDetails.book.URI,
-				card: contactPhoto.messageDisplay.photoInfo.cardDetails.card
-			};
-
-			contactPhoto.messageDisplay.cardWindow.addEventListener('load', function() {
-					var abTabs = contactPhoto.messageDisplay.cardWindow.document.getElementById('abTabs');
-					var photoTabButton = contactPhoto.messageDisplay.cardWindow.document.getElementById('photoTabButton');
-					abTabs.selectedItem = photoTabButton;
-				}, false);
-
-			contactPhoto.messageDisplay.cardWindow.addEventListener('blur', function() {
-					contactPhoto.messageDisplay.cardWindow.close();
-				}, false);
-
+			window.contactPhoto.editCardFocusPhotoTab = true;
+			var cardWindow = window.openDialog('chrome://messenger/content/addressbook/abEditCardDialog.xul',
+				'DCP-EditCard',
+				'chrome,modal,resizable=no,centerscreen',
+				{ 
+					abURI: contactPhoto.messageDisplay.photoInfo.cardDetails.book.URI,
+					card: contactPhoto.messageDisplay.photoInfo.cardDetails.card
+			});
 		} else {
 			contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('contactHasNoCard'));
 		}

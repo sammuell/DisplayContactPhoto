@@ -6,6 +6,8 @@ pref('extensions.contactPhoto.photoSize', 75);
 pref('extensions.contactPhoto.smallIconSize', 20);
 pref('extensions.contactPhoto.photoPosition', 'left');
 
+pref('extensions.contactPhoto.addressbook.size', 100);
+
 pref('extensions.contactPhoto.composePhotos.display', true);
 pref('extensions.contactPhoto.composePhotos.type', '3d');
 pref('extensions.contactPhoto.composePhotos.position', 'left');

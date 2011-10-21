@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2.3';
+contactPhoto.currentVersion = '1.2.4';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
@@ -404,7 +404,6 @@ contactPhoto.display = {
 				URI = URI+'?'+Math.floor(Math.random()*1000000000); // force to load photo every time
 				photoInfo.photoObject.style.listStyleImage = 'url("'+URI+'")';
 				photoInfo.photoObject.style.display = 'block';
-				
 				
 				contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
 				
@@ -1372,7 +1371,7 @@ contactPhoto.utils = {
 		var a = '';
 		var i = 0;
 		var j = 0;
-		for (x in what) {
+		for (var x in what) {
 			i++;
 
 			a = a+x+'  --  '+what[x]+'\n\n';

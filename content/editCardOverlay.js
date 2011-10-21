@@ -13,25 +13,22 @@ contactPhoto.editCard = {
 		 * -- with --
 		 *
 		 * <vbox id="GenericPhotoContainer">
-		 *  <hbox id="DCP-GenericUpperHbox">
-		 *	  <radio id="GenericPhotoType"/>
-		 *    <label id="DCP-LabelIsDefaultPhoto"/>
-		 *  </hbox>
-		 *  <hbox id="DCP-GenericLowerHbox">
-		 *	  <menulist id="GenericPhotoList"/>
+		 *  <hbox id="DCP-GenericPhotoHbox">
+		 *	  <radio id="GenericPhotoType" flex="1"/>
 		 *    <button id="DCP-ButtonSetDefaultPhoto"/>
 		 *  </hbox>
+		 *	<menulist id="GenericPhotoList"/>
+		 *  <label id="DCP-LabelIsDefaultPhoto" hidden="true"/>
          * </vbox>
 		 */
-		var upperHbox = document.getElementById('DCP-GenericUpperHbox');
-		var lowerHbox = document.getElementById('DCP-GenericLowerHbox');
+		var hbox = document.getElementById('DCP-GenericPhotoHbox');
 		
 		var genericPhotoType = document.getElementById('GenericPhotoType');
 		var genericPhotoList = document.getElementById('GenericPhotoList');
 		
-		upperHbox.insertBefore(genericPhotoType, upperHbox.firstChild);
-		lowerHbox.insertBefore(genericPhotoList, lowerHbox.firstChild);
+		hbox.insertBefore(genericPhotoType, hbox.firstChild);
 		
+		genericPhotoType.flex = 1;
 		
 		var menupopup = genericPhotoList.firstChild;
 		
@@ -96,7 +93,7 @@ contactPhoto.editCard = {
 	
 	// check if gravatar is enabled, else disable menuitem and assign default URI if gravatar has been selected
 	// select the correct default photo from DCP prefs
-	checkDCPDefaultPrefs: function() {
+	initEditCard: function() {
 		var genericPhotoList = document.getElementById('GenericPhotoList');
 		var DCPDefaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 		
@@ -118,13 +115,22 @@ contactPhoto.editCard = {
 			if (menupopup.childNodes[i].value == DCPDefaultPhoto) {
 				menupopup.childNodes[i].label = menupopup.childNodes[i].label +' '+ document.getElementById('DCP-LabelIsDefaultPhoto').value;
 				
-				if (document.getElementById("PhotoType").value == 'generic'
-						&& !genericPhotoList.value) {
+				if (!genericPhotoList.value) {
 					genericPhotoList.value = DCPDefaultPhoto;
 				}
 				break;
 			}
 		}
+		
+		// set editCardFocusPhotoTab = true in the opener window to automatically focus the photo tab
+		if (window.opener.contactPhoto.editCardFocusPhotoTab) {
+			window.opener.contactPhoto.editCardFocusPhotoTab = null; // reset the variable
+			
+			var abTabs = document.getElementById('abTabs');
+			var photoTabButton = document.getElementById('photoTabButton');
+			abTabs.selectedItem = photoTabButton;
+		}
+	
 	},
 }
 
@@ -132,4 +138,4 @@ RegisterLoadListener(contactPhoto.editCard.displayGenericPhotos);
 
 registerPhotoHandler('generic', contactPhoto.editCard.newGenericPhotoHandler);
 
-window.addEventListener('load', contactPhoto.editCard.checkDCPDefaultPrefs, false);
+window.addEventListener('load', contactPhoto.editCard.initEditCard, false);

@@ -13,17 +13,14 @@
 
 
 <vbox id="GenericPhotoContainer">
-	<hbox id="DCP-GenericUpperHbox">
+	<hbox id="DCP-GenericPhotoHbox" insertbefore="GenericPhotoList">
 		<!-- <radio id="GenericPhotoType"/> is moved here using javascript -->
 		
-		<!-- this <label> is only used to transfer the text. no need for a stringbundle for just one string -->
-		<label id="DCP-LabelIsDefaultPhoto" value="&editCard.defaultPhotoLabel;" hidden="true"/>
-	</hbox>
-	
-	<hbox id="DCP-GenericLowerHbox">
-		<!-- <menulist id="GenericPhotoList"/> is moved here using javascript -->
 		<button id="DCP-ButtonSetDefaultPhoto" oncommand="contactPhoto.editCard.setDefaultPhoto();" label="&editCard.setDefault;" accesskey="&editCard.setDefaultAccesskey;"/> 
 	</hbox>
+	
+	<!-- this <label> is only used to transfer the text. no need for a stringbundle for just one string -->
+	<label id="DCP-LabelIsDefaultPhoto" value="&editCard.defaultPhotoLabel;" hidden="true"/>
 </vbox>
 
 </overlay>
