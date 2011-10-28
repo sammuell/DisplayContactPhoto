@@ -5,7 +5,7 @@ contactPhoto.addressbook = {
 	DCPDisplayHandler: function(aCard, aImg) {
 		aImg.style.listStyleImage = ''; // clear the existing image
 		
-		var photoInfo = contactPhoto.photoForEmailAddress(aCard.primaryEmail);
+		var photoInfo = contactPhoto.photoForCard(aCard);
 		
 		photoInfo.size = contactPhoto.prefs.get('addressbook.size', 'int');
 		photoInfo.photoObject = aImg;

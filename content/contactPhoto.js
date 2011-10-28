@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2.4';
+contactPhoto.currentVersion = '1.2.5';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
@@ -42,33 +42,19 @@ contactPhoto.genericInit = function() {
 		
 		
 		// add add-on uninstall listener to remove thumbnail directory			
-		try {
-			// thunderbird >= 5
-			Components.utils.import("resource://gre/modules/AddonManager.jsm");
-			AddonManager.addAddonListener({
-				onUninstalling: function(addon) {
-					if (addon.id == 'contactPhoto@leven.ch') {
-						contactPhoto.cache.removeCacheDirectory();
-					}
-				},
-				onOperationCancelled: function(addon) {
-					if (addon.id == 'contactPhoto@leven.ch') {
-						contactPhoto.cache.checkDirectory();
-					}
-				}
-			});
-		} catch (ex) {
-			try {
-			// thunderbird < 5
-				var Application = Components.classes['@mozilla.org/steel/application;1'].getService(Components.interfaces.steelIApplication);
-				Application.extensions.get('contactPhoto@leven.ch').events.addListener('uninstall', function() {
+		Components.utils.import("resource://gre/modules/AddonManager.jsm");
+		AddonManager.addAddonListener({
+			onUninstalling: function(addon) {
+				if (addon.id == 'contactPhoto@leven.ch') {
 					contactPhoto.cache.removeCacheDirectory();
-					//contactPhoto.prefs.deletePreferences();
-				});
-			} catch (ex) {}
-		}
-		
-		
+				}
+			},
+			onOperationCancelled: function(addon) {
+				if (addon.id == 'contactPhoto@leven.ch') {
+					contactPhoto.cache.checkDirectory();
+				}
+			}
+		});
 	
 		// debug stuff
 		if (contactPhoto.debug > 0) { // auto-open javascript console
@@ -248,6 +234,13 @@ contactPhoto.display = {
 		}
 
 		// if we are here, then there is no photo nor face to show
+		
+		if (!isMessagePhoto) {
+			contactPhoto.display.defaultPhoto(photoInfo);
+			return;
+		}
+		
+		// this is only evaluated if isMessagePhoto=true
 		switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
 			case 'show':
 				contactPhoto.display.defaultPhoto(photoInfo);
@@ -420,56 +413,98 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 	
 	var photoInfo = contactPhoto.utils.newPhotoInfo(emailAddress);
 	
-	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool')) {
-		try {
-			var fileTypes = contactPhoto.prefs.get('imageExtensions', 'char').split(',');
+	photoInfo.cardDetails = contactPhoto.getCard(emailAddress);
 
-			var prefLocalPhotoDir = contactPhoto.prefs.get('photoDirectory', 'file');
-			var localPhotoDir = Components.classes["@mozilla.org/file/local;1"]
+	contactPhoto.getCardPhoto(photoInfo);
+	contactPhoto.getLocalPhoto(photoInfo);
+	
+	return photoInfo;
+}
+
+// photoForCard: get all existing photos for a given email address
+contactPhoto.photoForCard = function(aCard) {
+	var photoInfo = contactPhoto.utils.newPhotoInfo(aCard.primaryEmail);
+	
+	photoInfo.cardDetails = {
+		ab: null,
+		card: aCard,
+	};
+	
+	contactPhoto.getCardPhoto(photoInfo);
+	contactPhoto.getLocalPhoto(photoInfo);
+	
+	return photoInfo;
+}
+
+
+// getLocalPhotos: search the local folder for 
+contactPhoto.getLocalPhoto = function(photoInfo) {
+	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool') == false) return;
+	
+	// first collect all e-mail addresses in an array, then search the file system
+	addressList = [];
+	
+	var address = photoInfo.cardDetails.card.getProperty('PrimaryEmail', '');
+	if (address != '') addressList[addressList.length] = address;
+	
+	var address = photoInfo.cardDetails.card.getProperty('SecondEmail', '');
+	if (address != '') addressList[addressList.length] = address;
+	
+	var fileTypes = contactPhoto.prefs.get('imageExtensions', 'char').split(',');
+	var prefLocalPhotoDir = contactPhoto.prefs.get('photoDirectory', 'file');
+	
+	try {
+		var localPhotoDir = Components.classes["@mozilla.org/file/local;1"]
+							.createInstance(Components.interfaces.nsILocalFile);
+		localPhotoDir.initWithFile(prefLocalPhotoDir); // this might throw an error
+	
+		if (!localPhotoDir.exists()) return;
+	
+		// search through all addresses in the list until a match is found
+		while (addressList.length > 0) {
+			var address = addressList.shift().toLowerCase(); // get and remove the first element
+
+			// look for local photos
+			for (var i in fileTypes) {
+				var localPhoto = Components.classes["@mozilla.org/file/local;1"]
 									.createInstance(Components.interfaces.nsILocalFile);
-			localPhotoDir.initWithFile(prefLocalPhotoDir);
+				localPhoto.initWithFile(prefLocalPhotoDir);
+				localPhoto.append(address+'.'+fileTypes[i]);
 
-			if (localPhotoDir.exists()) { // if the specified directory exists
+				if (localPhoto.exists()) { // there is actually a file
+					photoInfo.hasLocalPhoto = true;
+					photoInfo.localPhotoURI = contactPhoto.utils.makeURI(localPhoto);
+					break;
+				}
+			}
 			
-				// look for local photos
+			// look for domain wildcard photos
+			if (contactPhoto.prefs.get('enableDomainWildcardPhotos', 'bool')) {
+				var domain = address.substr(address.indexOf('@'));
 				for (var i in fileTypes) {
-					var localPhoto = Components.classes["@mozilla.org/file/local;1"]
+					var wildcard = Components.classes["@mozilla.org/file/local;1"]
 										.createInstance(Components.interfaces.nsILocalFile);
-					localPhoto.initWithFile(prefLocalPhotoDir);
-					localPhoto.append(emailAddress+'.'+fileTypes[i]);
+					wildcard.initWithFile(prefLocalPhotoDir);
+					wildcard.append(domain+'.'+fileTypes[i]);
+					
 
-					if (localPhoto.exists()) { // there is actually a file
-						photoInfo.hasLocalPhoto = true;
-						photoInfo.localPhotoURI = contactPhoto.utils.makeURI(localPhoto);
+					if (wildcard.exists()) { // there is actually a file
+						photoInfo.hasDomainWildcard = true;
+						photoInfo.domainWildcardURI = contactPhoto.utils.makeURI(wildcard);
 						break;
 					}
 				}
-				
-				// look for domain wildcard photos
-				if (contactPhoto.prefs.get('enableDomainWildcardPhotos', 'bool')) {
-					var domain = emailAddress.substr(emailAddress.indexOf('@'));
-					for (var i in fileTypes) {
-						var wildcard = Components.classes["@mozilla.org/file/local;1"]
-											.createInstance(Components.interfaces.nsILocalFile);
-						wildcard.initWithFile(prefLocalPhotoDir);
-						wildcard.append(domain+'.'+fileTypes[i]);
-						
-
-						if (wildcard.exists()) { // there is actually a file
-							photoInfo.hasDomainWildcard = true;
-							photoInfo.domainWildcardURI = contactPhoto.utils.makeURI(wildcard);
-							break;
-						}
-					}
-				}
 			}
-		} catch (ex) {
-			if (contactPhoto.debug) alert('failed to load local photo, errmsg: '+ex);
+			
+			if (photoInfo.hasLocalPhoto || photoInfo.hasDomainWildcard) break;
 		}
+	} catch (ex) {
+		if (contactPhoto.debug) alert('failed to load local photo, errmsg: '+ex);
 	}
+}
 
-	photoInfo.cardDetails = contactPhoto.getCard(emailAddress);
-
+// getCardPhoto: get the photo information stored in a card
+contactPhoto.getCardPhoto = function(photoInfo) {
 	if (photoInfo.cardDetails && photoInfo.cardDetails.card) {
 
 		var photoType = photoInfo.cardDetails.card.getProperty('PhotoType', null);
@@ -491,8 +526,6 @@ contactPhoto.photoForEmailAddress = function(emailAddress) {
 			}
 		}
 	}
-	
-	return photoInfo;
 }
 
 // getCard: searches the first card match in all address books for a given email address

@@ -1,4 +1,4 @@
-<!ENTITY window.title "Исеци контактну слику">
+<!ENTITY window.title "Исеци фотографију контакта">
 <!ENTITY removeselection.label "Обриши изабрано">
 <!ENTITY squareselection.label "Исправан одабир">
-<!ENTITY donotcrop.description "Не изабирај ништа за приказ целе слике.">
+<!ENTITY donotcrop.description "Не бирај ништа за приказ целе фотографије.">
