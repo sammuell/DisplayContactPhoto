@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
 contactPhoto.currentVersion = '1.2.5';
-contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+contactPhoto.debug = 1; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -270,6 +270,7 @@ contactPhoto.display = {
 						.get("ProfD", Components.interfaces.nsIFile);
 		origFile.append('Photos');
 		origFile.append(photoInfo.photoName);
+		
 		var srcURI = contactPhoto.utils.makeURI(origFile);
 		contactPhoto.display.checkPhoto(srcURI, photoInfo);
 	},
@@ -444,12 +445,16 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
 	// first collect all e-mail addresses in an array, then search the file system
 	addressList = [];
 	
-	var address = photoInfo.cardDetails.card.getProperty('PrimaryEmail', '');
-	if (address != '') addressList[addressList.length] = address;
-	
-	var address = photoInfo.cardDetails.card.getProperty('SecondEmail', '');
-	if (address != '') addressList[addressList.length] = address;
-	
+	// get the addresses from the card if the contact has one
+	if (photoInfo.cardDetails.card) {
+		var address = photoInfo.cardDetails.card.getProperty('PrimaryEmail', '');
+		if (address != '') addressList[addressList.length] = address;
+		
+		var address = photoInfo.cardDetails.card.getProperty('SecondEmail', '');
+		if (address != '') addressList[addressList.length] = address;
+	} else if (photoInfo.emailAddress) {
+		addressList[addressList.length] = photoInfo.emailAddress;
+	}
 	var fileTypes = contactPhoto.prefs.get('imageExtensions', 'char').split(',');
 	var prefLocalPhotoDir = contactPhoto.prefs.get('photoDirectory', 'file');
 	
@@ -507,22 +512,28 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
 contactPhoto.getCardPhoto = function(photoInfo) {
 	if (photoInfo.cardDetails && photoInfo.cardDetails.card) {
 
-		var photoType = photoInfo.cardDetails.card.getProperty('PhotoType', null);
+		var photoType = photoInfo.cardDetails.card.getProperty('PhotoType', '');
 
-		if (photoType != null) {
+		if (photoType != '') {
 			if (photoType == 'generic') {
-				var photoURI = photoInfo.cardDetails.card.getProperty('PhotoURI', null);
+				var photoURI = photoInfo.cardDetails.card.getProperty('PhotoURI', '');
 				var DCPDefaultPhotoURI = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 				
-				if (photoURI != null && photoURI != '' && photoURI != DCPDefaultPhotoURI) {
+				//alert('URI: -'+photoURI+'-\n'+DCPDefaultPhotoURI);
+				if (photoURI != '' && photoURI != 'null' && photoURI != DCPDefaultPhotoURI) {
+					//alert('is true')
 					photoInfo.hasGenericPhoto = true;
 					photoInfo.hasPhoto = true;
 					photoInfo.genericPhotoURI = photoURI;
 				}
 
 			} else { // there is a contact photo
-				photoInfo.hasPhoto = true;
-				photoInfo.photoName = photoInfo.cardDetails.card.getProperty('PhotoName', null);
+				var photoName = photoInfo.cardDetails.card.getProperty('PhotoName', '');
+				
+				if (photoName != '') {
+					photoInfo.hasPhoto = true;
+					photoInfo.photoName = photoName;
+				}
 			}
 		}
 	}
@@ -1306,6 +1317,7 @@ contactPhoto.utils = {
 			const folderFlags = Components.interfaces.nsMsgFolderFlags;
 			var currentFolder = gMessageDisplay.displayedMessage.folder;
 			while (currentFolder) {
+				/*
 				if (contactPhoto.prefs.get('folderDebug', 'bool')) {
 					var msg = 'Folder name: '+currentFolder.prettiestName;
 					msg += '\n------------------------------';
@@ -1314,6 +1326,7 @@ contactPhoto.utils = {
 					msg += '\nFlag Sent: '+(currentFolder.flags & folderFlags.SentMail);
 					alert(msg)
 				}
+				*/
 				if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) return true;
 				currentFolder = currentFolder.parent;
 			}

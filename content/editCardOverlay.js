@@ -74,8 +74,8 @@ contactPhoto.editCard = {
 
 		onSave: function(aCard, aDocument) {
 			// If we had the photo saved locally, clear it.
-			removePhoto(aCard.getProperty('PhotoName', null));
-			aCard.setProperty('PhotoName', null);
+			removePhoto(aCard.getProperty('PhotoName', ''));
+			aCard.setProperty('PhotoName', '');
 			aCard.setProperty('PhotoType', 'generic');
 			
 			// do not save the URI if it is the default photo
@@ -83,7 +83,8 @@ contactPhoto.editCard = {
 			
 			var newURI = genericPhotoList.value;
 			if (genericPhotoList.value == contactPhoto.prefs.get('defaultGenericPhoto', 'char')) {
-				newURI = null;
+				// if the default photo has been selected, assign an empty URI to fall back to the current default URI automatically
+				newURI = '';
 			}
 			
 			aCard.setProperty('PhotoURI', newURI);
