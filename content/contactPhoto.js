@@ -13,7 +13,8 @@ contactPhoto.genericInit = function() {
 	window.setTimeout(function() {
 		// do some version first-time run stuff
 		if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
-		
+			contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
+			
 			// remove some outdated preferences
 			var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon', 'effectCornerRadius'];
 			for (var i in prefsToRemove) {
