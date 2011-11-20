@@ -80,7 +80,6 @@ contactPhoto.editCard = {
 			
 			// do not save the URI if it is the default photo
 			var genericPhotoList = document.getElementById('GenericPhotoList');
-			
 			var newURI = genericPhotoList.value;
 			if (genericPhotoList.value == contactPhoto.prefs.get('defaultGenericPhoto', 'char')) {
 				// if the default photo has been selected, assign an empty URI to fall back to the current default URI automatically

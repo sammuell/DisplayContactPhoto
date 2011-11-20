@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2.5';
-contactPhoto.debug = 1; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+contactPhoto.currentVersion = '1.2.5b2';
+contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
@@ -36,7 +36,8 @@ contactPhoto.genericInit = function() {
 					.openTab("contentTab", {contentPage: 'http://dicop.sourceforge.net/just_installed.php?version='+contactPhoto.currentVersion});
 			}
 			
-			contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
+			// sanitize card values
+			contactPhoto.utils.sanitizeCards();
 		}
 
 		
@@ -368,7 +369,9 @@ contactPhoto.display = {
 			// prune photos older than a week, they will be regenerated when they are displayed the next time
 			var oneWeekAgo = new Date().getTime() - 604800000; // 1000 * 3600 * 24 * 7;
 			if (thumbnailFile.lastModifiedTime < oneWeekAgo) {
-				thumbnailFile.remove(false);
+				try {
+					thumbnailFile.remove(false);
+				} catch (e) {}
 			}
 
 		} else { // generate it			
@@ -443,7 +446,7 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
 	if (contactPhoto.prefs.get('enableLocalPhotos', 'bool') == false) return;
 	
 	// first collect all e-mail addresses in an array, then search the file system
-	addressList = [];
+	var addressList = [];
 	
 	// get the addresses from the card if the contact has one
 	if (photoInfo.cardDetails.card) {
@@ -1341,6 +1344,47 @@ contactPhoto.utils = {
 								.getService(Components.interfaces.nsIPromptService);
 		
 		prompts.alert(null, alertTitle, text);
+	},
+	
+	// customAlert: sanitize photo information introduced by bug 702137
+	// replace 'null' string with an empty string ''
+	sanitizeCards: function() {
+	
+	    let abManager = Components.classes["@mozilla.org/abmanager;1"]  
+                              .getService(Components.interfaces.nsIAbManager);  
+      
+		let allAddressBooks = abManager.directories;   
+		  
+		while (allAddressBooks.hasMoreElements()) {
+			let addressBook = allAddressBooks.getNext()
+								.QueryInterface(Components.interfaces.nsIAbDirectory);
+			if (addressBook instanceof Components.interfaces.nsIAbDirectory && !addressBook.isRemote) {
+				let childCards = addressBook.childCards;
+				while (childCards.hasMoreElements()) {
+					var aCard = childCards.getNext();
+					
+					if (aCard instanceof Components.interfaces.nsIAbCard) {
+						var modified = false;
+						
+						var checkPhotoName = aCard.getProperty('PhotoName', '');
+						if (checkPhotoName == 'null' || checkPhotoName == null) {
+							modified = true;
+							aCard.setProperty('PhotoName', '');
+						}
+						
+						var checkPhotoURI = aCard.getProperty('PhotoURI', '');
+						if (checkPhotoURI == 'null' || checkPhotoURI == null) {
+							modified = true;
+							aCard.setProperty('PhotoURI', '');
+						}
+						
+						if (modified) {
+							addressBook.modifyCard(aCard);
+						}
+					}
+				}
+			}		
+		}
 	},
 
 	preferencesWindow: null,

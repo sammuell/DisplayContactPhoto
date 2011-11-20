@@ -9,8 +9,16 @@ contactPhoto.messageDisplay = {
 		// clear the existing image
 		contactPhoto.messageDisplay.imgObj.style.listStyleImage = '';
 		
-		var headerToParse = (contactPhoto.utils.isSentMessage())? currentHeaderData['to'].headerValue: currentHeaderData['from'].headerValue;
-
+		
+		var headerToParse;
+		if (contactPhoto.utils.isSentMessage()) {
+			// check if header exists at all - it might not exist if the message is a draft
+			headerToParse = (currentHeaderData['to'])? currentHeaderData['to'].headerValue: '';
+		} else {
+			headerToParse = (currentHeaderData['from'])? currentHeaderData['from'].headerValue: '';
+		}
+		
+		
 		var hdrAddresses = {};
 		var numAddresses = 0;
 		var msgHeaderParser = Components.classes["@mozilla.org/messenger/headerparser;1"]
@@ -27,6 +35,7 @@ contactPhoto.messageDisplay = {
 				if (photoFace && photoFace.length > 0) {
 					contactPhoto.messageDisplay.photoInfo.hasFace = true;
 					contactPhoto.messageDisplay.photoInfo.faceURI = 'data:image/png;base64,'+encodeURIComponent(photoFace);
+					
 					if (!gViewAllHeaders) delete currentHeaderData['face']; //prevent header to show up in normal mode
 				}
 			}
@@ -213,11 +222,11 @@ contactPhoto.messageDisplay = {
 	
 	messageListener: {
 		onStartHeaders: function() {},
-		onEndHeaders: function() {contactPhoto.messageDisplay.getPhoto();},
-		onEndAttachments: function() {}/*, 
-		onBeforeShowHeaderPane: function() { // seamonkey does not call onBeforeShowHeaderPane anymore
+		onEndHeaders: function() {},
+		onEndAttachments: function() {}, 
+		onBeforeShowHeaderPane: function() {
 			contactPhoto.messageDisplay.getPhoto();
-		}*/
+		}
 	},
 
 	onLoad: function() {
