@@ -1,11 +1,16 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.2.5';
+contactPhoto.currentVersion = '1.2.6';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
-
+/*
+var dump = function(msg) {
+	var Application = Components.classes["@mozilla.org/steel/application;1"].getService(Components.interfaces.steelIApplication);
+	Application.console.log(JSON.stringify(msg));
+}
+*/
 contactPhoto.genericInit = function() {
 	contactPhoto.prefs.init(); // initialize preferences
-	
+
 	// load localized javascript variables
 	contactPhoto.localizedJS = document.getElementById('DCP-LocalizedJS');
 	
@@ -900,7 +905,7 @@ contactPhoto.resizer = {
 		},
 
 		// save the canvas data to the file
-		persist.saveURI(source, null, null, null, null, contactPhoto.resizer.currentImage.dest);
+		persist.saveURI(source, null, null, null, null, contactPhoto.resizer.currentImage.dest, null);
 
 	}
 }
