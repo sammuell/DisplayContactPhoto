@@ -6,7 +6,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>contactPhoto@leven.ch</em:id>
 		<em:name>Display Contact Photo</em:name>
-		<em:version>1.2.5</em:version> <!-- ALSO CHANGE updateInfoURL -->
+		<em:version>1.2.6</em:version> <!-- ALSO CHANGE updateInfoURL -->
 		<em:type>2</em:type>
 		
 		<em:creator>Samuel Muller</em:creator>
