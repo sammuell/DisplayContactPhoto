@@ -5,11 +5,18 @@
   padding: 0px;
 }
 
-#photo  { /* photo in edit card dialog */
-  box-shadow: #444 2px 2px 5px;
+/* photo in edit card dialog */
+#photo  { 
+  box-shadow: #888 1px 1px 4px;
 }
 
-#DCP-PhotoStack { /* canvas in compose window */
+/* canvas in compose window */
+#DCP-PhotoStack { 
+
+}
+
+/* photo in address book */
+#cvPhoto {
 
 }
 
