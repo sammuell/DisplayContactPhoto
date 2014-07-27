@@ -1,12 +1,12 @@
 ﻿@import url("chrome://messenger/skin/");
 
 #DCP-Box {
-	margin: 2px;
-	padding: 0px;
+  margin: 2px;
+  padding: 0px;
 }
 
 #photo  { /* photo in edit card dialog */
-	box-shadow: #444 2px 2px 5px;
+  box-shadow: #444 2px 2px 5px;
 }
 
 #DCP-PhotoStack { /* canvas in compose window */
@@ -14,29 +14,29 @@
 }
 
 #DCP-PhotoStackContainer {
-	min-width: 50px;
-	max-width: 300px;
+  min-width: 50px;
+  max-width: 300px;
 }
 #DCP-VerticalSizer { /* sizer in compose window to adjust stack width */
-	width: 2px;
-	background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
-	margin: 2px 0px;
+  width: 2px;
+  background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
+  margin: 2px 0px;
 }
 
 box.DCP-ComposeImageBox {
-	margin: 0px;
-	margin: 0 2px;
+  margin: 0px;
+  margin: 0 2px;
 }
 box.DCP-ComposeImageBox  > image {
-	display: block;
+  display: block;
 }
 
 image.moreinfo { /* panel providing explanations in prefwindow */
-	cursor: pointer;
-	width: 16px;
-	height: 16px;
-	list-style-image: url("chrome://global/skin/icons/question-16.png");
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  list-style-image: url("chrome://global/skin/icons/question-16.png");
 }
 panel.moreinfo {
-	width: 350px;
+  width: 350px;
 }
