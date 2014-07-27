@@ -1,7 +1,7 @@
 function initPreferences() {
   updateColorPicker('backgroundColorPicker', 'backgroundColorPreview');
   updateColorPicker('borderColorPicker', 'borderColorPreview');
-  
+
   // display path of photo directory
   // automatic setting and getting of this pref does not work...
   var dirTextbox = document.getElementById('enableLocalPhotosTextbox');
@@ -9,13 +9,13 @@ function initPreferences() {
   if (directory && directory.path) {
     dirTextbox.value = directory.path;
   }
-  
+
   enableLocalOptions();
   enableFacesOptions();
   enableBorderTypes();
   enableBackgroundColor();
   enableComposePhotos();
-  
+
   populateDefaultGenericPhotoList();
   enableGravatar();
 }
@@ -36,7 +36,8 @@ function updateColorPicker(pickerID, textboxID) {
 
   if (hexCode.length == 7) {
     picker.color = hexCode;
-  } else {
+  }
+  else {
     //picker.color = 'transparent';
   }
 }
@@ -56,7 +57,8 @@ function setColor(pickerID, prefName, color) {
 function enableFacesOptions() {
   if (document.getElementById('enableFacesCheckbox').checked) {
     document.getElementById('enableFacesRadiogroup').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('enableFacesRadiogroup').disabled = true;
   }
 }
@@ -66,7 +68,8 @@ function enableLocalOptions() {
     document.getElementById('enableLocalPhotosButton').disabled = false;
     document.getElementById('enableLocalPhotosTextbox').disabled = false;
     document.getElementById('checkboxEnableWildcards').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('enableLocalPhotosButton').disabled = true;
     document.getElementById('enableLocalPhotosTextbox').disabled = true;
     document.getElementById('checkboxEnableWildcards').disabled = true;
@@ -77,7 +80,8 @@ function enableLocalOptions() {
 function enableOpenLocalFolder() {
   if (document.getElementById('enableLocalPhotosTextbox').value == '') {
     document.getElementById('openLocalFolderButton').disabled = true;
-  } else {
+  }
+  else {
     document.getElementById('openLocalFolderButton').disabled = false;
   }
 }
@@ -89,7 +93,8 @@ function enableBorderTypes() {
     document.getElementById('borderColorPicker').disabled = false;
     document.getElementById('colorDefaultBlack').disabled = false;
     document.getElementById('colorDefaultWhite').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('borderTypes').disabled = true;
     document.getElementById('borderColorPreview').disabled = true;
     document.getElementById('borderColorPicker').disabled = true;
@@ -102,7 +107,8 @@ function enableBackgroundColor() {
   if (document.getElementById('enableBackgroundColorCheckbox').checked) {
     document.getElementById('backgroundColorPicker').disabled = false;
     document.getElementById('backgroundColorPreview').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('backgroundColorPicker').disabled = true;
     document.getElementById('backgroundColorPreview').disabled = true;
   }
@@ -111,7 +117,8 @@ function enableBackgroundColor() {
 function enableGlossOptions() {
   if (document.getElementById('checkboxEnableGloss').checked) {
     document.getElementById('effectGlossTypes').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('effectGlossTypes').disabled = true;
   }
 }
@@ -120,7 +127,8 @@ function enableComposePhotos() {
   if (document.getElementById('enableComposeWindowPhotos').checked) {
     document.getElementById('composePhotoPosition').disabled = false;
     document.getElementById('listComposeWindowStyle').disabled = false;
-  } else {
+  }
+  else {
     document.getElementById('composePhotoPosition').disabled = true;
     document.getElementById('listComposeWindowStyle').disabled = true;
   }
@@ -140,7 +148,8 @@ function selectPhotoDirectory() {
             .createInstance(Components.interfaces.nsILocalFile);
     initDir.initWithPath(dirTextbox.value);
     picker.displayDirectory = initDir;
-  } catch (ex) { }
+  }
+  catch (ex) { }
 
   if (picker.show() == nsIFilePicker.returnOK){
     var directory = picker.file;
@@ -160,7 +169,8 @@ function openPhotoDirectory() {
     var localDir = Components.classes["@mozilla.org/file/local;1"].getService(Components.interfaces.nsILocalFile);
     localDir.initWithPath(dirTextbox.value);
     localDir.launch();
-  } catch (ex) {
+  }
+  catch (ex) {
     contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('directoryOpenError'));
   }
 }
@@ -169,7 +179,8 @@ function clearCache() {
   // this code needs to be reworked
   if (contactPhoto.cache.clear()) {
     contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('cacheCleared'));
-  } else {
+  }
+  else {
     contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('cacheClearedError'));
   }
 }
@@ -178,35 +189,36 @@ function populateDefaultGenericPhotoList() {
   var genericPhotoList = document.getElementById('listDefaultPhoto');
 
   var menupopup = genericPhotoList.firstChild;
-  
+
   // copy all entries from the template list into the real list
   var templateList = document.getElementById('DCP-GenericPhotoListTemplate');
   var templateMenupopup = templateList.firstChild;
-  
+
   for (var i=0; i<templateMenupopup.childNodes.length; i++) {
     var clone = templateMenupopup.childNodes[i].cloneNode(true);
     menupopup.appendChild(clone);
   }
-  
+
   // update the list
   document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();
 }
 
 function enableGravatar() {
   var menuitemGravatar = document.getElementById('DCP-GenericPhotoGravatar');
-  
+
   if (document.getElementById('checkboxEnableGravatar').checked) {
     menuitemGravatar.disabled = false;
     document.getElementById('defaultGravatar').disabled = false;
-    
-  } else {
+
+  }
+  else {
     // if gravatar is the current default photo when it gets disabled, change the default photo
     if (menuitemGravatar.selected) {
       var menuitemDCP = document.getElementById('DCP-GenericPhotoDCP');
       contactPhoto.prefs.set('defaultGenericPhoto', menuitemDCP.value, 'char');
       document.getElementById('extensions.contactPhoto.defaultGenericPhoto').updateElements();
     }
-    
+
     menuitemGravatar.disabled = true;
     document.getElementById('defaultGravatar').disabled = true;
   }
@@ -225,7 +237,8 @@ function openURL(aURL) {
     var protocolSvc = Components.classes['@mozilla.org/uriloader/external-protocol-service;1'].getService(Components.interfaces.nsIExternalProtocolService);
     if (!protocolSvc.isExposedProtocol(uri.scheme)) {
         protocolSvc.loadUrl(uri);
-    } else {
+    }
+    else {
         var loadgroup = Components.classes['@mozilla.org/network/load-group;1'].createInstance(Components.interfaces.nsILoadGroup);
         var appstartup = Components.classes['@mozilla.org/toolkit/app-startup;1'].getService(Components.interfaces.nsIAppStartup);
         var loadListener = {onStartRequest: function ll_start(aRequest, aContext) {appstartup.enterLastWindowClosingSurvivalArea();}, onStopRequest: function ll_stop(aRequest, aContext, aStatusCode) {appstartup.exitLastWindowClosingSurvivalArea();}, QueryInterface: function ll_QI(iid) {if (iid.equals(Components.interfaces.nsISupports) || iid.equals(Components.interfaces.nsIRequestObserver) || iid.equals(Components.interfaces.nsISupportsWeakReference)) {return this;}throw Components.results.NS_ERROR_NO_INTERFACE;}};

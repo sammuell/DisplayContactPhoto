@@ -4,7 +4,7 @@
 
 <!DOCTYPE window SYSTEM "chrome://contactPhoto/locale/contactPhotoOverlay.dtd">
 
-<overlay id="DCP-ContactPhoto" 
+<overlay id="DCP-ContactPhoto"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   xmlns:html="http://www.w3.org/1999/xhtml">
 
@@ -22,7 +22,7 @@
     <menuitem label="&contextmenu.prefs;" id="DCP-ContextmenuPrefs"
       oncommand="contactPhoto.utils.openPreferencesWindow();"/>
   </menupopup >
-  
+
   <hbox id="DCP-Box" align="center" pack="center" context="DCP-Contextmenu">
     <image id="DCP-Image" style="display: none;" tooltiptext="&photo.tooltip;" validate="always"/>
   </hbox>

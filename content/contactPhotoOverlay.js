@@ -4,21 +4,22 @@ contactPhoto.messageDisplay = {
   photoInfo: null,
   cardWindow: null,
   imgObj: null,
-  
+
   getPhoto: function() {
     // clear the existing image
     contactPhoto.messageDisplay.imgObj.style.listStyleImage = '';
-    
-    
+
+
     var headerToParse;
     if (contactPhoto.utils.isSentMessage()) {
       // check if header exists at all - it might not exist if the message is a draft
       headerToParse = (currentHeaderData['to'])? currentHeaderData['to'].headerValue: '';
-    } else {
+    }
+    else {
       headerToParse = (currentHeaderData['from'])? currentHeaderData['from'].headerValue: '';
     }
-    
-    
+
+
     var hdrAddresses = {};
     var numAddresses = 0;
     var msgHeaderParser = Components.classes["@mozilla.org/messenger/headerparser;1"]
@@ -28,65 +29,68 @@ contactPhoto.messageDisplay = {
     if (numAddresses == 1) {
       contactPhoto.messageDisplay.photoInfo = contactPhoto.photoForEmailAddress(hdrAddresses.value[0]);
       contactPhoto.messageDisplay.photoInfo.size = contactPhoto.prefs.get('photoSize', 'int');
-      
+
       if (contactPhoto.prefs.get('enableFaces', 'bool')) {
         //var photoFace = gMessageDisplay.displayedMessage.getStringProperty('face');
         var photoFace =  currentHeaderData['face']? currentHeaderData['face'].headerValue: null;
         if (photoFace && photoFace.length > 0) {
           contactPhoto.messageDisplay.photoInfo.hasFace = true;
           contactPhoto.messageDisplay.photoInfo.faceURI = 'data:image/png;base64,'+encodeURIComponent(photoFace);
-          
+
           if (!gViewAllHeaders) delete currentHeaderData['face']; //prevent header to show up in normal mode
         }
       }
-      
+
       contactPhoto.messageDisplay.photoInfo.photoObject = contactPhoto.messageDisplay.imgObj;
       contactPhoto.display.logic(contactPhoto.messageDisplay.photoInfo, true);
-      
-    } else { // multiple senders/receivers
+
+    }
+    // multiple senders/receivers
+    else {
       contactPhoto.messageDisplay.photoInfo = contactPhoto.utils.newPhotoInfo();
       contactPhoto.messageDisplay.photoInfo.hasGenericPhoto = true;
       contactPhoto.messageDisplay.photoInfo.hasPhoto = true;
       contactPhoto.messageDisplay.photoInfo.genericPhotoURI = 'chrome://contactPhoto/skin/genericIcons/multiple-persons.png';
     }
-    
+
     contactPhoto.messageDisplay.photoInfo.size = contactPhoto.prefs.get('photoSize', 'int');
     contactPhoto.messageDisplay.photoInfo.photoObject = contactPhoto.messageDisplay.imgObj;
-    
+
     contactPhoto.display.logic(contactPhoto.messageDisplay.photoInfo, true);
   },
-  
+
   editPhoto: function(event) {
     if (event.button != 0) return; // do nothing if not left click
 
-    if (contactPhoto.messageDisplay.photoInfo 
+    if (contactPhoto.messageDisplay.photoInfo
         && contactPhoto.messageDisplay.photoInfo.cardDetails
         && contactPhoto.messageDisplay.photoInfo.cardDetails.card) {
-      
+
       window.contactPhoto.editCardFocusPhotoTab = true;
       var cardWindow = window.openDialog('chrome://messenger/content/addressbook/abEditCardDialog.xul',
         'DCP-EditCard',
         'chrome,modal,resizable=no,centerscreen',
-        { 
+        {
           abURI: contactPhoto.messageDisplay.photoInfo.cardDetails.book.URI,
           card: contactPhoto.messageDisplay.photoInfo.cardDetails.card
       });
-    } else {
+    }
+    else {
       contactPhoto.utils.customAlert(contactPhoto.localizedJS.getString('contactHasNoCard'));
     }
 
   },
-  
+
   openCropWindow: function() {
     var photoURI = null;
-    
+
     var origFile = Components.classes["@mozilla.org/file/directory_service;1"]
               .getService(Components.interfaces.nsIProperties)
               .get("ProfD", Components.interfaces.nsIFile);
     origFile.append('Photos');
     origFile.append(contactPhoto.messageDisplay.photoInfo.photoName);
     photoURI = contactPhoto.utils.makeURI(origFile);
-    
+
     // the crop option should not be available if there is no card
     var card = contactPhoto.messageDisplay.photoInfo.cardDetails.card;
 
@@ -94,7 +98,7 @@ contactPhoto.messageDisplay = {
     var cropH = card.getProperty('CropPhotoHeight', '');
     var cropL = card.getProperty('CropPhotoLeft', '');
     var cropT = card.getProperty('CropPhotoTop', '');
-    
+
     // do not set any cropping area if the photo has been changed
     if (card.getProperty('CropPhotoName', '') != contactPhoto.messageDisplay.photoInfo.photoName) {
       cropW = '';
@@ -110,7 +114,7 @@ contactPhoto.messageDisplay = {
       left: cropL,
       top: cropT,
     };
-    
+
     var returnValues = {
       cropAreaChanged: false
     };
@@ -124,20 +128,21 @@ contactPhoto.messageDisplay = {
         card.setProperty('CropPhotoHeight', '');
         card.setProperty('CropPhotoLeft', '');
         card.setProperty('CropPhotoTop', '');
-      } else {
+      }
+      else {
         card.setProperty('CropPhotoName', contactPhoto.messageDisplay.photoInfo.photoName);
         card.setProperty('CropPhotoWidth', returnValues.width);
         card.setProperty('CropPhotoHeight', returnValues.height);
         card.setProperty('CropPhotoLeft', returnValues.left);
         card.setProperty('CropPhotoTop', returnValues.top);
       }
-      
+
       // remove thumbnail images and update the card in the address book (which triggers an update of the photo)
       contactPhoto.cache.removeThumbnail(contactPhoto.messageDisplay.photoInfo.photoName);
       contactPhoto.messageDisplay.photoInfo.cardDetails.book.modifyCard(card);
     }
   },
-  
+
   setPhotoPosition: function() {
     var photoPos = contactPhoto.prefs.get('photoPosition', 'char');
     var photoBox = document.getElementById('DCP-Box');
@@ -146,12 +151,13 @@ contactPhoto.messageDisplay = {
     if (photoPos == 'left') { // default is left side
       parent.removeChild(photoBox);
       parent.insertBefore(photoBox, parent.firstChild);
-    } else { // display on the right side
+    }
+    else { // display on the right side
       parent.removeChild(photoBox);
       parent.appendChild(photoBox);
     }
   },
-  
+
   setPhotoSize: function() {
     var photoSize = contactPhoto.prefs.get('photoSize', 'int');
     document.getElementById('DCP-Box').style.minWidth = photoSize+'px';
@@ -159,13 +165,13 @@ contactPhoto.messageDisplay = {
     contactPhoto.messageDisplay.imgObj.style.maxWidth = photoSize+'px';
     contactPhoto.messageDisplay.imgObj.style.maxHeight = photoSize+'px';
   },
-  
+
   prefObserver: {
     register: function() {
       contactPhoto.prefs.branch.QueryInterface(Components.interfaces.nsIPrefBranch2);
       contactPhoto.prefs.branch.addObserver('', contactPhoto.messageDisplay.prefObserver, false);
     },
-    
+
     unregister: function() {
       if (contactPhoto.prefs.branch) {
         contactPhoto.prefs.branch.removeObserver('', contactPhoto.messageDisplay.prefObserver);
@@ -219,11 +225,11 @@ contactPhoto.messageDisplay = {
       }
     }
   },
-  
+
   messageListener: {
     onStartHeaders: function() {},
     onEndHeaders: function() {},
-    onEndAttachments: function() {}, 
+    onEndAttachments: function() {},
     onBeforeShowHeaderPane: function() {
       contactPhoto.messageDisplay.getPhoto();
     }
@@ -242,7 +248,7 @@ contactPhoto.messageDisplay = {
     contactPhoto.messageDisplay.prefObserver.register();
 
     // check if all custom headers are present
-    contactPhoto.prefs.checkCustomHeaders();  
+    contactPhoto.prefs.checkCustomHeaders();
 
     // Check if thumbnailDirectory exists, else create it
     contactPhoto.cache.checkDirectory();
@@ -263,7 +269,7 @@ contactPhoto.messageDisplay = {
 
     window.addEventListener('unload', contactPhoto.messageDisplay.onUnload, false);
   },
-  
+
   onUnload: function() {
     contactPhoto.messageDisplay.imgObj.removeEventListener('click', contactPhoto.messageDisplay.editPhoto, false);
 

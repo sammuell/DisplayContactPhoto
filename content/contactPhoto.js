@@ -13,26 +13,27 @@ contactPhoto.genericInit = function() {
 
   // load localized javascript variables
   contactPhoto.localizedJS = document.getElementById('DCP-LocalizedJS');
-  
+
   // delay init stuff to improve startup time
   window.setTimeout(function() {
     // do some version first-time run stuff
     if (contactPhoto.prefs.get('currentVersion', 'char') != contactPhoto.currentVersion) {
       contactPhoto.prefs.set('currentVersion', contactPhoto.currentVersion, 'char');
-      
+
       // remove some outdated preferences
       var prefsToRemove = ['bgColor', 'maxSize', 'photoBoxSize', 'maxSizeUnit', 'createThumbnails', 'defaultGenericIcon', 'effectCornerRadius'];
       for (var i in prefsToRemove) {
         try {
           contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
-        } catch (e) {
+        }
+        catch (e) {
           //if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
         }
       }
-      
+
       contactPhoto.cache.clear();
-      
-      
+
+
       // open support website in a new tab
       if (contactPhoto.prefs.get('openWebsiteAfterInstall', 'bool')) {
         Components.classes['@mozilla.org/appshell/window-mediator;1']
@@ -41,14 +42,14 @@ contactPhoto.genericInit = function() {
           .document.getElementById("tabmail")
           .openTab("contentTab", {contentPage: 'http://dicop.sourceforge.net/just_installed.php?version='+contactPhoto.currentVersion});
       }
-      
+
       // sanitize card values
       contactPhoto.utils.sanitizeCards();
     }
 
-    
-    
-    // add add-on uninstall listener to remove thumbnail directory      
+
+
+    // add add-on uninstall listener to remove thumbnail directory
     Components.utils.import("resource://gre/modules/AddonManager.jsm");
     AddonManager.addAddonListener({
       onUninstalling: function(addon) {
@@ -62,14 +63,14 @@ contactPhoto.genericInit = function() {
         }
       }
     });
-  
+
     // debug stuff
     if (contactPhoto.debug > 0) { // auto-open javascript console
       //Application.console.open();
     }
-  
+
   }, 100);
-  
+
 }
 window.addEventListener('load', contactPhoto.genericInit, false);
 
@@ -88,24 +89,26 @@ contactPhoto.prefs = {
 
   get: function(prefName, type) {
     try {
-    switch (type) {
-      case 'bool':
-        return contactPhoto.prefs.branch.getBoolPref(prefName);
+      switch (type) {
+        case 'bool':
+          return contactPhoto.prefs.branch.getBoolPref(prefName);
 
-      case 'int':
-        return parseInt(contactPhoto.prefs.branch.getIntPref(prefName));
+        case 'int':
+          return parseInt(contactPhoto.prefs.branch.getIntPref(prefName));
 
-      case 'char':
-        return contactPhoto.prefs.branch.getCharPref(prefName);
+        case 'char':
+          return contactPhoto.prefs.branch.getCharPref(prefName);
 
-      case 'file':
-        try {
-          return contactPhoto.prefs.branch.getComplexValue(prefName, Components.interfaces.nsILocalFile);
-        } catch(e) {
-          if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
-        }
+        case 'file':
+          try {
+            return contactPhoto.prefs.branch.getComplexValue(prefName, Components.interfaces.nsILocalFile);
+          }
+          catch(e) {
+            if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
+          }
+      }
     }
-    } catch (e){
+    catch (e){
       if (contactPhoto.debug) alert('pref.get() failed: '+prefName)
     }
   },
@@ -115,21 +118,21 @@ contactPhoto.prefs = {
       case 'bool':
         contactPhoto.prefs.branch.setBoolPref(prefName, prefValue);
       break;
-      
+
       case 'int':
         contactPhoto.prefs.branch.setIntPref(prefName, prefValue);
       break;
-      
+
       case 'char':
         contactPhoto.prefs.branch.setCharPref(prefName, prefValue);
       break;
-      
+
       case 'file':
         contactPhoto.prefs.branch.setComplexValue(prefName, Components.interfaces.nsILocalFile, prefValue);
       break;
     }
   },
-  
+
   // delete all preferences
   deletePreferences: function() {
     contactPhoto.prefs.branch.deleteBranch('');
@@ -176,7 +179,7 @@ contactPhoto.style = {
       el.className = el.className.replace(reg, ' ');
     }
   },
-  
+
   hasClass: function(el, cls) {
     return el.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
   }
@@ -191,24 +194,26 @@ contactPhoto.display = {
       cropContextmenuItem = document.getElementById('DCP-ContextmenuCrop');
       cropContextmenuItem.disabled = true;
     }
-    
+
     if (isMessagePhoto && contactPhoto.photoBox.hasAttribute('hidden')) {
       contactPhoto.photoBox.removeAttribute('hidden');
     }
 
     if (photoInfo.hasPhoto && photoInfo.hasFace) {
       var prefOverrideFaces = contactPhoto.prefs.get('overrideFaces', 'bool');
-      
+
       if (prefOverrideFaces) { // there is a face, but display the contact photo
         if (photoInfo.hasGenericPhoto) {
           contactPhoto.display.genericPhoto(photoInfo);
           return;
-        } else {
+        }
+        else {
           contactPhoto.display.photo(photoInfo);
           if (isMessagePhoto) cropContextmenuItem.disabled = false;
           return;
         }
-      } else {
+      }
+      else {
         contactPhoto.display.face(photoInfo);
         return;
       }
@@ -223,73 +228,74 @@ contactPhoto.display = {
       if (photoInfo.hasGenericPhoto) {
         contactPhoto.display.genericPhoto(photoInfo);
         return;
-      } else {
+      }
+      else {
         contactPhoto.display.photo(photoInfo);
         if (isMessagePhoto) cropContextmenuItem.disabled = false;
         return;
       }
     }
-    
+
     if (photoInfo.hasLocalPhoto) {
       contactPhoto.display.localPhoto(photoInfo);
       return;
     }
-    
+
     if (photoInfo.hasDomainWildcard) {
       contactPhoto.display.domainWildcard(photoInfo);
       return;
     }
 
     // if we are here, then there is no photo nor face to show
-    
+
     if (!isMessagePhoto) {
       contactPhoto.display.defaultPhoto(photoInfo);
       return;
     }
-    
+
     // this is only evaluated if isMessagePhoto=true
     switch (contactPhoto.prefs.get('defaultPhoto', 'char')) {
       case 'show':
         contactPhoto.display.defaultPhoto(photoInfo);
         return;
       break;
-      
+
       case 'hide':
-        if (isMessagePhoto) 
+        if (isMessagePhoto)
           contactPhoto.messageDisplay.imgObj.style.display = 'none';
         return;
       break;
-      
+
       default:
-        if (isMessagePhoto) 
+        if (isMessagePhoto)
           contactPhoto.photoBox.setAttribute('hidden', true);
     }
-      
+
     // in case the photo is not displayed in a message header, do nothing
-    
+
   },
 
   photo: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp photo')
-    
+
     var origFile = Components.classes["@mozilla.org/file/directory_service;1"]
             .getService(Components.interfaces.nsIProperties)
             .get("ProfD", Components.interfaces.nsIFile);
     origFile.append('Photos');
     origFile.append(photoInfo.photoName);
-    
+
     var srcURI = contactPhoto.utils.makeURI(origFile);
     contactPhoto.display.checkPhoto(srcURI, photoInfo);
   },
-  
+
   genericPhoto: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp gen photo')
-    
+
     if (contactPhoto.prefs.get('enableGravatar', 'bool') && photoInfo.genericPhotoURI.indexOf('gravatar') > -1) {
       contactPhoto.display.gravatar(photoInfo);
       return;
     }
-    
+
     contactPhoto.display.checkPhoto(photoInfo.genericPhotoURI, photoInfo);
   },
 
@@ -298,16 +304,16 @@ contactPhoto.display = {
 
     contactPhoto.display.checkPhoto(photoInfo.localPhotoURI, photoInfo);
   },
-  
+
   domainWildcard: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp wild')
-    
+
     contactPhoto.display.checkPhoto(photoInfo.domainWildcardURI, photoInfo);
   },
 
   face: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp face')
-    
+
     photoInfo.photoObject.style.width = '48px';
     photoInfo.photoObject.style.height = '48px';
     photoInfo.photoObject.style.listStyleImage = 'url("'+photoInfo.faceURI+'")';
@@ -316,32 +322,33 @@ contactPhoto.display = {
 
   gravatar: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp gravatar')
-    
+
     // don't load image if the message has been marked as junk
     // copied from function SelectedMessagesAreJunk()
     var isJunk;
     try {
       var junkScore = gFolderDisplay.selectedMessage.getStringProperty("junkscore");
       isJunk = (junkScore != "") && (junkScore != "0");
-    } catch (ex) {
+    }
+    catch (ex) {
       isJunk = false;
     }
     if (isJunk) return;
-    
+
     // load gravatar image from gravatar server
     var hash = contactPhoto.utils.md5_hex(photoInfo.emailAddress);
-    
+
     var gravatarURI = contactPhoto.prefs.get('gravatarServer', 'char')+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
     //var gravatarURI = 'http://www.gravatar.com/avatar/'+hash+'?d='+contactPhoto.prefs.get('defaultGravatar', 'char')+'&s='+photoInfo.size;
-    
+
     contactPhoto.display.checkPhoto(gravatarURI, photoInfo, true);
   },
-  
+
   defaultPhoto: function(photoInfo) {
     //if (contactPhoto.debug) alert('disp def photo')
-    
+
     var defaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
-    
+
     if (contactPhoto.prefs.get('enableGravatar', 'bool') && defaultPhoto.indexOf('gravatar') > -1) {
       contactPhoto.display.gravatar(photoInfo);
       return;
@@ -349,18 +356,19 @@ contactPhoto.display = {
 
     contactPhoto.display.checkPhoto(defaultPhoto, photoInfo);
   },
-  
+
   // checkPhoto: checks if the thumbnails exists -> starts the loader, else starts the resizer
   checkPhoto: function(srcURI, photoInfo, isGravatar) {
     var thumbnailName;
-    
+
     // gravatar url contain invalid file name characters, so a separate name is generated
     if (isGravatar) {
       thumbnailName = 'gravatar-'+photoInfo.emailAddress;
-    } else {
+    }
+    else {
       thumbnailName = contactPhoto.utils.getFilename(srcURI);
     }
-    
+
     var thumbnailFile = Components.classes["@mozilla.org/file/directory_service;1"]
       .getService(Components.interfaces.nsIProperties)
       .get("ProfD", Components.interfaces.nsIFile);
@@ -369,18 +377,20 @@ contactPhoto.display = {
     thumbnailFile.append(thumbnailName+'.png');
 
     if (thumbnailFile.exists()) { // if the thumbnail already exists, display it
-      
+
       contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
-      
+
       // prune photos older than a week, they will be regenerated when they are displayed the next time
       var oneWeekAgo = new Date().getTime() - 604800000; // 1000 * 3600 * 24 * 7;
       if (thumbnailFile.lastModifiedTime < oneWeekAgo) {
         try {
           thumbnailFile.remove(false);
-        } catch (e) {}
+        }
+        catch (e) {}
       }
 
-    } else { // generate it      
+    }
+    else { // generate it
       if (contactPhoto.debug > 1) dump("generate thumb for "+srcURI+"\n")
       contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
@@ -392,14 +402,14 @@ contactPhoto.display = {
       contactPhoto.resizer.startProcessing(null, callbackFunc);
     }
   },
-  
+
   // soft cache of Image() elements, used for drawing in canvas
   photoCache: [],
 
   // photoLoader: pre-loads the photo to determine the dimensions, then displays the photo
   photoLoader: function(URI, photoInfo) {
     var dummyPhoto = new Image();
-    
+
     dummyPhoto.addEventListener('load', function() {
         photoInfo.photoObject.style.width = dummyPhoto.width+'px';
         photoInfo.photoObject.style.height = dummyPhoto.height+'px';
@@ -407,12 +417,12 @@ contactPhoto.display = {
         URI = URI+'?'+Math.floor(Math.random()*1000000000); // force to load photo every time
         photoInfo.photoObject.style.listStyleImage = 'url("'+URI+'")';
         photoInfo.photoObject.style.display = 'block';
-        
+
         contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
-        
+
         if (contactPhoto.debug > 1) dump('photo LOADED: '+URI+'\n');
       }, false);
-    
+
     dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
   }
 }
@@ -420,60 +430,61 @@ contactPhoto.display = {
 // photoForEmailAddress: get all existing photos for a given email address
 contactPhoto.photoForEmailAddress = function(emailAddress) {
   emailAddress = emailAddress.toLowerCase();
-  
+
   var photoInfo = contactPhoto.utils.newPhotoInfo(emailAddress);
-  
+
   photoInfo.cardDetails = contactPhoto.getCard(emailAddress);
 
   contactPhoto.getCardPhoto(photoInfo);
   contactPhoto.getLocalPhoto(photoInfo);
-  
+
   return photoInfo;
 }
 
 // photoForCard: get all existing photos for a given email address
 contactPhoto.photoForCard = function(aCard) {
   var photoInfo = contactPhoto.utils.newPhotoInfo(aCard.primaryEmail);
-  
+
   photoInfo.cardDetails = {
     ab: null,
     card: aCard,
   };
-  
+
   contactPhoto.getCardPhoto(photoInfo);
   contactPhoto.getLocalPhoto(photoInfo);
-  
+
   return photoInfo;
 }
 
 
-// getLocalPhotos: search the local folder for 
+// getLocalPhotos: search the local folder for
 contactPhoto.getLocalPhoto = function(photoInfo) {
   if (contactPhoto.prefs.get('enableLocalPhotos', 'bool') == false) return;
-  
+
   // first collect all e-mail addresses in an array, then search the file system
   var addressList = [];
-  
+
   // get the addresses from the card if the contact has one
   if (photoInfo.cardDetails.card) {
     var address = photoInfo.cardDetails.card.getProperty('PrimaryEmail', '');
     if (address != '') addressList[addressList.length] = address;
-    
+
     var address = photoInfo.cardDetails.card.getProperty('SecondEmail', '');
     if (address != '') addressList[addressList.length] = address;
-  } else if (photoInfo.emailAddress) {
+  }
+  else if (photoInfo.emailAddress) {
     addressList[addressList.length] = photoInfo.emailAddress;
   }
   var fileTypes = contactPhoto.prefs.get('imageExtensions', 'char').split(',');
   var prefLocalPhotoDir = contactPhoto.prefs.get('photoDirectory', 'file');
-  
+
   try {
     var localPhotoDir = Components.classes["@mozilla.org/file/local;1"]
               .createInstance(Components.interfaces.nsILocalFile);
     localPhotoDir.initWithFile(prefLocalPhotoDir); // this might throw an error
-  
+
     if (!localPhotoDir.exists()) return;
-  
+
     // search through all addresses in the list until a match is found
     while (addressList.length > 0) {
       var address = addressList.shift().toLowerCase(); // get and remove the first element
@@ -491,7 +502,7 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
           break;
         }
       }
-      
+
       // look for domain wildcard photos
       if (contactPhoto.prefs.get('enableDomainWildcardPhotos', 'bool')) {
         var domain = address.substr(address.indexOf('@'));
@@ -500,7 +511,7 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
                     .createInstance(Components.interfaces.nsILocalFile);
           wildcard.initWithFile(prefLocalPhotoDir);
           wildcard.append(domain+'.'+fileTypes[i]);
-          
+
 
           if (wildcard.exists()) { // there is actually a file
             photoInfo.hasDomainWildcard = true;
@@ -509,10 +520,11 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
           }
         }
       }
-      
+
       if (photoInfo.hasLocalPhoto || photoInfo.hasDomainWildcard) break;
     }
-  } catch (ex) {
+  }
+  catch (ex) {
     if (contactPhoto.debug) alert('failed to load local photo, errmsg: '+ex);
   }
 }
@@ -527,7 +539,7 @@ contactPhoto.getCardPhoto = function(photoInfo) {
       if (photoType == 'generic') {
         var photoURI = photoInfo.cardDetails.card.getProperty('PhotoURI', '');
         var DCPDefaultPhotoURI = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
-        
+
         //alert('URI: -'+photoURI+'-\n'+DCPDefaultPhotoURI);
         if (photoURI != '' && photoURI != 'null' && photoURI != DCPDefaultPhotoURI) {
           //alert('is true')
@@ -536,9 +548,10 @@ contactPhoto.getCardPhoto = function(photoInfo) {
           photoInfo.genericPhotoURI = photoURI;
         }
 
-      } else { // there is a contact photo
+      }
+      else { // there is a contact photo
         var photoName = photoInfo.cardDetails.card.getProperty('PhotoName', '');
-        
+
         if (photoName != '') {
           photoInfo.hasPhoto = true;
           photoInfo.photoName = photoName;
@@ -559,18 +572,19 @@ contactPhoto.getCard = function(emailAddress) {
   while (allAddressBooks.hasMoreElements()) {
     let ab = allAddressBooks.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
     if (ab.isRemote) continue; // skip ldap directories
-    
+
     try {
       var card = ab.cardForEmailAddress(emailAddress).QueryInterface(Components.interfaces.nsIAbCard);
       if (card == null) continue;
-      
+
       cardDetails = {
         book: ab,
         card: card
       };
       break;
-      
-    } catch (ex) { }
+
+    }
+    catch (ex) { }
   }
 
   return cardDetails;
@@ -580,7 +594,7 @@ contactPhoto.getCard = function(emailAddress) {
 // functions for disk cache managing
 contactPhoto.cache = {
   directory: 'contactPhotoThumbnails',
-  
+
   // clear: empties the cache
   clear: function() {
     var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -591,24 +605,25 @@ contactPhoto.cache = {
     if (cacheDir.exists() && cacheDir.isDirectory()) {
       var subDirs = cacheDir.directoryEntries;
       while (subDirs.hasMoreElements()) {
-      
+
         var dir = subDirs.getNext().QueryInterface(Components.interfaces.nsIFile);
-        
+
         if (dir.exists() && dir.isDirectory()) {
           try {
             dir.remove(true); // remove the directory and all its contents
-          } catch (e) { 
+          }
+          catch (e) {
             return false;
           }
         }
       }
-      
+
       return true;
     }
-    
+
     return false;
   },
-  
+
   // createSubDirectory: creates a directory in the thumbnail directory if it does not exist
   createSubDirectory: function(name) {
     var newDir = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -616,11 +631,11 @@ contactPhoto.cache = {
       .get("ProfD", Components.interfaces.nsIFile);
     newDir.append(contactPhoto.cache.directory);
     newDir.append(name);
-    
+
     if (newDir.exists() && newDir.isDirectory()) {
       return;
     }
-    
+
     newDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
   },
 
@@ -639,11 +654,11 @@ contactPhoto.cache = {
   // removeThumbnail: delete a specific thumbnail from the cache
   removeThumbnail: function(fileName) {
     subdirectories = [
-      ''+contactPhoto.prefs.get('smallIconSize', 'int'), 
+      ''+contactPhoto.prefs.get('smallIconSize', 'int'),
       ''+contactPhoto.prefs.get('photoSize', 'int'),
       ''+contactPhoto.prefs.get('composePhotos.size', 'int')
     ];
-    
+
     for (var i in subdirectories) {
       var removeFile = Components.classes["@mozilla.org/file/directory_service;1"]
         .getService(Components.interfaces.nsIProperties)
@@ -651,20 +666,20 @@ contactPhoto.cache = {
       removeFile.append(contactPhoto.cache.directory);
       removeFile.append(subdirectories[i]);
       removeFile.append(fileName+'.png');
-    
+
       if (removeFile.exists()) {
         removeFile.remove(false);
       }
     }
   },
-  
+
   // delete the entire cache directory (on add-on uninstall)
   removeCacheDirectory: function() {
     var cacheDir = Components.classes["@mozilla.org/file/directory_service;1"]
       .getService(Components.interfaces.nsIProperties)
       .get("ProfD", Components.interfaces.nsIFile);
     cacheDir.append(contactPhoto.cache.directory);
-    
+
     if (cacheDir.exists()) {
       cacheDir.remove(true); // remove recursively
     }
@@ -712,7 +727,7 @@ contactPhoto.resizer = {
 
   // startProcessing: starts the image resize process
   startProcessing: function(callbackProgress, callbackDone) {
-    
+
     if (typeof callbackDone == 'function') contactPhoto.resizer.callbackDone.push(callbackDone);
     if (typeof callbackProgress == 'function') contactPhoto.resizer.callbackProgress.push(callbackProgress);
 
@@ -732,7 +747,7 @@ contactPhoto.resizer = {
           contactPhoto.resizer.callbackDone[i]();
         }
       }
-      
+
       contactPhoto.resizer.resizing = false;
       return;
     }
@@ -753,11 +768,11 @@ contactPhoto.resizer = {
 
     contactPhoto.resizer.dummyImg.src = contactPhoto.resizer.currentImage.src;
   },
-  
+
   // resizeStep2: does the actual resizing and applies the visual effects
   resizeStep2: function() {
     var preScaleFactor = 2; // the images are scaled down in two steps to enhance quality
-  
+
     var w = contactPhoto.resizer.dummyImg.width;
     var h = contactPhoto.resizer.dummyImg.height;
     //alert(w+'x'+h)
@@ -768,9 +783,9 @@ contactPhoto.resizer = {
     var maxSize = contactPhoto.resizer.currentImage.size;
     var photoInfo = contactPhoto.resizer.currentImage.info;
     var card = (photoInfo.cardDetails && photoInfo.cardDetails.card)? photoInfo.cardDetails.card: null;
-    
+
     var cropPhoto = false;
-    if (photoInfo.hasPhoto && !photoInfo.hasGenericPhoto 
+    if (photoInfo.hasPhoto && !photoInfo.hasGenericPhoto
         && !photoInfo.hasLocalPhoto && !photoInfo.hasDomainWildcard) {
       var cropPhotoName = card.getProperty('CropPhotoName', '');
 
@@ -788,7 +803,8 @@ contactPhoto.resizer = {
       if (w > h) {
         h = Math.round(h/w*maxSize)
         w = maxSize;
-      } else {
+      }
+      else {
         w = Math.round(w/h*maxSize)
         h = maxSize;
       }
@@ -803,7 +819,7 @@ contactPhoto.resizer = {
       contactPhoto.resizer.ctx.fillStyle = 'rgb('+rgb[0]+', '+rgb[1]+', '+rgb[2]+')';
       contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
     }
-    
+
     var cropped_resized = false; // is used to signal that the image has been cropped/resized
     if (cropPhoto) {
       var cropW = card.getProperty('CropPhotoWidth', '');
@@ -817,12 +833,13 @@ contactPhoto.resizer = {
           var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
           preScaleCanvas.width = Math.round(w*preScaleFactor);
           preScaleCanvas.height = Math.round(h*preScaleFactor);
-          
+
           var preScaleCtx = preScaleCanvas.getContext('2d');
-          
+
           preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
           contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-        } else { // just draw it
+        }
+        else { // just draw it
           contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, cropL, cropT, cropW, cropH, 0, 0, w, h);
         }
         cropped_resized = true;
@@ -835,25 +852,26 @@ contactPhoto.resizer = {
         var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
         preScaleCanvas.width = Math.round(w*preScaleFactor);
         preScaleCanvas.height = Math.round(h*preScaleFactor);
-        
+
         var preScaleCtx = preScaleCanvas.getContext('2d');
-        
+
         preScaleCtx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, preScaleCanvas.width, preScaleCanvas.height);
         contactPhoto.resizer.ctx.drawImage(preScaleCanvas, 0, 0, w, h);
-      } else { // just draw it
+      }
+      else { // just draw it
         contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, w, h);
       }
     }
 
-    
-    
+
+
     /* IMAGE EFFECTS */
-      
+
     // apply gloss effect on all images
     if (contactPhoto.prefs.get('effectGloss', 'bool')) {
       contactPhoto.imageFX.addGloss();
     }
-    
+
     if (!photoInfo.noVisualEffects) {
       if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
         contactPhoto.imageFX.roundCorners();
@@ -862,12 +880,13 @@ contactPhoto.resizer = {
       if (contactPhoto.prefs.get('effectShadow', 'bool')) {
         contactPhoto.imageFX.addShadow();
       }
-      
+
       if (contactPhoto.prefs.get('effectBorder', 'bool')) {
         var borderType = contactPhoto.prefs.get('effectBorderType', 'int');
         if (borderType == 1) { // thin border
           contactPhoto.imageFX.addBorder();
-        } else if (borderType == 2) { // blurred border
+        }
+        else if (borderType == 2) { // blurred border
           contactPhoto.imageFX.addBlurredBorder();
         } // more borders to come?
       }
@@ -880,7 +899,7 @@ contactPhoto.resizer = {
 
     // check if the thumbnail folder exists
     contactPhoto.cache.createSubDirectory(contactPhoto.resizer.currentImage.size);
-    
+
     // prepare to save the canvas data
     var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
               .createInstance(Components.interfaces.nsIWebBrowserPersist);
@@ -894,7 +913,7 @@ contactPhoto.resizer = {
           if (contactPhoto.resizer.callbackProgress.length > 0) {
             var max = contactPhoto.resizer.queue.maxLength;
             var percent = new Number((max-contactPhoto.resizer.queue.length())/max).toFixed(2);
-            
+
             for (var i in contactPhoto.resizer.callbackProgress) {
               contactPhoto.resizer.callbackProgress[i](percent, max);
             }
@@ -913,7 +932,7 @@ contactPhoto.resizer = {
 contactPhoto.imageFX = {
   addGloss: function() {
     contactPhoto.resizer.ctx.save();
-    
+
     var gradPos = contactPhoto.prefs.get('effectGlossGradientPosition', 'int')/100;
 
     var w = contactPhoto.resizer.canvas.width;
@@ -934,7 +953,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*Math.min(1, gradPos+.1), w*.8, h*Math.min(1, gradPos+.1), w, h*gradPos)
         contactPhoto.resizer.ctx.lineTo(w, 0);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, 'rgba(255,255,255,0.5)');
         grad.addColorStop(gradPos+.1, 'rgba(255,255,255,0.1)');
@@ -942,7 +961,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fill();
       break;
-      
+
       case 1:  // gradient curved up
         contactPhoto.resizer.ctx.beginPath();
         contactPhoto.resizer.ctx.moveTo(0, 0);
@@ -950,7 +969,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.bezierCurveTo(w*.2, h*gradPos, w*.8, h*gradPos, w, h*Math.min(1, gradPos+.1))
         contactPhoto.resizer.ctx.lineTo(w, 0);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, 'rgba(255,255,255,0.5)');
         grad.addColorStop(Math.min(1, gradPos+.1), 'rgba(255,255,255,0.1)');
@@ -958,7 +977,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fill();
       break;
-      
+
       case 2: // horizontal gradient
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, 'rgba(255,255,255,0.5)');
@@ -967,36 +986,36 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fillRect(0, 0, w, h);
       break;
-      
-      case 3: // curved corner gradient 
+
+      case 3: // curved corner gradient
         contactPhoto.resizer.ctx.beginPath();
         contactPhoto.resizer.ctx.moveTo(0, 0);
         contactPhoto.resizer.ctx.lineTo(w, 0);
         contactPhoto.resizer.ctx.lineTo(w, h*.1);
         contactPhoto.resizer.ctx.quadraticCurveTo(w*.33, h*.20, 0, h*.4);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, w, h*.4);
         grad.addColorStop(0, 'rgba(255,255,255,0.4)');
         grad.addColorStop(1, 'rgba(255,255,255,0.0)');
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fill();
       break;
-      
+
       case 4: // right edge
         contactPhoto.resizer.ctx.beginPath();
         contactPhoto.resizer.ctx.moveTo(w, 0);
         contactPhoto.resizer.ctx.lineTo(w, h);
         contactPhoto.resizer.ctx.quadraticCurveTo(.8*w, .4*h, .85*w, 0);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, 'rgba(255,255,255,0.6)');
         grad.addColorStop(1, 'rgba(255,255,255,0.0)');
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fill();
       break;
-      
+
       case 5: // upper half
         contactPhoto.resizer.ctx.beginPath();
         contactPhoto.resizer.ctx.moveTo(0, 0);
@@ -1004,29 +1023,29 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.quadraticCurveTo(w, gradPos*.9*h, w, .05*h);
         contactPhoto.resizer.ctx.lineTo(w, 0);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, 'rgba(255,255,255,0.05)');
         grad.addColorStop(1, 'rgba(255,255,255,0.6)');
         contactPhoto.resizer.ctx.fillStyle = grad;
         contactPhoto.resizer.ctx.fill();
       break;
-      
+
       case 6: // diagonal
         var x0 = .1*w;
         var y0 = 0;
         var x1 = w;
         var y1 = .9*h;
-        
+
         var m1 = (y1-y0)/(x1-x0);
         var q1 = y0 - m1*x0;
-        
+
         var m2 = -1/m1;
         var q2 = -m2*w;
-        
+
         var x3 = (q2-q1)/(m1-m2);
         var y3 = m1*x3 + q1;
-        
+
         contactPhoto.resizer.ctx.beginPath();
         contactPhoto.resizer.ctx.moveTo(0, 0);
         contactPhoto.resizer.ctx.lineTo(x0, y0);
@@ -1034,7 +1053,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.lineTo(w, h);
         contactPhoto.resizer.ctx.lineTo(w, 0);
         contactPhoto.resizer.ctx.closePath();
-        
+
         var grad = contactPhoto.resizer.ctx.createLinearGradient(x3, y3, w, 0);
         grad.addColorStop(0, 'rgba(255,255,255,0.25)');
         grad.addColorStop(.7, 'rgba(255,255,255,0.05)');
@@ -1042,7 +1061,7 @@ contactPhoto.imageFX = {
         contactPhoto.resizer.ctx.fill();
       break;
     }
-    
+
     contactPhoto.resizer.ctx.restore();
   },
 
@@ -1051,40 +1070,40 @@ contactPhoto.imageFX = {
     var canvas = contactPhoto.resizer.canvas;
     var shadowBlur = contactPhoto.prefs.get('effectShadowBlur', 'int');
     var shadowOffset = contactPhoto.prefs.get('effectShadowOffset', 'int');
-    
+
     contactPhoto.resizer.canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
     contactPhoto.resizer.ctx = contactPhoto.resizer.canvas.getContext('2d');
-    
+
     contactPhoto.resizer.canvas.width = canvas.width;
     contactPhoto.resizer.canvas.height = canvas.height;
-    
+
     contactPhoto.resizer.ctx.shadowOffsetX = shadowOffset;
     contactPhoto.resizer.ctx.shadowOffsetY = shadowOffset;
     contactPhoto.resizer.ctx.shadowBlur = shadowBlur;
     contactPhoto.resizer.ctx.shadowColor = 'rgba(0, 0, 0, .6)';
     contactPhoto.resizer.ctx.drawImage(canvas, (shadowBlur-shadowOffset), (shadowBlur-shadowOffset), canvas.width-(2*shadowBlur), canvas.height-(2*shadowBlur));
-    
-    /* 
+
+    /*
     contactPhoto.resizer.ctx.shadowOffsetX = 0;
     contactPhoto.resizer.ctx.shadowOffsetY = 0;
     contactPhoto.resizer.ctx.shadowBlur = 0;
     */
     contactPhoto.resizer.ctx.restore();
   },
-  
+
   roundCorners: function() {
     contactPhoto.resizer.ctx.save();
     var w = contactPhoto.resizer.canvas.width;
     var h = contactPhoto.resizer.canvas.height;
-    
+
     var cornerRadius = Math.round(Math.min(w, h)/4);
-  
+
     var oldGlobalCompositeOperation = contactPhoto.resizer.ctx.globalCompositeOperation;
     contactPhoto.resizer.ctx.globalCompositeOperation = 'destination-in';
-    
+
     contactPhoto.resizer.ctx.beginPath();
     contactPhoto.resizer.ctx.moveTo(0, cornerRadius);
-    contactPhoto.resizer.ctx.quadraticCurveTo(0, 0, cornerRadius, 0);  
+    contactPhoto.resizer.ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
     contactPhoto.resizer.ctx.lineTo(w-cornerRadius, 0);
     contactPhoto.resizer.ctx.quadraticCurveTo(w, 0, w, cornerRadius);
     contactPhoto.resizer.ctx.lineTo(w, h-cornerRadius);
@@ -1095,16 +1114,16 @@ contactPhoto.imageFX = {
     contactPhoto.resizer.ctx.fill();
 
     contactPhoto.resizer.ctx.globalCompositeOperation = oldGlobalCompositeOperation;
-    
+
     contactPhoto.resizer.ctx.restore();
   },
-  
+
   addBorder: function() {
     contactPhoto.resizer.ctx.save();
-    
+
     var w = contactPhoto.resizer.canvas.width;
     var h = contactPhoto.resizer.canvas.height;
-    
+
     var offsetTL = 0; // top left offset
     var offsetBR = 0; // bottom right offset
     var shadowOffset = contactPhoto.prefs.get('effectShadowOffset', 'int');
@@ -1113,11 +1132,11 @@ contactPhoto.imageFX = {
       offsetTL = shadowBlur-shadowOffset;
       offsetBR = 2*shadowBlur - offsetTL;
     }
-    
+
     var borderColor = contactPhoto.utils.getColor('effectBorderColor');
     contactPhoto.resizer.ctx.strokeStyle = 'rgba('+borderColor[0]+', '+borderColor[1]+', '+borderColor[2]+', 1)';
     contactPhoto.resizer.ctx.lineWidth = 1;
-    
+
     if (contactPhoto.prefs.get('effectRoundedCorners', 'bool')) {
       var cornerRadius = Math.round(Math.min(w, h)/4); // radius is 2px shorter to account for clipping edge
       if (contactPhoto.prefs.get('effectShadow', 'bool')) {
@@ -1126,7 +1145,7 @@ contactPhoto.imageFX = {
 
       contactPhoto.resizer.ctx.beginPath();
       contactPhoto.resizer.ctx.moveTo(offsetTL+.5, offsetTL+cornerRadius+.5);
-      contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, offsetTL+.5, offsetTL+cornerRadius+.5, offsetTL+.5);  
+      contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, offsetTL+.5, offsetTL+cornerRadius+.5, offsetTL+.5);
       contactPhoto.resizer.ctx.lineTo(w-offsetBR-cornerRadius-.5, offsetTL+.5);
       contactPhoto.resizer.ctx.quadraticCurveTo(w-offsetBR-.5, offsetTL+.5, w-offsetBR-.5, offsetTL+cornerRadius+.5);
       contactPhoto.resizer.ctx.lineTo(w-offsetBR-.5, h-offsetBR-cornerRadius-.5);
@@ -1135,11 +1154,11 @@ contactPhoto.imageFX = {
       contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, h-offsetBR-.5, offsetTL+.5, h-offsetBR-cornerRadius-.5);
       contactPhoto.resizer.ctx.closePath();
       contactPhoto.resizer.ctx.stroke();
-      
+
       /*
       contactPhoto.resizer.ctx.beginPath();
       contactPhoto.resizer.ctx.moveTo(offsetTL+.5, offsetTL+.5+cornerRadius);
-      contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, offsetTL+.5, offsetTL+.5+cornerRadius, offsetTL+.5);  
+      contactPhoto.resizer.ctx.quadraticCurveTo(offsetTL+.5, offsetTL+.5, offsetTL+.5+cornerRadius, offsetTL+.5);
       contactPhoto.resizer.ctx.lineTo(w-offsetBR-.5-cornerRadius, offsetTL+.5);
       contactPhoto.resizer.ctx.quadraticCurveTo(w-offsetBR-.5, offsetTL+.5, w-offsetBR-.5, offsetTL+.5+cornerRadius);
       contactPhoto.resizer.ctx.lineTo(w-offsetBR-.5, h-offsetBR-.5-cornerRadius);
@@ -1149,16 +1168,17 @@ contactPhoto.imageFX = {
       contactPhoto.resizer.ctx.closePath();
       contactPhoto.resizer.ctx.stroke();
       */
-    } else {
+    }
+    else {
       contactPhoto.resizer.ctx.strokeRect(offsetTL+.5, offsetTL+.5, w-offsetTL-offsetBR-1, h-offsetTL-offsetBR-1);
     }
-    
+
     contactPhoto.resizer.ctx.restore();
   },
-  
+
   addBlurredBorder: function() {
     contactPhoto.resizer.ctx.save();
-  
+
     var blurWidth = contactPhoto.prefs.get('effectBlurWidth', 'int');
     var borderColor = contactPhoto.utils.getColor('effectBorderColor');
 
@@ -1237,10 +1257,10 @@ contactPhoto.imageFX = {
     contactPhoto.resizer.ctx.strokeStyle = 'rgba('+borderColor[0]+', '+borderColor[1]+', '+borderColor[2]+', .5)';
     contactPhoto.resizer.ctx.strokeRect(blurWidth-.5, blurWidth-.5, w-2*blurWidth+1, h-2*blurWidth+1);
     contactPhoto.resizer.ctx.strokeRect(.5, .5, w-1, h-1);
-    
+
     contactPhoto.resizer.ctx.restore();
   },
-  
+
   // _getGaussMatrix: calculates a two-dimensional gauss matrix
   _getGaussMatrix: function(size, sigma) {
     var matrix = [];
@@ -1299,14 +1319,14 @@ contactPhoto.utils = {
   getFilename: function(path) {
     return path.substring(path.lastIndexOf('/')+1);
   },
-  
+
   // makeURI: returns uri of a nsIFile
   makeURI: function(file) {
     return Components.classes["@mozilla.org/network/io-service;1"]
       .getService(Components.interfaces.nsIIOService)
       .newFileURI(file).spec;
   },
-  
+
   // getColor: loads a hex color from the preferences and converts it to an int array
   getColor: function(colorPref) {
     var color = contactPhoto.prefs.get(colorPref, 'char');
@@ -1319,7 +1339,7 @@ contactPhoto.utils = {
     }
     return rgb;
   },
-  
+
   // isSentMessage: determines if the message is inside the outbox, the sent or the drafts folder
   isSentMessage: function() {
     if (contactPhoto.prefs.get('specialFoldersUseToHeaders', 'bool')) {
@@ -1342,25 +1362,25 @@ contactPhoto.utils = {
     }
     return false;
   },
-  
+
   // customAlert: displays a nicer alert window than window.alert()
   customAlert: function(text) {
     var alertTitle = contactPhoto.localizedJS.getString('addonName');
     var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                 .getService(Components.interfaces.nsIPromptService);
-    
+
     prompts.alert(null, alertTitle, text);
   },
-  
+
   // customAlert: sanitize photo information introduced by bug 702137
   // replace 'null' string with an empty string ''
   sanitizeCards: function() {
-  
-      let abManager = Components.classes["@mozilla.org/abmanager;1"]  
-                              .getService(Components.interfaces.nsIAbManager);  
-      
-    let allAddressBooks = abManager.directories;   
-      
+
+      let abManager = Components.classes["@mozilla.org/abmanager;1"]
+                              .getService(Components.interfaces.nsIAbManager);
+
+    let allAddressBooks = abManager.directories;
+
     while (allAddressBooks.hasMoreElements()) {
       let addressBook = allAddressBooks.getNext()
                 .QueryInterface(Components.interfaces.nsIAbDirectory);
@@ -1368,28 +1388,28 @@ contactPhoto.utils = {
         let childCards = addressBook.childCards;
         while (childCards.hasMoreElements()) {
           var aCard = childCards.getNext();
-          
+
           if (aCard instanceof Components.interfaces.nsIAbCard) {
             var modified = false;
-            
+
             var checkPhotoName = aCard.getProperty('PhotoName', '');
             if (checkPhotoName == 'null' || checkPhotoName == null) {
               modified = true;
               aCard.setProperty('PhotoName', '');
             }
-            
+
             var checkPhotoURI = aCard.getProperty('PhotoURI', '');
             if (checkPhotoURI == 'null' || checkPhotoURI == null) {
               modified = true;
               aCard.setProperty('PhotoURI', '');
             }
-            
+
             if (modified) {
               addressBook.modifyCard(aCard);
             }
           }
         }
-      }    
+      }
     }
   },
 
@@ -1398,17 +1418,18 @@ contactPhoto.utils = {
     if (contactPhoto.utils.preferencesWindow == null || contactPhoto.utils.preferencesWindow.closed) {
       //contactPhoto.utils.preferencesWindow = window.openDialog('chrome://contactPhoto/content/prefs.xul', 'contactPhotoPrefs', 'chrome,titlebar,toolbar,centerscreen,modal');
       contactPhoto.utils.preferencesWindow = window.openDialog('chrome://contactPhoto/content/prefs.xul', 'contactPhotoPrefs', 'resizable=yes,centerscreen');
-    } else {
+    }
+    else {
       contactPhoto.utils.preferencesWindow.focus();
     }
   },
-  
+
   // trim: trim a string
   trim: function(str) {
     str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
   },
-  
-  // newPhotoInfo: 
+
+  // newPhotoInfo:
   newPhotoInfo: function(address) {
     return {
       emailAddress: address,
@@ -1428,15 +1449,15 @@ contactPhoto.utils = {
       domainWildcardURI: null
     }
   },
-  
+
   // md5_hex: calculate the md5 checksum of a string
   md5_hex: function(str) {
     var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
           createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-          
+
     // we use UTF-8 here, you can choose other encodings.
     converter.charset = 'UTF-8';
-    
+
     // data is an array of bytes
     var data = converter.convertToByteArray(str, {});
     var cryptohash = Components.classes["@mozilla.org/security/hash;1"]
@@ -1444,7 +1465,7 @@ contactPhoto.utils = {
     cryptohash.init(cryptohash.MD5);
 
     cryptohash.update(data, data.length);
-    
+
     // pass false here to get binary data back
     var hash = cryptohash.finish(false);
 
@@ -1456,14 +1477,14 @@ contactPhoto.utils = {
     // convert the binary hash data to a hex string.
     return [toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
   },
-  
+
   // mydump: a debug function to quickly inspect objects
   mydump: function(what, useAlert) {
     if (typeof what == 'undefined') {
       alert('undefined');
       return;
     }
-    
+
     var a = '';
     var i = 0;
     var j = 0;
@@ -1486,5 +1507,5 @@ contactPhoto.utils = {
       else dump(a)
     }
   }
-  
+
 };
