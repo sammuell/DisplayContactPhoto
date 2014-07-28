@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Display Contact Photo Options">
 <!ENTITY tabs.generalSettings "General Settings">
 <!ENTITY tabs.facesLocalPhotos "Faces/Local photos">
@@ -37,13 +37,13 @@
 <!ENTITY faces.moreInfo "Please visit the following website for more information:">
 <!ENTITY directory.enable "Enable display of local photos">
 <!ENTITY directory.description1 "The file name must be composed of the e-mail address and the file type.">
-<!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Supported image types: jpg, png, gif.">
+<!ENTITY directory.description2 "E.g. \'info@mozilla.org.png\'. Supported image types: jpg, png, gif.">
 <!ENTITY directory.description3 "The entire file name must be in lowercase.">
 <!ENTITY directory.description4 "If such a file exists, it will be displayed regardless of other photos.">
 <!ENTITY directory.browseButton "Browse directory…">
 <!ENTITY directory.openButton "Open directory">
 <!ENTITY directory.enableWildcards "Enable domain wildcard photos">
-<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Fill transparent areas with a color:">
 <!ENTITY effects.backgroundLabel "Color for transparent areas of a photo (e.g. .png, .gif):">
 <!ENTITY effects.label "Visual effects">

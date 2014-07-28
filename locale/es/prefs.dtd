@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Preferencias de Display Contact Photo">
 <!ENTITY tabs.generalSettings "General">
 <!ENTITY tabs.facesLocalPhotos "Caras/ Fotos locales">
@@ -43,7 +43,7 @@
 <!ENTITY directory.browseButton "Examinar directorio ...">
 <!ENTITY directory.openButton "Abrir carpeta">
 <!ENTITY directory.enableWildcards "Habilitar fotos de dominio de tarjetas de invitación.">
-<!ENTITY directory.wildcardDescription "Estas fotos son asignados a un dominio completo y se mostrará si no hay otra foto para mostrar. El nombre del archivo debe estar compuesto por un signo @ seguido del nombre de dominio y el tipo de archivo, por ejemplo, '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "Estas fotos son asignados a un dominio completo y se mostrará si no hay otra foto para mostrar. El nombre del archivo debe estar compuesto por un signo @ seguido del nombre de dominio y el tipo de archivo, por ejemplo, \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Rellenar las zonas transparentes con un color:">
 <!ENTITY effects.backgroundLabel "Color para las áreas transparentes de una foto (por ejemplo. .png,.gif):">
 <!ENTITY effects.label "Efectos visuales">

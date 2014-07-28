@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Opcje Display Contact Photo">
 <!ENTITY tabs.generalSettings "Ustawienia główne">
 <!ENTITY tabs.facesLocalPhotos "Twarze/lokalne fotki">
@@ -21,7 +21,7 @@
 <!ENTITY composeWindow.type.3d "3D Photo stack">
 <!ENTITY composeWindow.type.grid "Photo grid">
 <!ENTITY gravatar.enable "Włącz Gravatary">
-<!ENTITY gravatar.description "Gravatar (skrót od globalnie rozpoznawalne avatary) jest serwisem dostarczającym globalnie wyjątkowe awatery. Adres e-mail w postaci zaszyfrowanej zostaje wysłany do gravatar.com i jeśli taki sam adres jest zarejestrowany w gravatar.com, to wyświetlony zostanie obrazek zdefiniowany przez właściciela adresu email, jeśli w bazie gravatar.com nie ma adresu e-mail, zostaje wyświetlony domyślny obrazek. Fotki z Gravatara są lokalnie składowane na dysku (cache'owane) aby zwiększyć wydajność i zmniejszyć obciążenie komputera.">
+<!ENTITY gravatar.description "Gravatar (skrót od globalnie rozpoznawalne avatary) jest serwisem dostarczającym globalnie wyjątkowe awatery. Adres e-mail w postaci zaszyfrowanej zostaje wysłany do gravatar.com i jeśli taki sam adres jest zarejestrowany w gravatar.com, to wyświetlony zostanie obrazek zdefiniowany przez właściciela adresu email, jeśli w bazie gravatar.com nie ma adresu e-mail, zostaje wyświetlony domyślny obrazek. Fotki z Gravatara są lokalnie składowane na dysku (cache\'owane) aby zwiększyć wydajność i zmniejszyć obciążenie komputera.">
 <!ENTITY gravatar.default "Domyślny Gravatar:">
 <!ENTITY gravatar.defaultLogo "Domyślny Obrazek">
 <!ENTITY gravatar.defaultWavatar "Wavatar">
@@ -37,13 +37,13 @@
 <!ENTITY faces.moreInfo "Odwiedź stronę, by uzyskać więcej informacji:">
 <!ENTITY directory.enable "Włącz wyświetlanie lokalnych fotek">
 <!ENTITY directory.description1 "Nazwa pliku zostanie utworzona z adresu email i typu pliku.">
-<!ENTITY directory.description2 "np. 'info@mozilla.org.png'. Obsługiwane typy plików: jpg, png, gif.">
+<!ENTITY directory.description2 "np. \'info@mozilla.org.png\'. Obsługiwane typy plików: jpg, png, gif.">
 <!ENTITY directory.description3 "Cała nazwa pliku powinna być napisana małymi literami.">
 <!ENTITY directory.description4 "Jeśli taki plik istnieje, zostanie wyświetlony bez względu na inne fotki.">
 <!ENTITY directory.browseButton "Przeglądaj foldery…">
 <!ENTITY directory.openButton "Otwórz folder">
 <!ENTITY directory.enableWildcards "Włącz fotki dla domain wildcard">
-<!ENTITY directory.wildcardDescription "Te fotki będą połączone z całą domeną i będą wyświetlane wtedy, gdy brak będzie innych fotek do pokazania. Nazwa pliku powinna być zbudowana ze znaku @, nazwy domeny i typu pliku, np. '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "Te fotki będą połączone z całą domeną i będą wyświetlane wtedy, gdy brak będzie innych fotek do pokazania. Nazwa pliku powinna być zbudowana ze znaku @, nazwy domeny i typu pliku, np. \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Wypełnij przezroczyste pola kolorem:">
 <!ENTITY effects.backgroundLabel "Kolor przeżroczystych powierzchni fotki (w plikach typu np. .png, .gif):">
 <!ENTITY effects.label "Efekty wizualne">
@@ -67,7 +67,7 @@
 <!ENTITY specialFolders.description "Specjalne foldery to: Wychodzące, Wysłane, Szkice. Wiadomości z tych folderów są traktowane w inny sposób: wyświetla się fotka odbiorcy (z twojego punku widzenia). Odznacz kwadracik wyboru aby wyłączyć tę opcję.">
 <!ENTITY specialFolders.label "Włącz specjalne foldery">
 <!ENTITY clearCache.label "Wyczyść cache miniaturek">
-<!ENTITY clearCache.description "Czyszczenie cache'a miniaturek powinno odbywać się tylko i wyłącznie, gdy z(wy)mienisz fotkę w katalogu lokalnym, lub gdy chcesz załadować ponownie wszystkie Gravatary.">
+<!ENTITY clearCache.description "Czyszczenie cache\'a miniaturek powinno odbywać się tylko i wyłącznie, gdy z(wy)mienisz fotkę w katalogu lokalnym, lub gdy chcesz załadować ponownie wszystkie Gravatary.">
 <!ENTITY openWebsite.caption "Display Contact Photo website">
 <!ENTITY openWebsite.label "Open release notes after the installation of a new version.">
 <!ENTITY pixels "pikseli">

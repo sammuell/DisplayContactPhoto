@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Inställningar för Display Contact Photo">
 <!ENTITY tabs.generalSettings "Allmänt">
 <!ENTITY tabs.facesLocalPhotos "Face-huvuden/Lokala foton">
@@ -21,7 +21,7 @@
 <!ENTITY composeWindow.type.3d "3D-fotostapel">
 <!ENTITY composeWindow.type.grid "Fotorutnät">
 <!ENTITY gravatar.enable "Tillåt gravatarer">
-<!ENTITY gravatar.description "Gravatar (en förkortning av 'globally recognized avatar') är en tjänst som tillhandahåller globala, unika avatarer. E-postadressen krypteras och skickas till gravatar.com. Om ägaren till adressen är registrerad på gravatar.com, kommer hans avatar att visas, i annat fall visas en standardgravatar. Gravatar-bilder cachas lokalt av prestandaskäl och för att minska nätverksbelastningen.">
+<!ENTITY gravatar.description "Gravatar (en förkortning av \'globally recognized avatar\') är en tjänst som tillhandahåller globala, unika avatarer. E-postadressen krypteras och skickas till gravatar.com. Om ägaren till adressen är registrerad på gravatar.com, kommer hans avatar att visas, i annat fall visas en standardgravatar. Gravatar-bilder cachas lokalt av prestandaskäl och för att minska nätverksbelastningen.">
 <!ENTITY gravatar.default "Standardgravatar:">
 <!ENTITY gravatar.defaultLogo "Standardbild">
 <!ENTITY gravatar.defaultWavatar "Wavatar">
@@ -37,13 +37,13 @@
 <!ENTITY faces.moreInfo "Besök gärna följande webbplats för mer information om Face:">
 <!ENTITY directory.enable "Tillåt visning av lokala foton">
 <!ENTITY directory.description1 "Filnamnet måste bestå av e-postadressen och filtypen.">
-<!ENTITY directory.description2 "T.ex. 'info@mozilla.org.png'. Filtyper som stöds: jpg, png, gif.">
+<!ENTITY directory.description2 "T.ex. \'info@mozilla.org.png\'. Filtyper som stöds: jpg, png, gif.">
 <!ENTITY directory.description3 "Hela filnamnet måste skrivas med gemener.">
 <!ENTITY directory.description4 "Om en sådan fil finns kommer den att visas, oavsett andra foton.">
 <!ENTITY directory.browseButton "Bläddra i mapp…">
 <!ENTITY directory.openButton "Öppna mapp">
 <!ENTITY directory.enableWildcards "Tillåt domänanknutna standardfoton">
-<!ENTITY directory.wildcardDescription "De här fotona knyts till en hel domän och kommer att visas om det inte finns något annat foto att visa. Filnamnet måste bestå av ett @-tecken följt av domännamnet och filtypen, t.ex. '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "De här fotona knyts till en hel domän och kommer att visas om det inte finns något annat foto att visa. Filnamnet måste bestå av ett @-tecken följt av domännamnet och filtypen, t.ex. \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Fyll transparenta ytor med en färg:">
 <!ENTITY effects.backgroundLabel "Färg för ett fotos transparenta ytor (i t.ex. .png, .gif):">
 <!ENTITY effects.label "Visuella effekter">

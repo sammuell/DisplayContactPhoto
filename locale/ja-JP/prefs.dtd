@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "連絡先にある写真の表示 - オプション">
 <!ENTITY tabs.generalSettings "一般設定">
 <!ENTITY tabs.facesLocalPhotos "face/ローカルの写真">
@@ -43,7 +43,7 @@
 <!ENTITY directory.browseButton "ディレクトリーを参照する...">
 <!ENTITY directory.openButton "ディレクトリーを開く">
 <!ENTITY directory.enableWildcards "ドメインのワイルドカード写真を有効にする">
-<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "透過エリアを指定の色で埋める:">
 <!ENTITY effects.backgroundLabel "写真の透過エリアの色 (例: .png、.gif):">
 <!ENTITY effects.label "ビジュアル エフェクト">

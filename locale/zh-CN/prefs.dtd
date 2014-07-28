@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Display Contact Photo 选项">
 <!ENTITY tabs.generalSettings "常规设置">
 <!ENTITY tabs.facesLocalPhotos "面部/本地照片">
@@ -43,7 +43,7 @@
 <!ENTITY directory.browseButton "浏览目录…">
 <!ENTITY directory.openButton "打开目录">
 <!ENTITY directory.enableWildcards "启用域名通配符照片">
-<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "These photos are assigned to an entire domain and will be displayed if there is no other photo to show. The file name should be composed of an @ sign followed by the domain name and the file type, e.g. \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "透明区域填充颜色：">
 <!ENTITY effects.backgroundLabel "照片透明区域的颜色（例如 .png, .gif）：">
 <!ENTITY effects.label "视觉效果">

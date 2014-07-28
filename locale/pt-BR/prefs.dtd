@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Opções do Display Contact Photo">
 <!ENTITY tabs.generalSettings "Configurações Gerais">
 <!ENTITY tabs.facesLocalPhotos "Rostos/Fotos Locais">
@@ -37,13 +37,13 @@
 <!ENTITY faces.moreInfo "Por favor, visite a seguinte página para maiores informações:">
 <!ENTITY directory.enable "Ativar exibição de fotos locais">
 <!ENTITY directory.description1 "Os nomes de arquivos devem ser compostos pelo endereço eletrônico e o tipo do arquivo.">
-<!ENTITY directory.description2 "Por exemplo: 'info@mozilla.org.png'. Tipos de imagens suportados: jpg, png e gif.">
+<!ENTITY directory.description2 "Por exemplo: \'info@mozilla.org.png\'. Tipos de imagens suportados: jpg, png e gif.">
 <!ENTITY directory.description3 "Se esse arquivo existir, ele será exibido, independentemente de outras fotos.">
 <!ENTITY directory.description4 "Se essa imagem existir, ela será exibida, com prioridade sobre outras fotos.">
 <!ENTITY directory.browseButton "Buscar na pasta...">
 <!ENTITY directory.openButton "Abrir pasta">
 <!ENTITY directory.enableWildcards "Ativar domínio de fotos coringa">
-<!ENTITY directory.wildcardDescription "Essas fotos são atribuídos a um domínio inteiro e serão exibidas se não houver outra foto para mostrar. O nome do arquivo deverá ser composto por um símbolo @ seguido do nome de domínio e do tipo de arquivo, por exemplo '@mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "Essas fotos são atribuídos a um domínio inteiro e serão exibidas se não houver outra foto para mostrar. O nome do arquivo deverá ser composto por um símbolo @ seguido do nome de domínio e do tipo de arquivo, por exemplo \'@mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Preencher espaços transparentes com a cor:">
 <!ENTITY effects.backgroundLabel "Cor para áreas transparentes de uma foto (por exemplo png, gif):">
 <!ENTITY effects.label "Efeitos visuais">

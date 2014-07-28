@@ -1,4 +1,4 @@
-<!-- do not translate 'Display Contact Photo' -->
+<!-- do not translate \'Display Contact Photo\' -->
 <!ENTITY window.title "Display Contact Photo Indstillinger">
 <!ENTITY tabs.generalSettings "Generelle indstillinger">
 <!ENTITY tabs.facesLocalPhotos "Lokale fotos">
@@ -37,13 +37,13 @@
 <!ENTITY faces.moreInfo "Vær venlig at besøge følgende website for mere information:">
 <!ENTITY directory.enable "Muliggør visning af lokale fotos">
 <!ENTITY directory.description1 "Filnavnene bør bestå af e-mail adresse og filtype.">
-<!ENTITY directory.description2 "E.g. 'info@mozilla.org.png'. Understøttede billed typer: jpg, png, gif.">
+<!ENTITY directory.description2 "E.g. \'info@mozilla.org.png\'. Understøttede billed typer: jpg, png, gif.">
 <!ENTITY directory.description3 "Hvis sådan fik eksistere, vil den blive vist uanset om der er andre billeder.">
 <!ENTITY directory.description4 "If such a file exists, it will be displayed regardless of other photos.">
 <!ENTITY directory.browseButton "Søg mappe...">
 <!ENTITY directory.openButton "Åben mappe">
 <!ENTITY directory.enableWildcards "Muliggør domæne wildcard billeder">
-<!ENTITY directory.wildcardDescription "Disse billeder er tildelt et helt domæne og vil blive vist, hvis der ikke er andre foto at vise frem. Filnavnet bør bestå af en snabelA(@) efterfulgt af domænenavnet og filtype, f.eks '@ Mozilla.org.png'">
+<!ENTITY directory.wildcardDescription "Disse billeder er tildelt et helt domæne og vil blive vist, hvis der ikke er andre foto at vise frem. Filnavnet bør bestå af en snabelA(@) efterfulgt af domænenavnet og filtype, f.eks \'@ Mozilla.org.png\'">
 <!ENTITY effects.enableBackgroundColor "Fyld gennemsigtige områder med en farve:">
 <!ENTITY effects.backgroundLabel "Farve på gennemsigtige område i et foto (eks. .png, .gif):">
 <!ENTITY effects.label "Visuelle effekter">
