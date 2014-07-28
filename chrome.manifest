@@ -2,19 +2,21 @@ content   contactPhoto   content/
 
 skin   contactPhoto   classic   skin/
 
-locale   contactPhoto   cs    locale/cs/
-locale   contactPhoto   da    locale/da/
-locale   contactPhoto   de    locale/de/
+locale   contactPhoto   cs     locale/cs/
+locale   contactPhoto   da     locale/da/
+locale   contactPhoto   de     locale/de/
 locale   contactPhoto   en-GB  locale/en-GB/
 locale   contactPhoto   en-US  locale/en-US/
-locale   contactPhoto   es    locale/es/
-locale   contactPhoto   fr    locale/fr/
-locale   contactPhoto   it    locale/it/
+locale   contactPhoto   es     locale/es/
+locale   contactPhoto   es-ES  locale/es-ES/
+locale   contactPhoto   fr     locale/fr/
+locale   contactPhoto   hu-HU  locale/hu-HU/
+locale   contactPhoto   it     locale/it/
 locale   contactPhoto   ja-JP  locale/ja-JP/
-locale   contactPhoto   nl    locale/nl/
-locale   contactPhoto   pl    locale/pl/
+locale   contactPhoto   nl     locale/nl/
+locale   contactPhoto   pl     locale/pl/
 locale   contactPhoto   pt-BR  locale/pt-BR/
-locale   contactPhoto   sr    locale/sr/
+locale   contactPhoto   sr     locale/sr/
 locale   contactPhoto   sv-SE  locale/sv-SE/
 locale   contactPhoto   zh-CN  locale/zh-CN/
 
