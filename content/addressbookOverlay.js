@@ -30,9 +30,9 @@ contactPhoto.addressbook = {
     // open the edit card window when clicking on the photo
     cvPhoto.addEventListener('click', function(e) {
       if (e.button != 0) return; // do nothing if not left click
-
+      // open the card dialog with the photo tab focused
       window.contactPhoto.editCardFocusPhotoTab = true; // tell the dialog to focus the photo tab
-      goDoCommand('button_edit'); // this opens the contact dialog
+      goDoCommand('cmd_properties'); 
     }, false);
   },
 }
