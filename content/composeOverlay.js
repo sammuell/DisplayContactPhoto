@@ -96,7 +96,7 @@ contactPhoto.compose = {
       case 'position': // Position changed (left/right)
         var hbox = document.getElementById('DCP-AddressingContainer');
         var canvasBox = document.getElementById('DCP-PhotoStackContainer');
-        var splitter = document.getElementById('DCP-ContactsSizer');
+        var splitter = document.getElementById('DCP-VerticalSizer');
         var widget = document.getElementById('addressingWidget');
 
         if (contactPhoto.prefs.get('composePhotos.position', 'char') == 'left') {
@@ -113,7 +113,7 @@ contactPhoto.compose = {
 
       case 'display':
         var canvasBox = document.getElementById('DCP-PhotoStackContainer');
-        var splitter = document.getElementById('DCP-ContactsSizer');
+        var splitter = document.getElementById('DCP-VerticalSizer');
 
         if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
           canvasBox.collapsed = false;
@@ -546,9 +546,6 @@ contactPhoto.compose = {
   // modify the template listitem
   initTemplateTextbox: function(textbox) {
     if (contactPhoto.debug) dump('INIT TEMPLATE textbox\n')
-
-    // hide the existing icon
-    textbox.firstChild.setAttribute('hidden', 'true');
 
     // create a new icon outside the textbox
     var newBox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');

@@ -924,7 +924,7 @@ contactPhoto.resizer = {
     },
 
     // save the canvas data to the file
-    persist.saveURI(source, null, null, null, null, contactPhoto.resizer.currentImage.dest, null);
+    persist.saveURI(source, null, null, 0, null, null, contactPhoto.resizer.currentImage.dest, null);
 
   }
 }

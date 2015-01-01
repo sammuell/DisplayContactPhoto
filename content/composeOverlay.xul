@@ -14,19 +14,6 @@
 
 
 <vbox id="addresses-box">
-
-<!--
-  <hbox insertbefore="addressingWidget" id="DCP-AddressingContainer" flex="1">
-    <box id="DCP-PhotoStackContainer" style="overflow:hidden;" collapsed="true" align="center" context="DCP-Contextmenu">
-      <canvas id="DCP-PhotoStack" width="1" height="1" />
-    </box>
-
-    <splitter id="DCP-ContactsSizer" collapse="after" />
-
-  </hbox>
--->
-
-
   <menupopup id="DCP-Contextmenu">
     <menuitem label="&contextmenu.prefs;" id="DCP-ContextmenuPrefs"
       oncommand="contactPhoto.utils.openPreferencesWindow();"/>
