@@ -155,13 +155,13 @@ contactPhoto.compose = {
 
     var addrBox = widget.parentNode;
 
-    var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'hbox');
+    var hbox = document.createElementNS(contactPhoto.ns.XUL, 'hbox');
     hbox.flex = '1';
     hbox.id = 'DCP-AddressingContainer';
     addrBox.replaceChild(hbox, widget);
 
     // create a box around the canvas to center the canvas
-    var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
+    var box = document.createElementNS(contactPhoto.ns.XUL, 'box');
     box.align = 'center';
     box.id = 'DCP-PhotoStackContainer';
     box.style.overflow = 'hidden';
@@ -170,7 +170,7 @@ contactPhoto.compose = {
 
 
     var canvasSize = contactPhoto.prefs.get('composePhotos.width', 'int');
-    var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    var canvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     canvas.id = 'DCP-PhotoStack';
     canvas.width = canvasSize;
     canvas.height = 1; // Later adjusted by displayStackView()
@@ -200,7 +200,7 @@ contactPhoto.compose = {
     }, false);
 
 
-    var splitter = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'splitter');
+    var splitter = document.createElementNS(contactPhoto.ns.XUL, 'splitter');
     splitter.id = 'DCP-VerticalSizer';
 
     splitter.addEventListener('command', function() {
@@ -241,7 +241,7 @@ contactPhoto.compose = {
   setupEventListeners: function() {
     if (contactPhoto.debug) dump('--------------- setupEventListeners\n');
 
-    // change stack height after the size addressingwidget has been changed
+    // change stack height after the size addressing widget has been changed
     document.getElementById('compose-toolbar-sizer').addEventListener('mouseup', contactPhoto.compose.displayStackView, false);
 
     var composeWindow = document.getElementById("msgcomposeWindow");
@@ -383,7 +383,7 @@ contactPhoto.compose = {
             if (contactPhoto.prefs.get('composePhotos.display', 'bool')) {
               photoInfoStack.size = contactPhoto.prefs.get('composePhotos.size', 'int');
 
-              photoInfoStack.photoObject = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
+              photoInfoStack.photoObject = document.createElementNS(contactPhoto.ns.XUL, 'image');
               photoInfoStack.photoObject.setAttribute('collapsed', 'true'); // don't show the image in the ui
               photoInfoStack.photoObject.style.display = 'block';
               document.getElementById('addressingWidget').parentNode.appendChild(photoInfoStack.photoObject);
@@ -548,7 +548,7 @@ contactPhoto.compose = {
     if (contactPhoto.debug) dump('INIT TEMPLATE textbox\n')
 
     // create a new icon outside the textbox
-    var newBox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
+    var newBox = document.createElementNS(contactPhoto.ns.XUL, 'box');
     newBox.setAttribute('name', 'DCP-Photobox');
     newBox.className = 'DCP-ComposeImageBox';
     newBox.setAttribute('align', 'center');
@@ -560,7 +560,7 @@ contactPhoto.compose = {
     newBox.style.width = boxSize+'px';
     newBox.setAttribute('onclick', 'this.nextSibling.select();'); // use the onclick attribute to enable cloning of the action
 
-    var newImage = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'image');
+    var newImage = document.createElementNS(contactPhoto.ns.XUL, 'image');
     newImage.style.listStyleImage = contactPhoto.compose.defaultIconURI;
     newBox.appendChild(newImage);
 
@@ -663,7 +663,7 @@ contactPhoto.compose = {
       x: vanPt2.x - (stackCanvas.width - size),//- contactPhoto.compose.photoStack.padding),
       y: vanPt2.y - (stackCanvas.height- size)//- contactPhoto.compose.photoStack.padding)
     }
-    var dummyCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    var dummyCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     dummyCanvas.width = size;
     dummyCanvas.height = size;
     var perspectiveWarp = new contactPhoto.classes.canvasPerspectiveWarp(dummyCanvas);
@@ -680,7 +680,7 @@ contactPhoto.compose = {
     var y1 = stackCanvas.height - (boundingBox.height-size) - contactPhoto.compose.photoStack.padding;
 
 
-    var untransformedCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    var untransformedCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     untransformedCanvas.width = stackCanvas.width;
     untransformedCanvas.height = stackCanvas.height;
     var untransformedCtx = untransformedCanvas.getContext('2d');
@@ -761,7 +761,7 @@ contactPhoto.compose = {
 
 
       /* create a slight horizontal alpha gradient to let the photo behind shine through */
-      var tmpCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+      var tmpCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
       tmpCanvas.width = dw;
       tmpCanvas.height = dh;
       var tmpCtx = tmpCanvas.getContext('2d');

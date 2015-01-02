@@ -8,6 +8,13 @@ var dump = function(msg) {
   Application.console.log(JSON.stringify(msg));
 }
 */
+
+// Namespaces used by document.createElementNS()
+contactPhoto.ns = {
+  XUL: 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul',
+  XHTML: 'http://www.w3.org/1999/xhtml'
+};
+
 contactPhoto.genericInit = function() {
   contactPhoto.prefs.init(); // initialize preferences
 
@@ -777,7 +784,7 @@ contactPhoto.resizer = {
     var h = contactPhoto.resizer.dummyImg.height;
     //alert(w+'x'+h)
 
-    contactPhoto.resizer.canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    contactPhoto.resizer.canvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     contactPhoto.resizer.ctx = contactPhoto.resizer.canvas.getContext('2d');
 
     var maxSize = contactPhoto.resizer.currentImage.size;
@@ -830,7 +837,7 @@ contactPhoto.resizer = {
       if (cropW != '' && cropH != '' && cropL != '' && cropT != '') {
         // only pre-scale if source image is big enough
         if (contactPhoto.resizer.dummyImg.width > w*preScaleFactor && contactPhoto.resizer.dummyImg.height > h*preScaleFactor) {
-          var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+          var preScaleCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
           preScaleCanvas.width = Math.round(w*preScaleFactor);
           preScaleCanvas.height = Math.round(h*preScaleFactor);
 
@@ -849,7 +856,7 @@ contactPhoto.resizer = {
     if (!cropped_resized) {
       // only pre-scale if source image is big enough
       if (contactPhoto.resizer.dummyImg.width > w*preScaleFactor && contactPhoto.resizer.dummyImg.height > h*preScaleFactor) {
-        var preScaleCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+        var preScaleCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
         preScaleCanvas.width = Math.round(w*preScaleFactor);
         preScaleCanvas.height = Math.round(h*preScaleFactor);
 
@@ -1071,7 +1078,7 @@ contactPhoto.imageFX = {
     var shadowBlur = contactPhoto.prefs.get('effectShadowBlur', 'int');
     var shadowOffset = contactPhoto.prefs.get('effectShadowOffset', 'int');
 
-    contactPhoto.resizer.canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    contactPhoto.resizer.canvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     contactPhoto.resizer.ctx = contactPhoto.resizer.canvas.getContext('2d');
 
     contactPhoto.resizer.canvas.width = canvas.width;

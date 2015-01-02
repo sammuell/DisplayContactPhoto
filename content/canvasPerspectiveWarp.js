@@ -347,7 +347,7 @@ contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
     srcPixelData[srcPixelData.length] = srcData.width;
     srcPixelData[srcPixelData.length] = srcData.height;
 
-    this.destCanvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+    this.destCanvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     this.destCanvas.width = destWidth;
     this.destCanvas.height = destHeight;
     var destCtx = this.destCanvas.getContext('2d');
