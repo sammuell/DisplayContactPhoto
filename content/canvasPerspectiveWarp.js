@@ -584,7 +584,6 @@ contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
       var det = this._det22(dx1, dx2, dy1, dy2);
 
       if (det == 0) {
-        dump('det=0');
         return;
       }
 

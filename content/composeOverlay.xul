@@ -11,14 +11,18 @@
 <script type="application/javascript" src="chrome://contactPhoto/content/canvasPerspectiveWarp.js"/>
 <script type="application/javascript" src="chrome://contactPhoto/content/composeOverlay.js"/>
 
+<stringbundleset id="stringbundleset">
+  <stringbundle id="DCP-LocalizedJS" src="chrome://contactPhoto/locale/contactPhoto.properties"/>
+</stringbundleset>
 
 
 <vbox id="addresses-box">
-  <menupopup id="DCP-Contextmenu">
-    <menuitem label="&contextmenu.prefs;" id="DCP-ContextmenuPrefs"
-      oncommand="contactPhoto.utils.openPreferencesWindow();"/>
-  </menupopup>
+  <popupset>
+    <menupopup id="DCP-Contextmenu">
+      <menuitem label="&contextmenu.prefs;" id="DCP-ContextmenuPrefs"
+        oncommand="contactPhoto.utils.openPreferencesWindow();"/>
+    </menupopup>
+  </popupset>
 </vbox>
-
 
 </overlay>

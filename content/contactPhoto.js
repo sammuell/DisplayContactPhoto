@@ -1,13 +1,15 @@
 if (!contactPhoto) var contactPhoto = {};
 
 contactPhoto.currentVersion = '1.2.7';
-contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
-/*
-var dump = function(msg) {
-  var Application = Components.classes["@mozilla.org/steel/application;1"].getService(Components.interfaces.steelIApplication);
-  Application.console.log(JSON.stringify(msg));
+contactPhoto.debug = 3; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+
+contactPhoto.dump = function(data) {
+  if (!contactPhoto.debug) return;
+  var Application = Components.classes["@mozilla.org/steel/application;1"]
+                      .getService(Components.interfaces.steelIApplication);
+  Application.console.log(JSON.stringify(data));
 }
-*/
+
 
 // Namespaces used by document.createElementNS()
 contactPhoto.ns = {
@@ -398,11 +400,9 @@ contactPhoto.display = {
 
     }
     else { // generate it
-      if (contactPhoto.debug > 1) dump("generate thumb for "+srcURI+"\n")
       contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
       var callbackFunc = function() {
-        if (contactPhoto.debug > 1) dump('photo GENERATED: '+photoInfo.size+'  '+photoInfo.emailAddress+'\n');
         contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
       }
 
@@ -426,8 +426,6 @@ contactPhoto.display = {
         photoInfo.photoObject.style.display = 'block';
 
         contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
-
-        if (contactPhoto.debug > 1) dump('photo LOADED: '+URI+'\n');
       }, false);
 
     dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
@@ -1501,8 +1499,10 @@ contactPhoto.utils = {
       a = a+x+'  --  '+what[x]+'\n\n';
 
       if (i == 5) {
-        if (useAlert) alert(a);
-        else dump(a)
+        if (useAlert)
+          alert(a);
+        else
+          contactPhoto.dump(a)
         a = '';
         i = 0;
         j++;
@@ -1510,8 +1510,10 @@ contactPhoto.utils = {
     }
 
     if (j == 0) {
-      if (useAlert) alert(a);
-      else dump(a)
+      if (useAlert)
+        alert(a);
+      else
+        contactPhoto.dump(a)
     }
   }
 

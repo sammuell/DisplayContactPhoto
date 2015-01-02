@@ -9,7 +9,6 @@ contactPhoto.compose = {
   widget: null,
   widgetParent: null,
   photoStackInitDone: false,
-  canvasClickTimeout: 0,
   prefBranch: null,
 
 
@@ -131,7 +130,6 @@ contactPhoto.compose = {
 
 
   initPhotoStack: function() {
-    if (contactPhoto.debug) dump('--------------- initPhotoStack\n')
     if (contactPhoto.compose.photoStackInitDone) return;
     contactPhoto.compose.photoStackInitDone = true;
 
@@ -175,30 +173,6 @@ contactPhoto.compose = {
     canvas.width = canvasSize;
     canvas.height = 1; // Later adjusted by displayStackView()
 
-    // shift through recipients when clicking on the canvas
-    canvas.addEventListener('click', function() {
-      if (contactPhoto.debug) dump("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-
-      // capture subsequent clicks (<500ms) on the canvas and exit
-      if (new Date().getTime() - contactPhoto.compose.canvasClickTimeout < 500) return;
-      contactPhoto.compose.canvasClickTimeout = new Date().getTime();
-
-      var widget = document.getElementById('addressingWidget');
-      var textboxes = widget.getElementsByTagName("textbox");
-
-      if (textboxes.length > 1) {
-        // get type and value of first row
-        var type = awGetPopupElement(1).selectedItem.getAttribute("value");
-        var value = awGetInputElement(1).value;
-
-        // remove the first row
-        awDeleteRow(1);
-
-        // add a new row at the bottom
-        awAddRecipient(type, value);
-      }
-    }, false);
-
 
     var splitter = document.createElementNS(contactPhoto.ns.XUL, 'splitter');
     splitter.id = 'DCP-VerticalSizer';
@@ -239,8 +213,6 @@ contactPhoto.compose = {
 
 
   setupEventListeners: function() {
-    if (contactPhoto.debug) dump('--------------- setupEventListeners\n');
-
     // change stack height after the size addressing widget has been changed
     document.getElementById('compose-toolbar-sizer').addEventListener('mouseup', contactPhoto.compose.displayStackView, false);
 
@@ -266,7 +238,7 @@ contactPhoto.compose = {
 
 
   listenerComposeWindowClosed: function() {
-    if (contactPhoto.debug) dump('WINDOW CLOSED\n\n')
+    contactPhoto.dump('WINDOW CLOSED')
 
     // clear the stack area
     var stackCanvas = document.getElementById('DCP-PhotoStack');
@@ -305,7 +277,6 @@ contactPhoto.compose = {
   },
 
   resetPhoto: function(imgObj) {
-    if (contactPhoto.debug) dump('RESET img\n')
     imgObj.style.width = '16px';
     imgObj.style.height = '16px';
     imgObj.style.listStyleImage = contactPhoto.compose.defaultIconURI;
@@ -319,7 +290,8 @@ contactPhoto.compose = {
   // iterate through all textboxes in the addressingwidget.
   // check whether the contents have changed and load the photo.
   checkAllTextboxes: function() {
-    if (contactPhoto.debug) dump("\n----- checkAllTextboxes start\n");
+    const Cc = Components.classes;
+    const Ci = Components.interfaces;
 
     var forceRedraw = false; // force redraw of stack
     var photoChanged = false; // true whenever a photo will be changed
@@ -327,23 +299,22 @@ contactPhoto.compose = {
     var currentDrawNumber = contactPhoto.compose.stackDrawNumber;
 
     var bxs = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
-    if (contactPhoto.debug) dump('num boxes found: '+bxs.length+'\n')
 
     for (var i=0; i<bxs.length; i++) {
 
-      var boxID =  bxs[i].getAttribute('DCP-TextboxID');
-
       var setDefaultIcon = true;
+      // Each textbox is assigned the following properties:
+      // .currentValue
+      // .previousValue
+      // .email
+      // .imgLoaded
+      // .timeoutOccurred
+      // .hasCard
 
       var curBoxValue = bxs[i].currentValue;
 
-      if (contactPhoto.debug) {
-        dump('current box value: '+curBoxValue+"\n")
-        dump('previous box value: '+bxs[i].previousValue+"\n")
-        dump('email: '+bxs[i].email+"\n")
-      }
-
       var icon = bxs[i].previousSibling.firstChild;
+      var editLink = bxs[i].nextSibling;
 
       // only parse data if it has changed and there is an @-sign
       if (curBoxValue != bxs[i].previousValue) {
@@ -353,7 +324,8 @@ contactPhoto.compose = {
 
           // extract e-mail address
           var hdrAddresses = {};
-          var msgHeaderParser = Components.classes["@mozilla.org/messenger/headerparser;1"].getService(Components.interfaces.nsIMsgHeaderParser);
+          var msgHeaderParser = Cc["@mozilla.org/messenger/headerparser;1"]
+                                  .getService(Ci.nsIMsgHeaderParser);
           var numAddresses = msgHeaderParser.parseHeadersWithArray(curBoxValue, hdrAddresses, {}, {});
           var emailAddress = hdrAddresses.value[0];
 
@@ -365,10 +337,10 @@ contactPhoto.compose = {
             bxs[i].imgLoaded = false;
             let _ii_ = i; // used in event-listener-closures
 
-            if (contactPhoto.debug) dump('loading photo for '+emailAddress+'\n');
-
-
             var photoInfo = contactPhoto.photoForEmailAddress(emailAddress);
+
+            // Show the edit contact link if a card has been found.
+            bxs[i].hasCard = (photoInfo.cardDetails && photoInfo.cardDetails.card);
 
             var photoInfoStack = {};
             for (var x in photoInfo) { // copy the photoInfo object
@@ -391,7 +363,6 @@ contactPhoto.compose = {
               bxs[_ii_].imgObject = photoInfoStack.photoObject;
 
               photoInfoStack.photoObject.addEventListener('load', function() {
-                if (contactPhoto.debug) dump(bxs[_ii_].email+' loaded, #'+_ii_+'----------\n')
                 bxs[_ii_].imgLoaded = true;
 
                 // clear abort timeout
@@ -404,23 +375,16 @@ contactPhoto.compose = {
                 }
 
                 if (contactPhoto.compose.checkAllImagesLoaded()) {
-                  if (contactPhoto.debug) dump('all images loaded (load call)\n');
-
                   contactPhoto.compose.displayStackView();
                 }
               }, false);
 
               // add a timeout in case a photo can't be loaded (error-event does not work)
               bxs[_ii_].loadTimeout = window.setTimeout(function() {
-                if (contactPhoto.debug) dump('photo load timeout for '+_ii_+', adr: '+bxs[_ii_].email+'\n');
-
-
                 bxs[_ii_].timeoutOccurred = true;
 
                 // trigger image check again, as this might be the last image
                 if (contactPhoto.compose.checkAllImagesLoaded()) {
-                  if (contactPhoto.debug) dump('all images loaded (timeout call)\n');
-
                   contactPhoto.compose.displayStackView();
                 }
               }, 3000); // wait 3 sec for gravatar image to load
@@ -433,13 +397,15 @@ contactPhoto.compose = {
         else { // no mail address found, don't display a photo in the stack
           bxs[i].email = '';
           bxs[i].imgLoaded = false;
+          bxs[i].hasCard = false;
         }
       }
       else { // value of this textbox did not change
         setDefaultIcon = false;
       }
 
-      if (contactPhoto.debug) dump("setdefaulticon: "+setDefaultIcon+"\n")
+      // Show the edit link only if there is a card to modify.
+      editLink.hidden = !bxs[i].hasCard;
 
       if (setDefaultIcon) {
         bxs[i].email = '';
@@ -451,31 +417,23 @@ contactPhoto.compose = {
     }
 
     if (forceRedraw && !photoChanged) {
-      if (contactPhoto.debug) dump("Forced redraw\n");
+      contactPhoto.dump("Forced redraw");
       contactPhoto.compose.displayStackView(); // redraw the photo stack
     }
-
-    if (contactPhoto.debug) dump("---------- checkAllTextboxes end\n");
   },
 
   checkAllImagesLoaded: function() {
-    if (contactPhoto.debug) dump('\ncheckAllImagesLoaded\n');
-
     var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
     for (var id=0; id<boxes.length; id++) {
-      if (contactPhoto.debug) dump("box "+id+" img loaded: "+boxes[id].imgLoaded);
-
       // skip not valid email addresses
       if (boxes[id].email == '') {
-        if (contactPhoto.debug) dump(' (not valid)\n')
         continue;
       }
       // skip not loaded images (they may trigger a redraw whenever they are loaded)
       if (boxes[id].timeoutOccurred == true) {
-        if (contactPhoto.debug) dump(' (timeout)\n')
         continue;
       }
-      if (contactPhoto.debug) dump('\n')
+
       // exit if the current image is not yet loaded
       if (boxes[id].imgLoaded == false) return false;
     }
@@ -487,7 +445,6 @@ contactPhoto.compose = {
   // this function is called if DCPInitDone has not been set on a textbox
   // it sets custom properties and attaches several event listeners
   initTextbox: function(textbox) {
-    if (contactPhoto.debug) dump('INIT textbox '+textbox.id+'\n')
     textbox.DCPInitDone = true;
 
     contactPhoto.compose.resetPhoto(textbox.previousSibling.firstChild);
@@ -501,12 +458,13 @@ contactPhoto.compose = {
     textbox.imgObject = null;
     textbox.imgLoaded = false;
     textbox.timeoutOccurred = false;
+    textbox.hasCard = false;
 
+    // Hide the edit link which might be visible on the template row.
+    textbox.nextSibling.hidden = true;
 
     // listen for user-based changes which fire after the textbox loses focus
     textbox.addEventListener('change', function(e) {
-      if (contactPhoto.debug) dump('\nvalue changed: '+e.target.getAttribute('DCP-TextboxID')+' --> '+e.target.value+'\n')
-
       textbox.previousValue = textbox.currentValue;
       textbox.currentValue = e.target.value;
 
@@ -543,14 +501,14 @@ contactPhoto.compose = {
     */
   },
 
-  // modify the template listitem
+  /**
+   * Modify the template listitem which is copied to insert more listitems.
+   */
   initTemplateTextbox: function(textbox) {
-    if (contactPhoto.debug) dump('INIT TEMPLATE textbox\n')
+    contactPhoto.dump('INIT TEMPLATE textbox')
 
-    // create a new icon outside the textbox
+    // Create a box to center the icon inside.
     var newBox = document.createElementNS(contactPhoto.ns.XUL, 'box');
-    newBox.setAttribute('name', 'DCP-Photobox');
-    newBox.className = 'DCP-ComposeImageBox';
     newBox.setAttribute('align', 'center');
     newBox.setAttribute('pack', 'center');
     var boxSize = contactPhoto.prefs.get('smallIconSize', 'int');
@@ -558,13 +516,21 @@ contactPhoto.compose = {
     newBox.setAttribute('height', boxSize);
     newBox.style.height = boxSize+'px';
     newBox.style.width = boxSize+'px';
-    newBox.setAttribute('onclick', 'this.nextSibling.select();'); // use the onclick attribute to enable cloning of the action
+    // Use the onclick attribute to enable easy cloning of the node.
+    newBox.setAttribute('onclick', 'contactPhoto.compose.widgetEditContactHandler(this)');
 
     var newImage = document.createElementNS(contactPhoto.ns.XUL, 'image');
     newImage.style.listStyleImage = contactPhoto.compose.defaultIconURI;
     newBox.appendChild(newImage);
 
     textbox.parentNode.insertBefore(newBox, textbox);
+
+    var label = document.createElementNS(contactPhoto.ns.XUL, 'label');
+    label.setAttribute('class', 'text-link');
+    label.setAttribute('value', contactPhoto.localizedJS.getString('editContactLabel'));
+    label.setAttribute('hidden', 'true');
+    label.setAttribute('onclick', 'contactPhoto.compose.widgetEditContactHandler(this)');
+    textbox.parentNode.insertBefore(label, textbox.nextSibling);
   },
 
   displayStackView: function() {
@@ -589,7 +555,7 @@ contactPhoto.compose = {
   },
 
   display3DStackView: function() {
-    if (contactPhoto.debug) dump("DRAW STACK ")
+    contactPhoto.dump("DRAW STACK")
 
     var currentDrawNumber = ++contactPhoto.compose.stackDrawNumber;
 
@@ -601,24 +567,20 @@ contactPhoto.compose = {
 
     // check if an image has been assigned and reverse the order
     var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
-    if (contactPhoto.debug) dump('displayStackView: '+boxes.length+'\n')
+
     for (var id=0; id<boxes.length; id++) {
       if (typeof boxes[id].email == 'undefined') continue;
 
       if (boxes[id].email == '') {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (email not valid)\n');
         continue;
       }
       if (boxes[id].imgObject == null) {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (no img obj)\n');
         continue;
       }
       if (boxes[id].imgLoaded == false) {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (not loaded)\n');
         continue;
       }
 
-      if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' added\n')
       addresses.unshift(boxes[id].email);
 
       if (addresses.length >= maxAddresses) break;
@@ -630,7 +592,6 @@ contactPhoto.compose = {
 
     // exit if there is nothing to draw
     if (addresses.length == 0) {
-      if (contactPhoto.debug) dump("addresses.length == 0\n\n");
       contactPhoto.compose.displayEmptyCanvas();
       return;
     }
@@ -714,8 +675,6 @@ contactPhoto.compose = {
       var w = contactPhoto.display.photoCache[addresses[i]+'-'+size].width;
       var h = contactPhoto.display.photoCache[addresses[i]+'-'+size].height;
 
-
-
       var dx, dy, dw, dh
 
       // if there is only one image, position it in full size in the center
@@ -725,7 +684,6 @@ contactPhoto.compose = {
 
         dx = ((stackCanvas.width-w)*.5 - contactPhoto.compose.photoStack.padding);
         dy = ((stackCanvas.height-h)*.5 - contactPhoto.compose.photoStack.padding);
-
       }
       else {
 
@@ -749,8 +707,6 @@ contactPhoto.compose = {
 
         var t = (1-div)*u + (div)*v; // linearly mix the two functions
         var t2 = (1-div)*u2 + (div)*v2;
-
-        if (contactPhoto.debug) dump("tp: "+t.toFixed(2)+"\nts: "+t2.toFixed(2)+"\n")
 
         var dw = w*(sizeDistance + t2*(1-sizeDistance));
         var dh = h*(sizeDistance + t2*(1-sizeDistance));
@@ -799,35 +755,31 @@ contactPhoto.compose = {
 
     } // end addresses loop
 
-    if (contactPhoto.debug) dump('  ... finished\n-------------------------------\n');
+    contactPhoto.dump('  ... finished');
   },
 
 
   displayGridView: function() {
-    if (contactPhoto.debug) dump("DRAW STACK ")
+    contactPhoto.dump("DRAW STACK ")
 
     var currentDrawNumber = ++contactPhoto.compose.stackDrawNumber;
     var addresses = [];
 
     // check if an image has been assigned and reverse the order
     var boxes = contactPhoto.compose.widgetParent.getElementsByTagName('textbox');
-    if (contactPhoto.debug) dump('displayStackView: '+boxes.length+'\n')
+
     for (var id=0; id<boxes.length; id++) {
 
       if (boxes[id].email == '') {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (email not valid)\n');
         continue;
       }
       if (boxes[id].imgObject == null) {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (no img obj)\n');
         continue;
       }
       if (boxes[id].imgLoaded == false) {
-        if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' (not loaded)\n');
         continue;
       }
 
-      if (contactPhoto.debug) dump('id: '+id+' '+boxes[id].email+' added\n')
       addresses.push(boxes[id].email);
     }
 
@@ -883,12 +835,11 @@ contactPhoto.compose = {
       } // end addresses loop
     }
 
-    if (contactPhoto.debug) dump('  ... finished\n-------------------------------\n');
+    contactPhoto.dump('  ... finished');
   },
 
 
   displayEmptyCanvas: function() {
-    if (contactPhoto.debug) dump("display empty canvas\n");
     var stackCanvas = document.getElementById('DCP-PhotoStack');
     var stackCtx = stackCanvas.getContext('2d');
 
@@ -904,14 +855,17 @@ contactPhoto.compose = {
 
   addressBookListener: {
     onItemAdded: function(aParentDir, aItem) {
+      contactPhoto.dump('ablistener item added')
       contactPhoto.compose.forceCompleteImageReload();
     },
 
     onItemRemoved: function(aParentDir, aItem) {
+      contactPhoto.dump('ablistener item removed')
       contactPhoto.compose.forceCompleteImageReload();
     },
 
     onItemPropertyChanged: function(aItem, aProperty, aOldValue, aNewValue) {
+      contactPhoto.dump('ablistener item changed')
       contactPhoto.compose.forceCompleteImageReload();
     }
   },
@@ -927,10 +881,41 @@ contactPhoto.compose = {
     contactPhoto.compose.removeCachedImages();
     contactPhoto.compose.checkAllTextboxes();
   },
+
+  /**
+   * Fetch the card of a recipient and open the edit dialog.
+   */
+  widgetEditContactHandler: function(element) {
+    var textbox = element.parentNode.getElementsByTagName('textbox')[0];
+    var address = textbox.email;
+    var cardDetails = contactPhoto.getCard(address);
+
+    if (cardDetails && cardDetails.card) {
+      window.openDialog("chrome://messenger/content/addressbook/abEditCardDialog.xul",
+                      "",
+                      "chrome,modal,resizable=no,centerscreen",
+                      {abURI:cardDetails.book.URI, card:cardDetails.card});
+
+      // Update the textbox value because the contact data has potentially changed.
+      // Check if the address has been altered.
+      if (address != cardDetails.card.primaryEmail
+        && address != cardDetails.card.secondEmail) {
+        address = cardDetails.card.primaryEmail;
+      }
+      if (cardDetails.card.displayName) {
+        textbox.value = cardDetails.card.displayName + " <" + address + ">";
+      }
+      else {
+        textbox.value = address;
+      }
+      textbox.previousValue = textbox.currentValue;
+      textbox.currentValue = textbox.value;
+      // The updated data is handled by the address book listener.
+    }
+  }
 }
 
 window.addEventListener('load', function() {
-  if (contactPhoto.debug) dump("event window load\n");
   // no possiblity to delay - setup of photostack has to be done before the addresses are filled in
   contactPhoto.compose.wrap_functions();
   contactPhoto.compose.initPhotoStack();

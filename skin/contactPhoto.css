@@ -28,6 +28,7 @@
   width: 2px;
   background: no-repeat center center url("chrome://contactPhoto/skin/splitter.png");
   margin: 2px 0px;
+  border: 0;
 }
 
 box.DCP-ComposeImageBox {
@@ -38,7 +39,8 @@ box.DCP-ComposeImageBox  > image {
   display: block;
 }
 
-image.moreinfo { /* panel providing explanations in prefwindow */
+/* panel providing explanations in prefwindow */
+image.moreinfo {
   cursor: pointer;
   width: 16px;
   height: 16px;
