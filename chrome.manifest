@@ -13,6 +13,7 @@ locale   contactPhoto   fr     locale/fr/
 locale   contactPhoto   hu-HU  locale/hu-HU/
 locale   contactPhoto   it     locale/it/
 locale   contactPhoto   ja-JP  locale/ja-JP/
+locale   contactPhoto   ko-KR  locale/ko-KR/
 locale   contactPhoto   nl     locale/nl/
 locale   contactPhoto   pl     locale/pl/
 locale   contactPhoto   pt-BR  locale/pt-BR/
