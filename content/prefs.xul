@@ -88,7 +88,9 @@
           <menulist id="listDefaultPhoto" preference="extensions.contactPhoto.defaultGenericPhoto">
             <menupopup>
               <!-- the mozilla default photo is already here because it is not present in the template list -->
-              <menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" value="chrome://messenger/skin/addressbook/icons/contact-generic.png" image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
+              <menuitem label="&defaultPhoto.generic;" class="menuitem-iconic" 
+                        value="chrome://messenger/skin/addressbook/icons/contact-generic.png" 
+                        image="chrome://messenger/skin/addressbook/icons/contact-generic-tiny.png"/>
             </menupopup>
           </menulist>
         </hbox>

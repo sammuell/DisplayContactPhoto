@@ -1,7 +1,7 @@
 if (!contactPhoto) var contactPhoto = {};
 
 contactPhoto.currentVersion = '1.2.7';
-contactPhoto.debug = 3; // 0: turn off debug dump, 1: show some msg, 2: show all msg
+contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.dump = function(data) {
   if (!contactPhoto.debug) return;
@@ -35,9 +35,7 @@ contactPhoto.genericInit = function() {
         try {
           contactPhoto.prefs.branch.clearUserPref(prefsToRemove[i]);
         }
-        catch (e) {
-          //if (contactPhoto.debug) alert('failed to remove pref: '+prefsToRemove[i]);
-        }
+        catch (e) {}
       }
 
       contactPhoto.cache.clear();
@@ -75,10 +73,12 @@ contactPhoto.genericInit = function() {
 
     // debug stuff
     if (contactPhoto.debug > 0) { // auto-open javascript console
-      //Application.console.open();
+      var Application = Components.classes["@mozilla.org/steel/application;1"]
+                      .getService(Components.interfaces.steelIApplication);
+      Application.console.open();
     }
 
-  }, 100);
+  }, 1000);
 
 }
 window.addEventListener('load', contactPhoto.genericInit, false);
@@ -113,12 +113,12 @@ contactPhoto.prefs = {
             return contactPhoto.prefs.branch.getComplexValue(prefName, Components.interfaces.nsILocalFile);
           }
           catch(e) {
-            if (contactPhoto.debug) alert('failed to load file pref: '+prefName);
+            contactPhoto.dump('failed to load file pref: ' + prefName);
           }
       }
     }
     catch (e){
-      if (contactPhoto.debug) alert('pref.get() failed: '+prefName)
+      contactPhoto.dump('pref.get() failed: ' + prefName)
     }
   },
 
@@ -285,8 +285,6 @@ contactPhoto.display = {
   },
 
   photo: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp photo')
-
     var origFile = Components.classes["@mozilla.org/file/directory_service;1"]
             .getService(Components.interfaces.nsIProperties)
             .get("ProfD", Components.interfaces.nsIFile);
@@ -294,34 +292,32 @@ contactPhoto.display = {
     origFile.append(photoInfo.photoName);
 
     var srcURI = contactPhoto.utils.makeURI(origFile);
+    contactPhoto.dump('disp photo ' + srcURI);
     contactPhoto.display.checkPhoto(srcURI, photoInfo);
   },
 
   genericPhoto: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp gen photo')
-
     if (contactPhoto.prefs.get('enableGravatar', 'bool') && photoInfo.genericPhotoURI.indexOf('gravatar') > -1) {
       contactPhoto.display.gravatar(photoInfo);
       return;
     }
 
+    contactPhoto.dump('disp generic photo ' + photoInfo.genericPhotoURI);
     contactPhoto.display.checkPhoto(photoInfo.genericPhotoURI, photoInfo);
   },
 
   localPhoto: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp loc photo')
-
+    contactPhoto.dump('disp loc photo ' + photoInfo.localPhotoURI);
     contactPhoto.display.checkPhoto(photoInfo.localPhotoURI, photoInfo);
   },
 
   domainWildcard: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp wild')
-
+    contactPhoto.dump('disp loc * photo ' + photoInfo.domainWildcardURI);
     contactPhoto.display.checkPhoto(photoInfo.domainWildcardURI, photoInfo);
   },
 
   face: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp face')
+    contactPhoto.dump('disp face photo ' + photoInfo.domainWildcardURI);
 
     photoInfo.photoObject.style.width = '48px';
     photoInfo.photoObject.style.height = '48px';
@@ -330,7 +326,7 @@ contactPhoto.display = {
   },
 
   gravatar: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp gravatar')
+    contactPhoto.dump('disp grav photo ' + photoInfo.emailAddress);
 
     // don't load image if the message has been marked as junk
     // copied from function SelectedMessagesAreJunk()
@@ -354,10 +350,9 @@ contactPhoto.display = {
   },
 
   defaultPhoto: function(photoInfo) {
-    //if (contactPhoto.debug) alert('disp def photo')
-
     var defaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 
+    contactPhoto.dump('disp default photo ' + defaultPhoto);
     if (contactPhoto.prefs.get('enableGravatar', 'bool') && defaultPhoto.indexOf('gravatar') > -1) {
       contactPhoto.display.gravatar(photoInfo);
       return;
@@ -384,6 +379,7 @@ contactPhoto.display = {
     thumbnailFile.append(contactPhoto.cache.directory);
     thumbnailFile.append(photoInfo.size);
     thumbnailFile.append(thumbnailName+'.png');
+    contactPhoto.dump("path: " + thumbnailFile.path +", exists: "+ thumbnailFile.exists())
 
     if (thumbnailFile.exists()) { // if the thumbnail already exists, display it
 
@@ -402,7 +398,10 @@ contactPhoto.display = {
     else { // generate it
       contactPhoto.resizer.queue.add(srcURI, thumbnailFile, photoInfo);
 
+      contactPhoto.dump('generate');
       var callbackFunc = function() {
+        contactPhoto.dump('queue');
+        
         contactPhoto.display.photoLoader(contactPhoto.utils.makeURI(thumbnailFile), photoInfo);
       }
 
@@ -418,15 +417,19 @@ contactPhoto.display = {
     var dummyPhoto = new Image();
 
     dummyPhoto.addEventListener('load', function() {
-        photoInfo.photoObject.style.width = dummyPhoto.width+'px';
-        photoInfo.photoObject.style.height = dummyPhoto.height+'px';
+      photoInfo.photoObject.style.width = dummyPhoto.width+'px';
+      photoInfo.photoObject.style.height = dummyPhoto.height+'px';
 
-        URI = URI+'?'+Math.floor(Math.random()*1000000000); // force to load photo every time
-        photoInfo.photoObject.style.listStyleImage = 'url("'+URI+'")';
-        photoInfo.photoObject.style.display = 'block';
+      URI = URI+'?'+Math.floor(Math.random()*1000000000); // force to load photo every time
+      photoInfo.photoObject.style.listStyleImage = 'url("'+URI+'")';
+      photoInfo.photoObject.style.display = 'block';
 
-        contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
-      }, false);
+      contactPhoto.display.photoCache[photoInfo.emailAddress+'-'+photoInfo.size] = dummyPhoto;
+    }, false);
+    
+    dummyPhoto.addEventListener('error', function() {
+      contactPhoto.dump('photoLoader(): failed to load image: ' + URI);
+    }, false);
 
     dummyPhoto.src = URI+'?'+Math.floor(Math.random()*1000000000);
   }
@@ -530,7 +533,7 @@ contactPhoto.getLocalPhoto = function(photoInfo) {
     }
   }
   catch (ex) {
-    if (contactPhoto.debug) alert('failed to load local photo, errmsg: '+ex);
+    contactPhoto.dump('failed to load local photo, errmsg: '+ex);
   }
 }
 
@@ -545,9 +548,7 @@ contactPhoto.getCardPhoto = function(photoInfo) {
         var photoURI = photoInfo.cardDetails.card.getProperty('PhotoURI', '');
         var DCPDefaultPhotoURI = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 
-        //alert('URI: -'+photoURI+'-\n'+DCPDefaultPhotoURI);
         if (photoURI != '' && photoURI != 'null' && photoURI != DCPDefaultPhotoURI) {
-          //alert('is true')
           photoInfo.hasGenericPhoto = true;
           photoInfo.hasPhoto = true;
           photoInfo.genericPhotoURI = photoURI;
@@ -757,8 +758,6 @@ contactPhoto.resizer = {
       return;
     }
 
-    //contactPhoto.resizer.initialQueueSize = contactPhoto.resizer.queue.length();
-
     contactPhoto.resizer.currentImage = contactPhoto.resizer.queue.getNext();
 
     contactPhoto.resizer.resizeStep1();
@@ -768,8 +767,11 @@ contactPhoto.resizer = {
   resizeStep1: function() {
     contactPhoto.resizer.dummyImg = new Image();
     contactPhoto.resizer.dummyImg.addEventListener('load', function() {
-        contactPhoto.resizer.resizeStep2();
-      }, false);
+      contactPhoto.resizer.resizeStep2();
+    }, false);
+    contactPhoto.resizer.dummyImg.addEventListener('error', function() {
+      contactPhoto.dump('resizeStep1(): failed to load image: ' + contactPhoto.resizer.currentImage.src);
+    }, false);
 
     contactPhoto.resizer.dummyImg.src = contactPhoto.resizer.currentImage.src;
   },
@@ -780,7 +782,6 @@ contactPhoto.resizer = {
 
     var w = contactPhoto.resizer.dummyImg.width;
     var h = contactPhoto.resizer.dummyImg.height;
-    //alert(w+'x'+h)
 
     contactPhoto.resizer.canvas = document.createElementNS(contactPhoto.ns.XHTML, 'canvas');
     contactPhoto.resizer.ctx = contactPhoto.resizer.canvas.getContext('2d');
@@ -803,7 +804,7 @@ contactPhoto.resizer = {
         if (cropH != '') h = parseInt(cropH);
       }
     }
-    //alert(w+'x'+h)
+
     if (w > maxSize || h > maxSize) { // do not upscale an image
       if (w > h) {
         h = Math.round(h/w*maxSize)
@@ -814,7 +815,7 @@ contactPhoto.resizer = {
         h = maxSize;
       }
     }
-    //alert(w+'x'+h)
+
     contactPhoto.resizer.canvas.width = w;
     contactPhoto.resizer.canvas.height = h;
 
@@ -867,8 +868,6 @@ contactPhoto.resizer = {
         contactPhoto.resizer.ctx.drawImage(contactPhoto.resizer.dummyImg, 0, 0, w, h);
       }
     }
-
-
 
     /* IMAGE EFFECTS */
 
@@ -930,7 +929,6 @@ contactPhoto.resizer = {
 
     // save the canvas data to the file
     persist.saveURI(source, null, null, 0, null, null, contactPhoto.resizer.currentImage.dest, null);
-
   }
 }
 
@@ -1358,10 +1356,12 @@ contactPhoto.utils = {
           msg += '\nFlag Outbox: '+(currentFolder.flags & folderFlags.Queue);
           msg += '\nFlag Drafts: '+(currentFolder.flags & folderFlags.Drafts);
           msg += '\nFlag Sent: '+(currentFolder.flags & folderFlags.SentMail);
-          alert(msg)
+          contactPhoto.dump(msg);
         }
         */
-        if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) return true;
+        if (currentFolder.flags & (folderFlags.SentMail | folderFlags.Queue | folderFlags.Drafts)) 
+          return true;
+
         currentFolder = currentFolder.parent;
       }
     }
@@ -1377,11 +1377,10 @@ contactPhoto.utils = {
     prompts.alert(null, alertTitle, text);
   },
 
-  // customAlert: sanitize photo information introduced by bug 702137
+  // sanitizeCards: sanitize photo information introduced by bug 702137
   // replace 'null' string with an empty string ''
   sanitizeCards: function() {
-
-      let abManager = Components.classes["@mozilla.org/abmanager;1"]
+    let abManager = Components.classes["@mozilla.org/abmanager;1"]
                               .getService(Components.interfaces.nsIAbManager);
 
     let allAddressBooks = abManager.directories;
@@ -1457,8 +1456,8 @@ contactPhoto.utils = {
 
   // md5_hex: calculate the md5 checksum of a string
   md5_hex: function(str) {
-    var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
-          createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+    var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+          .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 
     // we use UTF-8 here, you can choose other encodings.
     converter.charset = 'UTF-8';

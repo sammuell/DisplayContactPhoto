@@ -67,8 +67,14 @@ contactPhoto.editCard = {
 
     onShow: function(aCard, aDocument, aTargetID) {
       var genericPhotoList = document.getElementById('GenericPhotoList');
+      
+      // In case that the Mozilla default has been selected remove the src 
+      // attribute to allow themes to customize the default photo.
+      if (genericPhotoList.value == 'default')
+        aDocument.getElementById(aTargetID).removeAttribute('src');
+      else
+        aDocument.getElementById(aTargetID).setAttribute('src', genericPhotoList.value);
 
-      aDocument.getElementById(aTargetID).setAttribute('src', genericPhotoList.value);
       return true;
     },
 
@@ -78,15 +84,14 @@ contactPhoto.editCard = {
       aCard.setProperty('PhotoName', '');
       aCard.setProperty('PhotoType', 'generic');
 
-      // do not save the URI if it is the default photo
       var genericPhotoList = document.getElementById('GenericPhotoList');
       var newURI = genericPhotoList.value;
       if (genericPhotoList.value == contactPhoto.prefs.get('defaultGenericPhoto', 'char')) {
         // if the default photo has been selected, assign an empty URI to fall back to the current default URI automatically
         newURI = '';
       }
-
       aCard.setProperty('PhotoURI', newURI);
+      
       return true;
     }
   },
@@ -94,6 +99,18 @@ contactPhoto.editCard = {
   // check if gravatar is enabled, else disable menuitem and assign default URI if gravatar has been selected
   // select the correct default photo from DCP prefs
   initEditCard: function() {
+    var photo = document.getElementById('photo');
+    
+    // Check if the default photo uri has been stored in the preferences.
+    var uri = window.getComputedStyle(photo, null).listStyleImage;
+    uri = uri.replace(/.*\s?url\([\'\"]?/, '').replace(/[\'\"]?\).*/, '');
+    contactPhoto.dump(uri);
+    var storedUri = contactPhoto.prefs.get('defaultGenericPhotoURI', 'char');
+    if (uri && uri != storedUri) {
+      contactPhoto.prefs.set('defaultGenericPhotoURI', storedUri, 'char');
+    }
+  
+  
     var genericPhotoList = document.getElementById('GenericPhotoList');
     var DCPDefaultPhoto = contactPhoto.prefs.get('defaultGenericPhoto', 'char');
 

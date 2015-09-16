@@ -631,7 +631,6 @@ contactPhoto.compose = {
     perspectiveWarp.interpolationMethod = 'bl'; // bilinear
     perspectiveWarp.referencePoint = 'bl'; // bottom left
     var boundingBox = perspectiveWarp.vanishingPointsBoundingBox(vp1.x, vp1.y, vp2.x, vp2.y);
-    //alert(boundingBox.width+'\n'+boundingBox.height)
 
     // draw photos along a linear slope from x0/y0 to x1/y1
     var x0 = contactPhoto.compose.photoStack.padding;

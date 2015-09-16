@@ -7,6 +7,7 @@ pref('extensions.contactPhoto.smallIconSize', 20);
 pref('extensions.contactPhoto.photoPosition', 'left');
 
 pref('extensions.contactPhoto.addressbook.size', 100);
+pref('extensions.contactPhoto.defaultGenericPhotoURI', 'chrome://messenger/skin/addressbook/icons/contact-generic.png');
 
 pref('extensions.contactPhoto.composePhotos.display', true);
 pref('extensions.contactPhoto.composePhotos.type', '3d');

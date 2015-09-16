@@ -96,8 +96,7 @@ contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
       if ((0 <= vp2.x && vp2.x <= this.srcCanvas.width) && (0 <= vp2.y && vp2.y <= this.srcCanvas.height)) throw "vp2 is within the canvas";
     }
     catch (e) {
-      alert('error: '+e)
-      return
+      return;
     }
 
     // no valid reference point specified
@@ -289,7 +288,7 @@ contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
 
     var destArea = destWidth*destHeight;
     if (destArea > 1e5) {
-      alert('Warning: Transformation is too big: '+destWidth+'x'+destHeight+', Area: '+destArea);
+      //alert('Warning: Transformation is too big: '+destWidth+'x'+destHeight+', Area: '+destArea);
       return -1;
     }
     //////////////////////////////////////////////////////////
@@ -479,10 +478,6 @@ contactPhoto.classes.canvasPerspectiveWarp = function(sCanvas) { return {
       alpha[0][1] = 0;
       alpha[1][1] = 0;
     }
-
-
-    //alert('srcx: '+srcCoord.x+'   srcy: '+srcCoord.y)
-    //alert('x0: '+x0+'   y0: '+y0)
 
     // if alpha[x][x] has not been modified, then the pixel exists --> set alpha
     if (alpha[0][0] == -1) alpha[0][0] = srcPixelData[x0][y0].a;

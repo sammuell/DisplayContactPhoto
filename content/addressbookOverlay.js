@@ -19,6 +19,16 @@ contactPhoto.addressbook = {
     container.setAttribute('context', 'DCP-Contextmenu'); // set the contextmenu
 
     var cvPhoto = document.getElementById('cvPhoto');
+    
+    // Check if the default photo uri has been stored in the preferences.
+    var uri = window.getComputedStyle(cvPhoto, null).listStyleImage;
+    uri = uri.replace(/.*\s?url\([\'\"]?/, '').replace(/[\'\"]?\).*/, '');
+    contactPhoto.dump(uri);
+    var storedUri = contactPhoto.prefs.get('defaultGenericPhotoURI', 'char');
+    if (uri && uri != storedUri) {
+      contactPhoto.prefs.set('defaultGenericPhotoURI', storedUri, 'char');
+      contactPhoto.cache.clear();
+    }
 
     // Display a larger photo in the address book.
     // Override unit of width (ch -> px).
