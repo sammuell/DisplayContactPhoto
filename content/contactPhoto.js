@@ -1,6 +1,6 @@
 if (!contactPhoto) var contactPhoto = {};
 
-contactPhoto.currentVersion = '1.3.0';
+contactPhoto.currentVersion = '1.3.1';
 contactPhoto.debug = 0; // 0: turn off debug dump, 1: show some msg, 2: show all msg
 
 contactPhoto.dump = function(data) {
